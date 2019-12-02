@@ -11,18 +11,16 @@ import GroupListing from '@/components/groups/GroupListing'
 import GroupCreator from '@/components/groups/GroupCreator'
 import GroupEditor from '@/components/groups/GroupEditor'
 import Group from '@/components/groups/Group'
-/*
-import TaskManager from '@/components/TaskManager'
-import TaskListing from '@/components/TaskListing'
-import TaskCreator from '@/components/TaskCreator'
-import Task from '@/components/Task'
-import ExerciseListing from '@/components/ExerciseListing'
-import ExerciseCreator from '@/components/ExerciseCreator'
-import Exercise from '@/components/Exercise'
-import TestListing from '@/components/TestListing'
-import Test from '@/components/Test'
-import TestCreator from '@/components/TestCreator'
-*/
+import TaskManager from '@/components/tasks/TaskManager'
+import TaskListing from '@/components/tasks/TaskListing'
+import TaskCreator from '@/components/tasks/TaskCreator'
+import Task from '@/components/tasks/Task'
+import ExerciseListing from '@/components/exercises/ExerciseListing'
+import ExerciseCreator from '@/components/exercises/ExerciseCreator'
+import Exercise from '@/components/exercises/Exercise'
+import TestListing from '@/components/tests/TestListing'
+import Test from '@/components/tests/Test'
+import TestCreator from '@/components/tests/TestCreator'
 
 Vue.use(VueRouter)
 
@@ -68,7 +66,6 @@ export default new VueRouter({
         }
       ]
     },
-    /*
     {
       path: '/tasks',
       name: 'MyTasks',
@@ -115,7 +112,7 @@ export default new VueRouter({
           component: TestCreator
         }
       ]
-    } */
+    }
   ],
   mode: 'history'
 })
