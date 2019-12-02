@@ -1,31 +1,28 @@
 <template>
   <div>
     <v-container>
-      <v-layout row wrap justify-space-around border>
-        <v-flex md6 offset-md2>
+      <v-row>
+        <v-col cols="6">
           <h2>Moje ćwiczenia</h2>
-        </v-flex>
-        <v-flex md2>
+        </v-col>
+        <v-spacer></v-spacer>
+        <v-col cols="2">
           <v-btn to="/tasks/newExercise" color="success" small>Utwórz ćwiczenie</v-btn>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
+      
       <v-divider></v-divider>
-      <v-layout row wrap justify-space-around v-for="(exercise, index) in exercises" :key="index" mt-4>
-        <v-flex md6 offset-md2>
+
+      <v-row v-for="(exercise, index) in exercises" :key="index" mt-4>
+        <v-col cols="6">
           <h3>{{ exercise.title }}</h3>
-        </v-flex>
-        <v-flex md2>
+        </v-col>
+        <v-spacer></v-spacer>
+        <v-col cols="2">
           <v-btn @click="showExerciseDetails(exercise)" color="primary" small>Szczegóły</v-btn>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-container>
-    <!--
-        <span><router-link to="/tasks/newExercise">Utwórz ćwiczenie</router-link></span><br><br>
-        Ćwiczenia:
-        <ul>
-            <li v-for="exercise in exercises" :key="exercise"> {{ exercise.title }}  - <span @click="showExerciseDetails(exercise)">Podgląd</span></li>
-        </ul>
-    -->
   </div>
 </template>
 
