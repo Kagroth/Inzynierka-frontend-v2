@@ -6,12 +6,12 @@ import VueRouter from 'vue-router'
 import StartSite from '@/components/StartSite'
 import LoginForm from '@/components/auth/LoginForm'
 import RegisterForm from '@/components/auth/RegisterForm'
+import GroupManager from '@/components/groups/GroupManager'
+import GroupListing from '@/components/groups/GroupListing'
+import GroupCreator from '@/components/groups/GroupCreator'
+import GroupEditor from '@/components/groups/GroupEditor'
+import Group from '@/components/groups/Group'
 /*
-import GroupManager from '@/components/GroupManager'
-import GroupListing from '@/components/GroupListing'
-import GroupCreator from '@/components/GroupCreator'
-import GroupEditor from '@/components/GroupEditor'
-import Group from '@/components/Group'
 import TaskManager from '@/components/TaskManager'
 import TaskListing from '@/components/TaskListing'
 import TaskCreator from '@/components/TaskCreator'
@@ -41,7 +41,6 @@ export default new VueRouter({
       path: '/register',
       component: RegisterForm
     },
-    /*
     {
       path: '/groups',
       name: '/MyGroups',
@@ -69,6 +68,7 @@ export default new VueRouter({
         }
       ]
     },
+    /*
     {
       path: '/tasks',
       name: 'MyTasks',
