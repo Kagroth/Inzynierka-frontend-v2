@@ -16,7 +16,7 @@ const mutations = {
   init (state) {
     state.token = localStorage.getItem('token') || ''
     state.refreshToken = localStorage.getItem('refresh') || ''
-    state.isLogged = (localStorage.getItem('token') !== 'null' &&
+    state.isLogged = (localStorage.getItem('token') !== null &&
                       localStorage.getItem('token') !== undefined)
     state.username = localStorage.getItem('username') || ''
     state.profile = JSON.parse(localStorage.getItem('profile')) || {}
@@ -50,6 +50,8 @@ const mutations = {
     for (const stateProp of Object.getOwnPropertyNames(state)) {
       state[stateProp] = null
     }
+    
+    state.isLogged = false
   }
 }
 

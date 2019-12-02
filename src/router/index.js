@@ -1,10 +1,12 @@
-/*
-Docelowy Router
+
+//Docelowy Router
+
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 import StartSite from '@/components/StartSite'
-import LoginForm from '@/components/LoginForm'
-import RegisterForm from '@/components/RegisterForm'
+import LoginForm from '@/components/auth/LoginForm'
+import RegisterForm from '@/components/auth/RegisterForm'
+/*
 import GroupManager from '@/components/GroupManager'
 import GroupListing from '@/components/GroupListing'
 import GroupCreator from '@/components/GroupCreator'
@@ -20,24 +22,26 @@ import Exercise from '@/components/Exercise'
 import TestListing from '@/components/TestListing'
 import Test from '@/components/Test'
 import TestCreator from '@/components/TestCreator'
+*/
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
-export default new Router({
+export default new VueRouter({
   routes: [
     {
       path: '/',
       name: 'App',
       component: StartSite
-    },
+    },    
     {
       path: '/login',
       component: LoginForm
-    },
+    },    
     {
       path: '/register',
       component: RegisterForm
     },
+    /*
     {
       path: '/groups',
       name: '/MyGroups',
@@ -111,11 +115,10 @@ export default new Router({
           component: TestCreator
         }
       ]
-    }
+    } */
   ],
   mode: 'history'
 })
-*/
 
 /*
 Stockowy router z vue add router
