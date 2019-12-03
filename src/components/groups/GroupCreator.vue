@@ -2,11 +2,13 @@
   <div>
     <v-form>
       <v-container>
-        <v-layout row wrap>
-          <v-flex xs12 md5 offset-md4>
-            <v-text-field :type="text" v-model="form.groupName" label="Nazwa grupy" required></v-text-field>
-          </v-flex>
-          <v-flex xs12 md4 offset-md4>
+        <v-row>
+          <v-col>
+            <v-text-field type="text" v-model="form.groupName" label="Nazwa grupy" required></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
             <v-select :items="users" v-model="currentSelectedUser">
                 <template slot="item" slot-scope="data"> <!-- ten slot odpowiada za to jak obiekty sa wyswietlane w liscie -->
                     {{ data.item.first_name }} {{ data.item.last_name }}
@@ -15,45 +17,30 @@
                     {{ data.item.first_name }} {{ data.item.last_name }}
                 </template>
             </v-select>
-          </v-flex>
-          <v-flex xs12 md3>
+          </v-col>
+          <v-col>
             <v-btn color="primary" @click="addUser">Dodaj</v-btn>
-          </v-flex>
-          <v-flex xs12 md4 offset-md4>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
             <v-btn color="primary" @click="createGroup">Utwórz</v-btn>
-          </v-flex>
-        </v-layout>
-
-        <v-layout row wrap>
-            <v-flex md4 offset-md4>
-                <h3>Wybrani użytkownicy: </h3>
-            </v-flex>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <h3>Wybrani użytkownicy: </h3>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
             <v-flex md4 offset-md4 :key="selectedUser" v-for="selectedUser in form.selectedUsers">
                 {{ selectedUser.first_name }} {{ selectedUser.last_name }}
             </v-flex>
-        </v-layout>
+          </v-col>
+        </v-row>
       </v-container>
     </v-form>
-    <!--
-        <form>
-            <input type="text" placeholder="Nazwa grupy" v-model="form.groupName"/><br><br>
-            <select v-model="currentSelectedUser">
-                <option :key="user" v-for="user in users" :value="user.username">
-                     {{ user.first_name }} {{ user.last_name }} - {{ user.username }}
-                </option>
-            </select>
-            <input type="button" value="Dodaj" @click="addUser"/><br>            
-            <input type="submit" value="Utwórz" @click="createGroup"/>
-        </form>
-        <div>
-            <p>Wybrani użytkownicy: </p>
-            <ul>
-                <li :key="selectedUser" v-for="selectedUser in form.selectedUsers">
-                    {{ selectedUser.first_name }} {{ selectedUser.last_name }} - {{ selectedUser.username }}
-                </li>
-            </ul>
-        </div>
-    -->
   </div>
 </template>
 

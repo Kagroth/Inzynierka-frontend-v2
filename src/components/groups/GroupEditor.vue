@@ -2,59 +2,52 @@
   <div>
     <v-form>
       <v-container>
-        <v-layout row wrap>
-          <v-flex xs12 md5 offset-md4>
-            <v-text-field :type="text" v-model="form.groupName" label="Nazwa grupy" required></v-text-field>
-          </v-flex>
-        </v-layout>
-
-        <v-layout>
-          <v-flex md4 offset-md4>
+        <v-row>
+          <v-col>
+            <v-text-field type="text" v-model="form.groupName" label="Nazwa grupy" required></v-text-field>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
             <h3>Członkowie grupy: </h3>
-          </v-flex>
-        </v-layout>
-
-        <v-layout row wrap :key="index" v-for="(member, index) in contextGroup.users">
-            <v-flex offset-md4 md2>
-                {{ member.first_name }} {{ member.last_name }}
-            </v-flex>
-            <v-flex md2>
-                <v-btn color="error" small @click="removeUserFromGroup(member)">Usun</v-btn>
-            </v-flex>
-        </v-layout>
-
-        <v-layout>
-          <v-flex md8 offset-md4>
-              <h3>Członkowie do usuniecia:</h3>
-          </v-flex>
-        </v-layout>
-
-        <v-layout row wrap :key="index" v-for="(member, index) in form.usersToRemove">            
-            <v-flex offset-md4 md2>
-              {{ member.first_name }} {{ member.last_name }}
-            </v-flex>
-            <v-flex>
-              <v-btn @click="undoRemove(member)">Cofnij</v-btn>
-            </v-flex>
-        </v-layout>
-
-        <v-layout>
-          <v-flex md8 offset-md4>
+          </v-col>
+        </v-row>
+        <v-row :key="index" v-for="(member, index) in contextGroup.users">
+          <v-col>
+            {{ member.first_name }} {{ member.last_name }}
+          </v-col>
+          <v-col>
+             <v-btn color="error" small @click="removeUserFromGroup(member)">Usun</v-btn>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <h3>Członkowie do usuniecia:</h3>
+          </v-col>
+        </v-row>
+        <v-row :key="index" v-for="(member, index) in form.usersToRemove">
+          <v-col>
+            {{ member.first_name }} {{ member.last_name }}
+          </v-col>
+          <v-col>
+            <v-btn @click="undoRemove(member)">Cofnij</v-btn>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
             <h3>Nowi uzytkownicy do dodania </h3>
-          </v-flex>
-        </v-layout>
-
-        <v-layout row wrap :key="index" v-for="(user, index) in form.selectedUsers">
-            <v-flex md2 offset-md4 >
-                {{ user.first_name }} {{ user.last_name }}
-            </v-flex>
-            <v-flex md2>
-                <v-btn color="error" small @click="removeSelectedUser(user)">Usun</v-btn>
-            </v-flex>
-        </v-layout>
-
-        <v-layout row wrap>
-          <v-flex xs12 md3 offset-md4>
+          </v-col>
+        </v-row>
+        <v-row :key="index" v-for="(user, index) in form.selectedUsers">
+          <v-col>
+             {{ user.first_name }} {{ user.last_name }}
+          </v-col>
+          <v-col>
+            <v-btn color="error" small @click="removeSelectedUser(user)">Usun</v-btn>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
             <v-select :items="users" v-model="currentSelectedUser">
                 <template slot="item" slot-scope="data"> <!-- ten slot odpowiada za to jak obiekty sa wyswietlane w liscie -->
                     {{ data.item.first_name }} {{ data.item.last_name }}
@@ -63,16 +56,16 @@
                     {{ data.item.first_name }} {{ data.item.last_name }}
                 </template>
             </v-select>
-          </v-flex>
-          <v-flex xs12 md2>
+          </v-col>
+          <v-col>
             <v-btn color="primary" @click="addUser">Dodaj</v-btn>
-          </v-flex>
-        </v-layout>
-        <v-layout row wrap>
-          <v-flex xs12 md4 offset-md4>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
             <v-btn color="primary" @click="saveGroupChanges">Zapisz zmiany</v-btn>
-          </v-flex>
-        </v-layout>
+          </v-col>
+        </v-row>
       </v-container>
     </v-form>
   </div>

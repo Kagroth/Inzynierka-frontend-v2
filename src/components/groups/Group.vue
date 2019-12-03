@@ -1,90 +1,78 @@
 <template>
   <div>
     <v-container>
-      <v-layout row wrap>
-        <v-flex md6 offset-md2>
-          <h3> {{ group.name }}</h3>
-        </v-flex>
-        <v-flex md1>
-          <v-btn @click="editGroup" color="success" small>
-            Edytuj
-          </v-btn>
-        </v-flex>
-        <v-flex md1>
-          <v-btn @click="deleteGroup" color="error" small>
-            Usuń
-          </v-btn>
-        </v-flex>
-      </v-layout>
+      <v-row>
+        <v-col cols="4">
+          <h3>{{ group.name }}</h3>
+        </v-col>
+        <v-spacer></v-spacer>
+        <v-col cols="1">
+          <v-btn @click="editGroup" color="success" small>Edytuj</v-btn>
+        </v-col>
+        <v-col cols="1">
+          <v-btn @click="deleteGroup" color="error" small>Usuń</v-btn>
+        </v-col>
+      </v-row>
 
       <v-divider></v-divider>
 
-      <v-layout mt-2>
-        <v-flex md6 offset-md2>
+      <v-row>
+        <v-col>
           <h3>Członkowie:</h3>
-        </v-flex>
-      </v-layout>
-      <v-layout row wrap>
-        <v-flex md6 offset-md2>
-          Imię i nazwisko
-        </v-flex>
-        <v-flex md2>
-          Email
-        </v-flex>
-      </v-layout>
-      <v-layout row wrap v-for="(user, index) in group.users" :key="index">
-        <v-flex md6 offset-md2>
-          {{user.first_name}} {{ user.last_name}}
-        </v-flex>
-        <v-flex md2>
-          {{ user.email }}
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>Imię i nazwisko</v-col>
+        <v-col>Email</v-col>
+      </v-row>
+      <v-row v-for="(user, index) in group.users" :key="index">
+        <v-col>{{user.first_name}} {{ user.last_name}}</v-col>
+        <v-col>{{ user.email }}</v-col>
+      </v-row>
 
       <v-divider></v-divider>
 
-      <v-layout row wrap>
-        <v-flex offset-md2 md6>
+      <v-row>
+        <v-col>
           <h3>Aktywne zadania:</h3>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
       <span v-if="group.activeTasks.length > 0">
-        <v-layout row wrap v-for="(task, index) in group.activeTasks" :key="index">
-          <v-flex md6 offset-md2>
-            {{ task.title }}
-          </v-flex>
-          <v-flex>
-           <v-btn @click="showTaskDetails(task)" color="primary" small>Szczegóły</v-btn>
-          </v-flex>
-        </v-layout>
+        <v-row v-for="(task, index) in group.activeTasks" :key="index">
+          <v-col>{{ task.title }}</v-col>
+          <v-col>
+            <v-btn @click="showTaskDetails(task)" color="primary" small>Szczegóły</v-btn>
+          </v-col>
+        </v-row>
       </span>
       <span v-else>
-        Brak aktywnych zadan
+        <v-row>
+          <v-col>Brak aktywnych zadan</v-col>
+        </v-row>
       </span>
-
+    
       <v-divider></v-divider>
 
       <span v-if="group.archivedTasks.length > 0">
-        <v-layout row wrap>
-          <v-flex offset-md2 md6>
+        <v-row>
+          <v-col>
             <h3>Zadania zarchiwizowane:</h3>
-          </v-flex>
-        </v-layout>
-        <v-layout row wrap v-for="(task, index) in group.archivedTasks" :key="index">
-          <v-flex md6 offset-md2>
+          </v-col>
+        </v-row>
+        <v-row v-for="(task, index) in group.archivedTasks" :key="index">
+          <v-col>
             {{ task.title }}
-          </v-flex>
-          <v-flex>
-           <v-btn color="primary" small disabled>Szczegoly</v-btn>
-          </v-flex>
-        </v-layout>
+          </v-col>
+          <v-col>
+            <v-btn color="primary" small disabled>Szczegoly</v-btn>
+          </v-col>
+        </v-row>
       </span>
     </v-container>
   </div>
 </template>
 
 <script>
-
 //import Task from '@/components/tasks/Task'
 
 export default {
@@ -93,35 +81,40 @@ export default {
   },
 
   methods: {
-    editGroup () {
-      let currentGroup = this.$route.params.name
-      this.$router.push({ name: 'GroupEditor', params: { name: currentGroup } })
+    editGroup() {
+      let currentGroup = this.$route.params.name;
+      this.$router.push({
+        name: "GroupEditor",
+        params: { name: currentGroup }
+      });
     },
 
-    deleteGroup () {
-      let confirmation = confirm('Czy na pewno chcesz usunąć grupę?')
+    deleteGroup() {
+      let confirmation = confirm("Czy na pewno chcesz usunąć grupę?");
 
       if (confirmation) {
-        console.log(this.group)
-        this.$store.dispatch('users/deleteGroup', this.group.pk).then(() => {
-          this.$router.push('/groups')
-        })
+        console.log(this.group);
+        this.$store.dispatch("users/deleteGroup", this.group.pk).then(() => {
+          this.$router.push("/groups");
+        });
       }
     },
 
-    showTaskDetails (task) {
-      this.$router.push({ name: 'TaskDetails', params: { pk: task.pk } })
+    showTaskDetails(task) {
+      this.$router.push({ name: "TaskDetails", params: { pk: task.pk } });
     }
   },
 
   computed: {
-    group () {
-      let contextGroup = this.$store.state.users.groups.find(group => group.name === this.$route.params.name)
+    group() {
+      let contextGroup = this.$store.state.users.groups.find(
+        group => group.name === this.$route.params.name
+      );
 
-      return contextGroup
+      return contextGroup;
     }
   }
-}
+};
 </script>
 
 <style scoped>
