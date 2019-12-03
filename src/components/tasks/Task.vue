@@ -1,16 +1,30 @@
 <template>
     <div>
-        <h3> {{ task.title }} </h3>
-        <p>Przypisane do:</p>
-        <ul>
-            <li v-for="(group, index) in task.assignedTo" :key="index"> {{ group.name }}</li>
-        </ul>
-        <div v-if="task.taskType.name == 'Exercise'">
+      <v-container>
+        <v-row>
+          <v-col>
+            <h3> {{ task.title }} </h3>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            Przypisane do:
+          </v-col>
+        </v-row>
+        <v-row v-for="(group, index) in task.assignedTo" :key="index">
+          <v-col>
+             {{ group.name }}
+          </v-col>
+        </v-row>
+        <v-row v-if="task.taskType.name == 'Exercise'">
+          <v-col>
             <exercise :pk="task.exercise.pk"></exercise>
-        </div>
-        <div v-else>
+          </v-col>
+        </v-row>
+        <v-row v-else>
           Kolokwium
-        </div>
+        </v-row>
+      </v-container>
     </div>
 </template>
 <script>

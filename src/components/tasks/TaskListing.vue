@@ -1,64 +1,49 @@
 <template>
   <div>
     <v-container>
-      <v-layout row wrap justify-space-around border>
-        <v-flex md6 offset-md2>
+      <v-row>
+        <v-col>
           <h2>Moje zadania</h2>
-        </v-flex>
-        <v-flex md2 v-if="userType.name === 'Teacher'">
+        </v-col>
+        <v-col v-if="userType.name === 'Teacher'">
           <v-btn to="/tasks/newTask" color="success" small>Utwórz zadanie</v-btn>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
       <v-divider></v-divider>
-      <v-layout row wrap justify-space-around v-for="(task, index) in tasks" :key="index" mt-4>
-        <v-flex md6 offset-md2>
+      <v-row v-for="(task, index) in tasks" :key="index">
+        <v-col>
           <h3>{{ task.title }}</h3>
-        </v-flex>
-        <v-flex md2>
+        </v-col>
+        <v-col>
           <v-btn @click="showTaskDetails(task)" color="primary" small>Szczegóły</v-btn>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-container>
-    <!--
-    <span>
-      <router-link to="/tasks/newTask">Utwórz zadanie</router-link>
-    </span>
-    <br>
-    <br>Zadania:
-    <ul>
-      <li v-for="task in tasks" :key="task">
-        {{ task.pk }} - {{ task.title }} - {{ task.taskType.name }} -
-        <span
-          @click="showTaskDetails(task)"
-        >Podgląd</span>
-      </li>
-    </ul>
-    -->
   </div>
 </template>
 
 <script>
 export default {
-  created () {
-    this.$store.dispatch('tasks/getAllTasks')
+  created() {
+    this.$store.dispatch("tasks/getAllTasks");
   },
 
   methods: {
-    showTaskDetails (task) {
-      this.$router.push({ name: 'TaskDetails', params: { pk: task.pk } })
+    showTaskDetails(task) {
+      this.$router.push({ name: "TaskDetails", params: { pk: task.pk } });
     }
   },
 
   computed: {
-    tasks () {
-      return this.$store.state.tasks.tasks
+    tasks() {
+      return this.$store.state.tasks.tasks;
     },
 
-    userType () {
-      return this.$store.state.auth.profile.userType
+    userType() {
+      return this.$store.state.auth.profile.userType;
     }
   }
-}
+};
 </script>
 
 <style scoped>
