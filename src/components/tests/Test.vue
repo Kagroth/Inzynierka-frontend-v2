@@ -1,12 +1,24 @@
 <template>
     <div>
-        <v-btn color="error" @click="deleteTest">Usun</v-btn>
-        <h3>{{ test.name }}</h3>
-        <div v-for="(exercise, index) in test.exercises" :key="index">
+      <v-container>
+        <v-row>
+          <v-col cols="6">
+             <h3>{{ test.title }}</h3>
+          </v-col>
+          <v-spacer></v-spacer>
+          <v-col cols="2">
+            <v-btn color="error" @click="deleteTest">Usun</v-btn>
+          </v-col>
+        </v-row>
+        <v-row v-for="(exercise, index) in test.exercises" :key="index">
+          <v-col cols="12">
             <h4> Zadanie {{ index + 1 }} </h4>
+          </v-col>
+          <v-col>
             <exercise :pk="exercise.pk"></exercise>
-            <v-divider></v-divider>
-        </div>
+          </v-col>
+        </v-row>
+      </v-container>
     </div>
 </template>
 <script>

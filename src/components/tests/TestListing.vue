@@ -1,51 +1,49 @@
 <template>
   <div>
     <v-container>
-      <v-layout row wrap justify-space-around border>
-        <v-flex md6 offset-md2>
+      <v-row>
+        <v-col cols="6">
           <h2>Moje kolokwia</h2>
-        </v-flex>
-        <v-flex md2>
+        </v-col>
+        <v-col cols="2">
           <v-btn to="/tasks/newTest" color="success" small>Utwórz kolokwium</v-btn>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
       <v-divider></v-divider>
-      <v-layout row wrap justify-space-around v-for="(test, index) in tests" :key="index" mt-4>
-        <v-flex md6 offset-md2>
-          <h3>{{ test.name }}</h3>
-        </v-flex>
-        <v-flex md2>
+      <v-row v-for="(test, index) in tests" :key="index">
+        <v-col>
+          <h3>{{ test.title }}</h3>
+        </v-col>
+        <v-col>
           <v-btn @click="showTestDetails(test)" color="primary" small>Szczegóły</v-btn>
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-container>
   </div>
 </template>
 
 <script>
 export default {
-  created () {
-    this.$store.dispatch('tasks/getAllTests')
+  created() {
+    this.$store.dispatch("tasks/getAllTests");
   },
 
   methods: {
-    showTestDetails (test) {
+    showTestDetails(test) {
       this.$router.push({
-        name: 'TestDetails',
+        name: "TestDetails",
         params: { pk: test.pk }
-      })
+      });
     }
   },
 
   computed: {
-    tests () {
-      return this.$store.state.tasks.tests
+    tests() {
+      return this.$store.state.tasks.tests;
     }
   }
-
-}
+};
 </script>
 
 <style scoped>
-
 </style>

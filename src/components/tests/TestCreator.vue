@@ -1,12 +1,14 @@
 <template>
   <div>
     <v-content>
-      <v-layout row wrap>
-        <v-flex xs12 md5 offset-md4>
-          <v-text-field :type="text" v-model="form.name" label="Nazwa kolokwium" required></v-text-field>
-        </v-flex>
-        <v-flex xs12 md4 offset-md4>
-            <v-select :items="exercises" v-model="selectedExercise" label="Cwiczenia" required>
+      <v-row>
+        <v-col>
+          <v-text-field type="text" v-model="form.name" label="Nazwa kolokwium" required></v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <v-select :items="exercises" v-model="selectedExercise" label="Cwiczenia" required>
               <template slot="item" slot-scope="data"> <!-- ten slot odpowiada za to jak obiekty sa wyswietlane w liscie -->
                     {{ data.item.title }}
                 </template>
@@ -14,17 +16,21 @@
                     {{ data.item.title }}
                 </template>
             </v-select>
-        </v-flex>
-        <v-flex md2>
+        </v-col>
+        <v-col>
           <v-btn color="primary" @click="addExerciseToTest">Dodaj</v-btn>
-        </v-flex>
-        <v-flex xs12 md4 offset-md4>
-          <v-btn color="primary" @click="createTest">Utwórz</v-btn>
-        </v-flex>
-        <v-flex xs12 md4 offset-md4 v-for="(exercise, index) in form.exercises" :key="index">
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+           <v-btn color="primary" @click="createTest">Utwórz</v-btn>
+        </v-col>
+      </v-row>
+      <v-row v-for="(exercise, index) in form.exercises" :key="index">
+        <v-col>
           {{ exercise.title }}
-        </v-flex>
-      </v-layout>
+        </v-col>
+      </v-row>
     </v-content>
   </div>
 </template>
@@ -35,7 +41,7 @@ export default {
     return {
       selectedExercise: {},
       form: {
-        name: '',
+        title: '',
         exercises: []
       }
     }
@@ -57,7 +63,7 @@ export default {
     createTest (event) {
       event.preventDefault()
 
-      if (this.form.name === '') {
+      if (this.form.title === '') {
         alert('Nie podano nazwy kolokwium')
         return
       }
