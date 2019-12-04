@@ -41,6 +41,26 @@
             </v-textarea>
           </v-col>
         </v-row>
+        <v-divider></v-divider>
+        <v-row>
+          <v-col>
+            Utworz testy jednostkowe
+          </v-col>
+          <v-spacer></v-spacer>
+          <v-col>
+            <v-btn color="primary" @click="addUnitTest">Dodaj test</v-btn>
+          </v-col>
+        </v-row>
+        <v-row v-for="(unit_test, index) in form.unitTests" :key="index">
+          <v-col>
+            <v-textarea
+              v-model="form.unitTests[index]"
+              required
+            >
+
+            </v-textarea>
+          </v-col>
+        </v-row>
         <v-row justify="end">
           <v-col cols="1">
             <v-btn color="primary" @click="createExercise">Utwórz</v-btn>
@@ -61,7 +81,8 @@ export default {
         title: '',
         language: '',
         level: '',
-        content: ''
+        content: '',
+        unitTests: []
       }
     }
   },
@@ -82,6 +103,12 @@ export default {
       this.$store.dispatch('tasks/createExercise', this.form).then(responseData => {
         alert(responseData.message)
       })
+    },
+
+    addUnitTest (event) {
+      event.preventDefault()
+
+      this.form.unitTests.push("")
     }
   },
 
