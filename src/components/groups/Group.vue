@@ -6,12 +6,14 @@
           <h3>{{ group.name }}</h3>
         </v-col>
         <v-spacer></v-spacer>
-        <v-col cols="1">
-          <v-btn @click="editGroup" color="success" small>Edytuj</v-btn>
-        </v-col>
-        <v-col cols="1">
-          <v-btn @click="deleteGroup" color="error" small>Usuń</v-btn>
-        </v-col>
+        <span v-if="userType.name === 'Teacher'">
+          <v-col cols="1">
+            <v-btn @click="editGroup" color="success" small>Edytuj</v-btn>
+          </v-col>
+          <v-col cols="1">
+            <v-btn @click="deleteGroup" color="error" small>Usuń</v-btn>
+          </v-col>
+        </span>
       </v-row>
 
       <v-divider></v-divider>
@@ -50,7 +52,7 @@
           <v-col>Brak aktywnych zadan</v-col>
         </v-row>
       </span>
-    
+
       <v-divider></v-divider>
 
       <span v-if="group.archivedTasks.length > 0">
@@ -60,9 +62,7 @@
           </v-col>
         </v-row>
         <v-row v-for="(task, index) in group.archivedTasks" :key="index">
-          <v-col>
-            {{ task.title }}
-          </v-col>
+          <v-col>{{ task.title }}</v-col>
           <v-col>
             <v-btn color="primary" small disabled>Szczegoly</v-btn>
           </v-col>
@@ -95,7 +95,7 @@ export default {
       if (confirmation) {
         console.log(this.group);
         this.$store.dispatch("users/deleteGroup", this.group.pk).then(() => {
-          this.$router.push("/groups");
+          this.$router.push("/groups/groups");
         });
       }
     },
@@ -112,6 +112,10 @@ export default {
       );
 
       return contextGroup;
+    },
+
+    userType () {
+      return this.$store.state.auth.profile.userType
     }
   }
 };
