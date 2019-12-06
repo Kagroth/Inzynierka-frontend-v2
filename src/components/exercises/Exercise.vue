@@ -5,7 +5,7 @@
         <h3>{{ exercise.title }}</h3>
       </v-col>
       <v-spacer></v-spacer>
-      <v-col cols="1">
+      <v-col cols="1" v-if="userType.name === 'Teacher'">
         <v-btn small color="error" @click="deleteExercise">Usun</v-btn>
       </v-col>
     </v-row>
@@ -23,6 +23,10 @@
 <script>
 export default {
   props: ["pk"],
+
+  created () {
+    this.$store.dispatch('tasks/getAllExercises')
+  },
 
   methods: {
     deleteExercise() {
@@ -55,6 +59,10 @@ export default {
       );
 
       return contextExercise;
+    },
+
+    userType () {
+      return this.$store.state.auth.profile.userType;
     }
   }
 };
