@@ -21,6 +21,7 @@ import Exercise from '@/components/exercises/Exercise'
 import TestListing from '@/components/tests/TestListing'
 import Test from '@/components/tests/Test'
 import TestCreator from '@/components/tests/TestCreator'
+import Solution from '@/components/solutions/Solution'
 
 Vue.use(VueRouter)
 
@@ -110,6 +111,11 @@ export default new VueRouter({
         {
           path: 'newTest',
           component: TestCreator
+        },
+        {
+          path: 'tasks/:pk/solution/:pks',
+          name: 'Solution',
+          component: Solution,
         }
       ]
     }
