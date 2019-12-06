@@ -67,6 +67,7 @@ const actions = {
     try {
       createGroupResponse = await API.createGroup(newGroupData)
       console.log(createGroupResponse)
+      return createGroupResponse
     } catch (e) {
       console.log(e)
     }
@@ -85,7 +86,8 @@ const actions = {
 
   async deleteGroup ({ commit }, pk) {
     let deleteGroupResponse = {}
-
+    console.log(pk)
+    
     try {
       deleteGroupResponse = await API.deleteGroup(pk)
       console.log(deleteGroupResponse)
