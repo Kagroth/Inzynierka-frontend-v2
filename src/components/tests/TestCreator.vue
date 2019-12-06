@@ -3,7 +3,7 @@
     <v-content>
       <v-row>
         <v-col>
-          <v-text-field type="text" v-model="form.name" label="Nazwa kolokwium" required></v-text-field>
+          <v-text-field type="text" v-model="form.title" label="Nazwa kolokwium" required></v-text-field>
         </v-col>
       </v-row>
       <v-row>
