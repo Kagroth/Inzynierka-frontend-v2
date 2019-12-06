@@ -48,7 +48,7 @@
           </v-col>
           <v-spacer></v-spacer>
           <v-col>
-            <v-btn color="primary" @click="addUnitTest">Dodaj test</v-btn>
+            <v-btn color="primary" @click="addUnitTest" :disabled="unitTestFormShow()" small>Dodaj test</v-btn>
           </v-col>
         </v-row>
         <v-row v-for="(unit_test, index) in form.unitTests" :key="index">
@@ -57,7 +57,6 @@
               v-model="form.unitTests[index]"
               required
             >
-
             </v-textarea>
           </v-col>
         </v-row>
@@ -109,6 +108,13 @@ export default {
       event.preventDefault()
 
       this.form.unitTests.push("")
+    },
+
+    unitTestFormShow () {
+      if (this.form.language.name === 'Python')
+        return false
+      else
+        return true
     }
   },
 
