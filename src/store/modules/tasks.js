@@ -177,6 +177,41 @@ const actions = {
     } catch (e) {
       console.log(e)
     }
+  },
+
+  async sendSolution({ commit }, solutionData) {
+    let sendSolutionResponse = {}
+
+    try {
+      sendSolutionResponse = await API.createSolution(solutionData)
+      console.log(sendSolutionResponse)
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
+  async getAllSolutions({ commit }) {
+    let getAllSolutionResponse = {}
+
+    try {
+      getAllSolutionResponse = await API.getAllSolutions()
+      console.log(getAllSolutionResponse)
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
+  async getSolution({commit}, pk) {
+    let getSolutionResponse = {}
+
+    try {
+      getSolutionResponse = await API.getSolution(pk)
+      console.log(getSolutionResponse)
+      return getSolutionResponse
+      
+    } catch (e) {
+      console.log(e)
+    }
   }
 }
 
