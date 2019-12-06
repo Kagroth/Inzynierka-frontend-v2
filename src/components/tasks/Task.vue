@@ -5,6 +5,32 @@
         <v-col>
           <h3>{{ task.title }}</h3>
         </v-col>
+        <v-col v-if="userType.name === 'Student' && task.taskType.name === 'Exercise'">
+          <span v-if="hasSolution">
+            <v-btn color="primary" @click="showSolution">Podglad odpowiedzi</v-btn>
+          </span>
+          <span v-else>
+            <v-dialog v-model="fileSendDialog" width="500">
+              <template v-slot:activator="{ on }">
+                <v-btn color="success" dark v-on="on">Przeslij odpowiedz</v-btn>
+              </template>
+              <v-card>
+                <v-card-title class="headline grey lighten-2" primary-title>Przesyłanie odpowiedzi</v-card-title>
+
+                <v-card-text>
+                  <v-file-input v-model="file" label="Wybierz plik" @click="onFileChange"></v-file-input>
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="sendFileSolution">Wyślij</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </span>
+        </v-col>
       </v-row>
       <v-row>
         <v-col>Przypisane do:</v-col>
@@ -22,13 +48,29 @@
           <v-expansion-panels multiple="true">
             <v-expansion-panel v-for="(exercise, index) in task.test.exercises" :key="index">
               <v-expansion-panel-header>{{ exercise.title }}</v-expansion-panel-header>
-              <v-expansion-panel-content>
-                {{ exercise.content }}
-              </v-expansion-panel-content>
+              <v-expansion-panel-content>{{ exercise.content }}</v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
         </v-col>
       </v-row>
+
+      <v-divider></v-divider>
+      
+      <span v-if="userType.name === 'Teacher'">
+        <v-row>
+          <v-col>
+            Rozwiązania nadeslali:
+          </v-col>
+        </v-row>
+        <v-row v-for="(solution, index) in task.solution" :key="index">
+          <v-col>
+             {{ solution.user.username }}
+          </v-col>         
+          <v-col>
+            <v-btn color="primary" small @click="showSolutionAsTeacher(solution.pk)">Podglad</v-btn>
+          </v-col>
+        </v-row>
+      </span>
     </v-container>
   </div>
 </template>
@@ -40,6 +82,62 @@ export default {
     exercise: Exercise
   },
 
+  data() {
+    return {
+      fileSendDialog: false,
+      file: null,
+      solution: null
+    };
+  },
+
+  created() {},
+
+  methods: {
+    onFileChange(event) {
+      console.log(this.file);
+    },
+
+    sendFileSolution(event) {
+      if (this.file === undefined || this.file === null) {
+        return 
+      }
+
+      console.log(this.file);
+      this.fileSendDialog = false;
+
+      let formData = new FormData();
+
+      formData.append("file", this.file);
+      formData.append("taskPk", this.task.pk);
+
+      this.$store.dispatch("tasks/sendSolution", formData).then(() => {
+        this.$store.dispatch("tasks/getAllTasks")
+      });
+    },
+
+    showSolution() {
+      if (this.solution !== undefined) {
+        let pks = this.task.solution.find(solution => {
+          console.log(solution.user.username);
+          console.log(this.$store.state.auth.username);
+          return solution.user.username === this.$store.state.auth.username;
+        }).pk;
+
+        this.$router.push({
+          name: "Solution",
+          params: { pk: this.task.pk, pks: pks }
+        });
+      }
+    },
+
+    showSolutionAsTeacher (pk) {
+      this.$router.push({
+          name: "Solution",
+          params: { pk: this.task.pk, pks: pk }
+        });
+    }
+  },
+
   computed: {
     task() {
       let contextTask = this.$store.state.tasks.tasks.filter(
@@ -47,6 +145,22 @@ export default {
       );
       // filter zwraca tablicę, dlatego trzeba zwrócić pierwszy obiekt explicit
       return contextTask[0];
+    },
+
+    userType() {
+      return this.$store.state.auth.profile.userType;
+    },
+
+    hasSolution() {
+      console.log(this.task);
+      console.log(this.task.solution);
+      let sol = this.task.solution.find(solution => {
+        console.log(solution.user.username);
+        console.log(this.$store.state.auth.username);
+        return solution.user.username === this.$store.state.auth.username;
+      });
+      console.log(sol);
+      return sol !== undefined;
     }
   }
 };
