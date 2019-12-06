@@ -105,7 +105,7 @@ export default {
   },
 
   deleteGroup (primaryKey) {
-    return this.sendRequest('groups/', 'delete', primaryKey)
+    return this.sendRequest('groups/' + primaryKey + '/', 'delete')
   },
 
   loadAllExercises () {
@@ -146,5 +146,26 @@ export default {
 
   loadLevelsAll () {
     return this.sendRequest('levels/', 'get')
+  },
+
+  createSolution (solutionData) {
+    let config = {
+      url: 'solutions/',
+      method: 'post',
+      data: solutionData,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }
+
+    return this.APIInstance.request(config)
+  },
+
+  getAllSolutions () {
+    return this.sendRequest('solutions/', 'get')
+  },
+
+  getSolution (pk) {
+    return this.sendRequest('solutions/' + pk, 'get')
   }
 }
