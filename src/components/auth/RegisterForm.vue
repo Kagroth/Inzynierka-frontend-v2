@@ -1,51 +1,33 @@
 <template>
   <div>
-    <v-form>
+    <v-snackbar v-model="snackbar.show" top :color="snackbar.color">
+      {{ snackbar.message }}
+      <v-btn @click="snackbar.show = false" text dark>Ok</v-btn>
+    </v-snackbar>
+
       <v-container>
-        <v-row>
-          <v-col>
-            <v-text-field type="text" v-model="form.firstname" label="Imię" required></v-text-field>
-          </v-col>
-        </v-row>
-         <v-row>
-          <v-col>
-            <v-text-field type="text" v-model="form.lastname" label="Nazwisko" required></v-text-field>
-          </v-col>
-        </v-row>
-         <v-row>
-          <v-col>
-             <v-text-field type="text" v-model="form.username" label="Nazwa użytkownika" required></v-text-field>
-          </v-col>
-        </v-row>
-         <v-row>
-          <v-col>
-            <v-text-field type="email" v-model="form.email" label="Email" required></v-text-field>
-          </v-col>
-        </v-row>
-         <v-row>
-          <v-col>
-            <v-text-field type="password" v-model="form.password" label="Hasło" required></v-text-field>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-text-field type="password" v-model="form.passwordRepeat" label="Powtórz hasło" required></v-text-field>
-          </v-col>
-        </v-row>
-         <v-row>
-          <v-col>
-            <v-select :items="userTypes" v-model="form.userType" label="Rodzaj użytkownika"></v-select>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-btn color="primary" @click="registerUser" class="ma-0">
-              Utwórz konto
-            </v-btn>
+        <v-row justify="center">
+          <v-col cols="6">
+            <v-card>
+              <v-card-title>Rejestracja</v-card-title>
+              <v-card-text>
+                <v-form>
+                  <v-text-field type="text" v-model="form.firstname" label="Imię" required outlined></v-text-field>
+                  <v-text-field type="text" v-model="form.lastname" label="Nazwisko" required outlined></v-text-field>
+                  <v-text-field type="text" v-model="form.username" label="Nazwa użytkownika" required outlined></v-text-field>
+                  <v-text-field type="email" v-model="form.email" label="Email" required outlined></v-text-field>
+                  <v-text-field type="password" v-model="form.password" label="Hasło" required outlined></v-text-field>
+                  <v-text-field type="password" v-model="form.passwordRepeat" label="Powtórz hasło" required outlined></v-text-field>
+                  <v-select :items="userTypes" v-model="form.userType" label="Rodzaj użytkownika" outlined></v-select>
+                  <v-btn color="primary" @click="registerUser" class="ma-0" :loading="loading">
+                    Utwórz konto
+                  </v-btn>
+                </v-form>
+              </v-card-text>
+            </v-card>
           </v-col>
         </v-row>
       </v-container>
-    </v-form>
   </div>
 </template>
 
@@ -56,6 +38,12 @@ export default {
   data () {
     return {
       userTypes: ['Student', 'Teacher'],
+      loading: false,
+      snackbar: {
+        show: false,
+        color: "",
+        message: ""
+      },
       form: {
         firstname: '',
         lastname: '',
@@ -111,18 +99,39 @@ export default {
     registerUser (event) {
       event.preventDefault()
 
-      /* if (!this.$v.form.passwordRepeat.sameAsPassword) {
-        alert('Hasla sie roznia')
-        return
-      } */
-
       if (this.$v.$invalid) {
-        alert('Niepoprawnie wypelniony formularz')
+        this.snackbar.color = "warning"
+        this.snackbar.show = true
+        this.snackbar.message = 'Niepoprawnie wypelniony formularz'
         return
       }
 
+      this.loading = true
+
       console.log('Username in component: ' + this.form.username)
-      this.$store.dispatch('auth/createUser', this.form).then(data => alert(data.message))
+
+      this.$store.dispatch('auth/createUser', this.form).then(response => {
+        this.loading = false
+        console.log(response)
+        console.log(response.status)
+
+        if (response.status === 200) {
+          this.snackbar.color = "success"
+          this.snackbar.show = true
+          this.snackbar.message = response.data.message + " .Nastapi przekierowanie do strny logowania"
+          
+          setTimeout(() => {
+            this.$router.push("/login");
+          }, 2000);
+        }
+        else {
+          this.snackbar.color = "warning"
+          this.snackbar.show = true
+          this.snackbar.message = response.data.message
+        }
+
+        console.log(response)
+      })
     }
   }
 }

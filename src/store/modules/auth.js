@@ -63,10 +63,18 @@ const actions = {
 
     try {
       registerResponse = await API.createUser(registerForm)
-      console.log(registerResponse.data)
-      return registerResponse.data
+
+      // jest blad, bledny rzut wyjatku po stronie API lub axios
+      if (registerResponse.response) {
+        return registerResponse.response
+      }
+      
+      return registerResponse      
     } catch (e) {
       console.log(e)
+      return {
+        message: "Nie udalo sie zarejestrować"
+      }
     }
   },
 
