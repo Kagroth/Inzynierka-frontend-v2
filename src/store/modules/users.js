@@ -30,6 +30,11 @@ const actions = {
       loadUsersResponse = await API.loadAllUsers()
       console.log(loadUsersResponse)
       commit('setUsers', loadUsersResponse.data)
+
+      return {
+        data: loadUsersResponse,
+        message: 'Wszyscy użytkownicy zostali załadowani'
+      }
     } catch (e) {
       console.log(e)
     }
@@ -44,6 +49,11 @@ const actions = {
       loadStudentsResponse = await API.loadStudents()
       console.log(loadStudentsResponse)
       commit('setUsers', loadStudentsResponse.data)
+
+      return {
+        data: loadStudentsResponse,
+        message: 'Wszyscy studenci zostali zaladowani'
+      }
     } catch (e) {
       console.log(e)
     }
@@ -56,6 +66,11 @@ const actions = {
       loadGroupsResponse = await API.loadGroups()
       console.log(loadGroupsResponse)
       commit('setGroups', loadGroupsResponse.data)
+
+      return {
+        data: loadGroupsResponse,
+        message: 'Pobrano wszystkie grupy'
+      }
     } catch (e) {
       console.log(e)
     }
@@ -79,6 +94,11 @@ const actions = {
     try {
       updateGroupResponse = await API.updateGroup(changedGroupData)
       console.log(updateGroupResponse)
+
+      return {
+        data: updateGroupResponse,
+        message: 'Grupa zostala zaktualizowana'
+      }
     } catch (e) {
       console.log(e)
     }
@@ -91,6 +111,11 @@ const actions = {
     try {
       deleteGroupResponse = await API.deleteGroup(pk)
       console.log(deleteGroupResponse)
+
+      return {
+        data: deleteGroupResponse,
+        message: 'Grupa zostala usunieta'
+      }
     } catch (e) {
       console.log(e)
     }
