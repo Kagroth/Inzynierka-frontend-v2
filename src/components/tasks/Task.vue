@@ -6,10 +6,11 @@
           <h3>{{ task.title }}</h3>
         </v-col>
         <v-col v-if="userType.name === 'Student' && task.taskType.name === 'Exercise'">
+          <!--
           <span v-if="hasSolution">
             <v-btn color="primary" @click="showSolution">Podglad odpowiedzi</v-btn>
-          </span>
-          <span v-else>
+          </span>-->
+          <span>
             <v-dialog v-model="fileSendDialog" width="500">
               <template v-slot:activator="{ on }">
                 <v-btn color="success" dark v-on="on">Przeslij odpowiedz</v-btn>
@@ -18,7 +19,7 @@
                 <v-card-title class="headline grey lighten-2" primary-title>Przesyłanie odpowiedzi</v-card-title>
 
                 <v-card-text>
-                  <v-file-input v-model="file" label="Wybierz plik" @click="onFileChange"></v-file-input>
+                  <v-file-input v-model="file" :accept="task.exercise.language.allowed_extension" label="Wybierz plik" @click="onFileChange"></v-file-input>
                 </v-card-text>
 
                 <v-divider></v-divider>
