@@ -66,6 +66,11 @@ const actions = {
       getAllExercisesResponse = await API.loadAllExercises()
       console.log(getAllExercisesResponse)
       commit('setExercises', getAllExercisesResponse.data)
+
+      return {
+        data: getAllExercisesResponse,
+        message: 'Pobrano wszystkie cwiczenia'
+      }
     } catch (e) {
       console.log(e)
     }
@@ -80,6 +85,11 @@ const actions = {
       getAllTestsResponse = await API.loadAllTests()
       console.log(getAllTestsResponse)
       commit('setTests', getAllTestsResponse.data)
+
+      return {
+        data: getAllTestsResponse,
+        message: 'Pobrano wszystkie kolokwia'
+      }
     } catch (e) {
       console.log(e)
     }
@@ -94,6 +104,11 @@ const actions = {
       getAllTasksResponse = await API.loadAllTasks()
       console.log(getAllTasksResponse)
       commit('setTasks', getAllTasksResponse.data)
+
+      return {
+        data: getAllTasksResponse,
+        message: 'Pobrano wszystkie zadania'
+      }
     } catch (e) {
       console.log(e)
     }
@@ -125,6 +140,11 @@ const actions = {
     try {
       deleteExerciseResponse = await API.deleteExercise(exerciseToDeletePk)
       console.log(deleteExerciseResponse)
+
+      return {
+        data: deleteExerciseResponse,
+        message: 'Usunieto cwiczenie'
+      }
     } catch (e) {
       console.log(e)
     }
@@ -161,6 +181,11 @@ const actions = {
     try {
       deleteTestResponse = await API.deleteTest(testToDeletePk)
       console.log(deleteTestResponse)
+
+      return {
+        data: deleteTestResponse,
+        message: "Usunieto kolokwium"
+      }
     } catch (e) {
       console.log(e)
     }
@@ -174,6 +199,11 @@ const actions = {
     try {
       createTaskResponse = await API.createTask(newTaskData)
       console.log(createTaskResponse)
+
+      return {
+        data: createTaskResponse,
+        message: "Zadanie zostalo utworzone"
+      }
     } catch (e) {
       console.log(e)
     }
@@ -185,6 +215,11 @@ const actions = {
     try {
       sendSolutionResponse = await API.createSolution(solutionData)
       console.log(sendSolutionResponse)
+      
+      return {
+        data: sendSolutionResponse,
+        message: 'Wyslano rozwiazanie'
+      }
     } catch (e) {
       console.log(e)
     }
@@ -196,6 +231,11 @@ const actions = {
     try {
       getAllSolutionResponse = await API.getAllSolutions()
       console.log(getAllSolutionResponse)
+
+      return {
+        data: getAllSolutionResponse,
+        message: 'Pobrano wszystkie rozwiazania'
+      }
     } catch (e) {
       console.log(e)
     }
@@ -207,8 +247,11 @@ const actions = {
     try {
       getSolutionResponse = await API.getSolution(pk)
       console.log(getSolutionResponse)
-      return getSolutionResponse
-      
+
+      return {
+        data: getSolutionResponse,
+        message: 'Pobrano roziwazanie'
+      }
     } catch (e) {
       console.log(e)
     }
