@@ -167,5 +167,9 @@ export default {
 
   getSolution (pk) {
     return this.sendRequest('solutions/' + pk, 'get')
+  },
+
+  getSolutionTypes () {
+    return this.sendRequest('solution_types/', 'get')
   }
 }

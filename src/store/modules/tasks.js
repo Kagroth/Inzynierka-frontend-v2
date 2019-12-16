@@ -51,7 +51,21 @@ const actions = {
     try {
       getLevelsAllResponse = await API.loadLevelsAll()
       console.log(getLevelsAllResponse.data)
+      
       return getLevelsAllResponse.data
+    } catch (e) {
+      console.log(e)
+    }
+  },
+
+  async getSolutionTypesAll () {
+    let getSolutionTypesAllResponse = {}
+
+    try {
+      getSolutionTypesAllResponse = await API.getSolutionTypes()
+      console.log(getSolutionTypesAllResponse)
+
+      return getSolutionTypesAllResponse.data
     } catch (e) {
       console.log(e)
     }
