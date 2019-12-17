@@ -230,10 +230,7 @@ const actions = {
       sendSolutionResponse = await API.createSolution(solutionData)
       console.log(sendSolutionResponse)
       
-      return {
-        data: sendSolutionResponse,
-        message: 'Wyslano rozwiazanie'
-      }
+      return sendSolutionResponse
     } catch (e) {
       console.log(e)
     }

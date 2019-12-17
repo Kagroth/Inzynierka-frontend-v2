@@ -11,11 +11,34 @@
             <v-btn color="primary" @click="showSolution">Podglad odpowiedzi</v-btn>
           </span>-->
           <span>
-            <v-dialog v-model="fileSendDialog" width="500">
+            <v-dialog v-model="fileSendDialog" width="600">
               <template v-slot:activator="{ on }">
                 <v-btn color="success" dark v-on="on">Przeslij odpowiedz</v-btn>
               </template>
-              <v-card>
+              <v-card v-if="testsResultsModal">
+                <v-card-title>
+                  Twoje rozwiązanie zostało przetestowane i zapisane
+                </v-card-title>
+              
+                <v-card-text>
+                  <h3> Wyniki testów: </h3>
+                  <v-list>
+                    <v-list-item v-for="(singleResult, index) in this.testResults" :key="index">
+                      <v-list-item-content>
+                        {{ singleResult }}
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" text @click="hideResultDialog">Ok</v-btn>
+                </v-card-actions>
+              </v-card>
+              <v-card v-else>
                 <v-card-title class="headline grey lighten-2" primary-title>Przesyłanie odpowiedzi</v-card-title>
 
                 <v-card-text>
@@ -26,7 +49,7 @@
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="primary" text @click="sendFileSolution">Wyślij</v-btn>
+                  <v-btn color="primary" :loading="sendSolutionLoading" text @click="sendFileSolution">Wyślij</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -85,6 +108,9 @@ export default {
 
   data() {
     return {
+      sendSolutionLoading: false,
+      testsResultsModal: false,
+      testResults: "",
       fileSendDialog: false,
       file: null,
       solution: null
@@ -100,19 +126,26 @@ export default {
 
     sendFileSolution(event) {
       if (this.file === undefined || this.file === null) {
+        // komunikat o nie wybraniu pliku
         return 
       }
 
+      this.sendSolutionLoading = true
+
       console.log(this.file);
-      this.fileSendDialog = false;
 
       let formData = new FormData();
 
       formData.append("file", this.file);
       formData.append("taskPk", this.task.pk);
 
-      this.$store.dispatch("tasks/sendSolution", formData).then(() => {
+      this.$store.dispatch("tasks/sendSolution", formData).then(response => {
+        this.sendSolutionLoading = false
+        this.testsResultsModal = true
+        this.testResults = response.data.test_results
+
         this.$store.dispatch("tasks/getAllTasks")
+
       });
     },
 
@@ -136,6 +169,11 @@ export default {
           name: "Solution",
           params: { pk: this.task.pk, pks: pk }
         });
+    },
+
+    hideResultDialog () {
+      this.fileSendDialog = false
+      this.testsResultsModal = false
     }
   },
 
