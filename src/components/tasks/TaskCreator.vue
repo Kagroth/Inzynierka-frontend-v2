@@ -15,6 +15,18 @@
       </v-row>
       <v-row>
         <v-col>
+          <v-select :items="allowed_solution_types" v-model="form.solutionType" label="Sposób rozwiązania zadania">
+            <template slot="item" slot-scope="data"> <!-- ten slot odpowiada za to jak obiekty sa wyswietlane w liscie -->
+              <v-icon>home</v-icon> {{ data.item.name }}
+            </template>
+            <template slot="selection" slot-scope="data"> <!-- ten slot odpowiada za to jak wybrany obiekt jest wyswietlany -->
+              {{ data.item.name }}
+            </template>
+          </v-select>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
            <v-select :items="exercises" v-model="form.exercise" label="Zadanie">
             <template slot="item" slot-scope="data"> <!-- ten slot odpowiada za to jak obiekty sa wyswietlane w liscie -->
               {{ data.item.title }}
@@ -64,10 +76,12 @@ export default {
   data () {
     return {
       taskTypes: ['Exercise', 'Test'],
+      solutionTypes: [],
       selectedGroup: '',
       form: {
         title: '',
         taskType: '',
+        solutionType: {},
         exercise: '',
         groups: []
       }
@@ -109,6 +123,14 @@ export default {
 
     groups () {
       return this.$store.state.users.groups
+    },
+
+    allowed_solution_types () {
+      if (this.form.taskType === 'Test') {
+        return this.solutionTypes.filter(solType => solType.name === 'Editor')
+      }
+
+      return this.solutionTypes
     }
   },
 
@@ -138,6 +160,16 @@ export default {
       })
       .catch(() => {
         console.log('Nie udalo sie pobrac cwiczen')
+      })
+    
+    this.$store
+      .dispatch('tasks/getSolutionTypesAll')
+      .then(data => {
+        console.log(data)
+        this.solutionTypes = data
+      })
+      .catch(() => {
+        console.log("Nie udalo sie pobrac rodzajow rozwiazan")
       })
   }
 }
