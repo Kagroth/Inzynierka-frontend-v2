@@ -138,6 +138,7 @@ export default {
 
       formData.append("file", this.file);
       formData.append("taskPk", this.task.pk);
+      formData.append("solutionType", this.task.solutionType.name)
 
       this.$store.dispatch("tasks/sendSolution", formData).then(response => {
         this.sendSolutionLoading = false
