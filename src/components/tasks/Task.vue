@@ -76,7 +76,7 @@
               </span>
             </div>
             <div v-else-if="task.solutionType.name === 'Editor'">
-              <v-btn color="orange" class="white--text">
+              <v-btn color="orange" class="white--text" :to="{name: 'Editor', params: {task: this.task}}">
                 <v-icon left>mdi-play</v-icon>
                 Rozwiąż zadanie
               </v-btn>
@@ -89,7 +89,7 @@
             </div>
           </div>
           <div v-else>
-            <v-btn color="orange" class="white--text">
+            <v-btn color="orange" class="white--text" :to="{name: 'Editor', params: {task: this.task}}">
               <v-icon left>mdi-play-circle</v-icon>
               Rozwiąż kolokwium
             </v-btn>

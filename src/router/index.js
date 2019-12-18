@@ -22,6 +22,7 @@ import TestListing from '@/components/tests/TestListing'
 import Test from '@/components/tests/Test'
 import TestCreator from '@/components/tests/TestCreator'
 import Solution from '@/components/solutions/Solution'
+import Editor from '@/components/editor/Editor'
 
 Vue.use(VueRouter)
 
@@ -118,6 +119,12 @@ export default new VueRouter({
           component: Solution,
         }
       ]
+    },
+    {
+      path: '/editor',
+      name: 'Editor',
+      component: Editor,
+      props: true
     }
   ],
   mode: 'history'

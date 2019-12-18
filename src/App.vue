@@ -3,7 +3,7 @@
     <v-app>      
       <main-nav />
       <v-content>
-        <v-container fluid>
+        <v-container fluid style="height: 100%; width: 100%">
           <router-view />
         </v-container>
       </v-content>
@@ -23,4 +23,8 @@ export default {
 </script>
 
 <style>
+#app {
+  min-height: 100vh;
+  width: 100vw;
+}
 </style>
