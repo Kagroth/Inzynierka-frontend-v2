@@ -4,7 +4,10 @@ import store from './store'
 import router from './router'
 import vuetify from './plugins/vuetify';
 import Vuelidate from 'vuelidate'
-
+import VueHighlightJS from 'vue-highlightjs'
+ 
+// Tell Vue.js to use vue-highlightjs
+Vue.use(VueHighlightJS)
 Vue.use(Vuelidate)
 
 Vue.config.productionTip = false
