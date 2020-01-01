@@ -111,7 +111,7 @@ export default {
     },
 
     unitTestFormShow () {
-      if (this.form.language.name === 'Python')
+      if (['Python', 'Java'].includes(this.form.language.name))
         return false
       else
         return true
