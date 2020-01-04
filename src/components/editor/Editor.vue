@@ -113,6 +113,9 @@
               <v-col cols="12">
                 <v-card dark height="100%">
                   <v-card-text>
+                    <span>
+                      {{ responseMessage }}
+                    </span><br>
                     <span v-for="(test_r, index) in testResults" :key="index">
                       {{ test_r }} <br>
                     </span>                    
@@ -139,6 +142,7 @@ export default {
       tabs_solutions_results: [],
       myCode: "def myFun(a, b):\n\treturn a + b",
       sendSolutionLoading: false,
+      responseMessage: "",
       testResults: null,
     };
   },
@@ -203,6 +207,7 @@ export default {
       this.$store.dispatch('tasks/sendSolution', formData).then(response => {
         this.sendSolutionLoading = false
         if (response.status === 200) {
+          this.responseMessage = response.data.message
           if (this.task.taskType.name === 'Exercise') {            
             this.testResults = response.data.test_results
           }
