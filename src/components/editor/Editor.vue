@@ -1,7 +1,7 @@
 <template>
-  <div style="height: 100%;">
+  <div style="height: 100%">
     <!-- Gorne menu z zadaniami oraz przyciskiem 'Uruchom' -->
-    <v-row style="height: 8%;" class="grey darken-3" align="center">
+    <v-row class="grey darken-3" align="center" style="height: 8%">
       <v-col v-if="task.taskType.name === 'Test'" class="ma-0 pa-0">
         <v-tabs left dark show-arrows v-model="tab" @change="onExerciseTabChange">
           <v-tab v-for="(exercise, index) in tabs_exercises" :key="index">
@@ -23,7 +23,7 @@
       </v-col>
     </v-row>
 
-    <v-row style="height: 92%;">
+    <v-row style="height: 92%">
       <!-- KOLOKWIUM -->
       <v-col v-if="task.taskType.name === 'Test'">
         <v-tabs-items v-model="tab">
@@ -62,7 +62,7 @@
       </v-col>
       <!-- CWICZENIE -->
       <v-col v-else>
-        <v-row>
+        <v-row style="height: 100%">
           <v-col class="ma-0 pa-0">
             <v-card dark height="100%">
               <v-card-text>
@@ -79,18 +79,24 @@
               
             </v-card>
           </v-col>
-          <v-col cols="8" class="pt-0" style="height: 100%;">
-            <v-row style="height: 80%;">
-              <v-col cols="12" class="pt-0 pb-0" style="height: 100%;">
-                <v-card dark>
-                  <v-card-text>
-                    <!--
+          <v-col cols="8" class="pt-0">
+            <v-row style="height: 80%">
+              <v-col cols="12" class="pt-0 pb-0">
+                <v-card dark height="100%">
+                  <v-card-text style="height: 100%;">
                     <pre v-highlightjs="myCode">
-                      <code class="language-javascript editor">
+                      <code class="">
+
                       </code>
                     </pre>
-                    <textarea class="textarea-editor" spellcheck="false" v-model="myCode"></textarea> 
-                    -->
+
+                    <textarea 
+                      class="textarea-editor" 
+                      spellcheck="false" 
+                      v-model="myCode"
+                      v-on:keydown.tab="editorInputChange(null, $event)"></textarea> 
+                    
+                    <!--
                     <textarea
                       rows="25"
                       cols="100"
@@ -98,11 +104,12 @@
                       v-model="myCode"
                       v-on:keydown.tab="editorInputChange(null, $event)"
                     ></textarea>
+                    -->
                   </v-card-text>
                 </v-card>
               </v-col>
             </v-row>
-            <v-row style="height: 22%;">
+            <v-row style="height: 23%">
               <v-col cols="12">
                 <v-card dark height="100%">
                   <v-card-text>
@@ -238,20 +245,41 @@ textarea, code {
 		
     transition: all 0.5s ease-in-out;
 }
-
-.textarea-editor {
-background: transparent !important;
+*/
+.textarea-editor { 
+  font-size: 14px;
+  line-height: 21px;
+  width: 100%;
+  min-height: calc(100% - 2vh);
+  z-index: 2;
+  background: transparent !important;
+  -webkit-text-fill-color: transparent;
+  position: absolute;
+    top: 0;
+    left: 0;
+  /*
+    background: transparent !important;
 		z-index: 2;
 		height: auto;
 		resize: none;
 		color: black;
     text-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
 		-webkit-text-fill-color: transparent;
+    */
 }
 
-code{
-		z-index: 1;
-    background-color: black;
-	}
-*/
+code {
+  font-size: 14px !important;
+  line-height: 21px;
+	z-index: 1;  
+  width: 100%;
+  min-height: calc(100% - 2vh);
+  padding: 0;
+  margin: 0;
+  background: transparent !important;
+  position: absolute;
+    top: 0;
+    left: 0;
+}
+
 </style>
