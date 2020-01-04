@@ -1,5 +1,6 @@
 <template>
   <div style="height: 100%;">
+    <!-- Gorne menu z zadaniami oraz przyciskiem 'Uruchom' -->
     <v-row style="height: 8%;" class="grey darken-3" align="center">
       <v-col v-if="task.taskType.name === 'Test'" class="ma-0 pa-0">
         <v-tabs left dark show-arrows v-model="tab" @change="onExerciseTabChange">
@@ -64,7 +65,18 @@
         <v-row>
           <v-col class="ma-0 pa-0">
             <v-card dark height="100%">
-              <v-card-text>{{ task.exercise.content }}</v-card-text>
+              <v-card-text>
+                <h3 class="mb-5">Treść zadania:</h3>
+                {{ task.exercise.content }}
+                <v-divider class="mt-5 mb-5"></v-divider>
+                <h3 class="mb-5">Testy: </h3>
+                <span v-for="(unit_test_arr_elem, index) in task.exercise.unit_tests" :key="`arr_elem_test-${index}`">
+                  <p v-for="(unit_test, idx) in unit_test_arr_elem.content.split('\n')" :key="`test-${idx}`">
+                    {{ unit_test }}
+                  </p>
+                </span>
+              </v-card-text>
+              
             </v-card>
           </v-col>
           <v-col cols="8" class="pt-0" style="height: 100%;">
