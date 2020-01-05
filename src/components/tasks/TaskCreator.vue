@@ -39,7 +39,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-select :items="groups" v-model="selectedGroup" label="Przypisz do">
+          <v-select :items="groups" v-model="form.group" label="Przypisz do">
             <template slot="item" slot-scope="data"> <!-- ten slot odpowiada za to jak obiekty sa wyswietlane w liscie -->
               {{ data.item.name }}
             </template>
@@ -48,23 +48,10 @@
             </template>
           </v-select>
         </v-col>
-        <v-col>
-          <v-btn color="primary" @click="addGroup">Dodaj</v-btn>
-        </v-col>
       </v-row>
       <v-row>
         <v-col>
           <v-btn color="primary" @click="createTask">Utwórz zadanie</v-btn>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-           Wybrane grupy:
-        </v-col>
-      </v-row>
-      <v-row v-for="(group, index) in this.form.groups" :key="index">
-        <v-col>
-           {{ group.name }}
         </v-col>
       </v-row>
     </v-content>
@@ -83,20 +70,12 @@ export default {
         taskType: '',
         solutionType: {},
         exercise: '',
-        groups: []
+        group: {}
       }
     }
   },
 
   methods: {
-    addGroup () {
-      if (this.form.groups.includes(this.selectedGroup)) {
-        return
-      }
-      console.log('Dodaje grupe')
-      this.form.groups.push(this.selectedGroup)
-    },
-
     createTask (event) {
       event.preventDefault()
 
