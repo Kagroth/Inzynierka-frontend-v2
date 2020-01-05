@@ -17,7 +17,7 @@
         <v-col>
           <v-select :items="allowed_solution_types" v-model="form.solutionType" label="Sposób rozwiązania zadania">
             <template slot="item" slot-scope="data"> <!-- ten slot odpowiada za to jak obiekty sa wyswietlane w liscie -->
-              <v-icon>home</v-icon> {{ data.item.name }}
+              {{ data.item.name }}
             </template>
             <template slot="selection" slot-scope="data"> <!-- ten slot odpowiada za to jak wybrany obiekt jest wyswietlany -->
               {{ data.item.name }}
