@@ -63,12 +63,12 @@
                         v-if="!sendSolutionLoading"
                         color="primary"
                         text
-                        @click="addGitHubRepoDialog=false">Anuluj</v-btn>
+                        @click="fileSendDialog=false">Anuluj</v-btn>
                       <v-btn
                         color="primary"
                         :loading="sendSolutionLoading"
                         text
-                        @click="sendGitHubSolution"
+                        @click="sendFileSolution"
                       >Wyślij</v-btn>
                     </v-card-actions>
                   </v-card>
