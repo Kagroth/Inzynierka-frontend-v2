@@ -63,12 +63,12 @@
                         v-if="!sendSolutionLoading"
                         color="primary"
                         text
-                        @click="fileSendDialog=false">Anuluj</v-btn>
+                        @click="addGitHubRepoDialog=false">Anuluj</v-btn>
                       <v-btn
                         color="primary"
                         :loading="sendSolutionLoading"
                         text
-                        @click="sendFileSolution"
+                        @click="sendGitHubSolution"
                       >Wyślij</v-btn>
                     </v-card-actions>
                   </v-card>
@@ -82,10 +82,65 @@
               </v-btn>
             </div>
             <div v-else>
-              <v-btn color="primary">
-                <v-icon left>mdi-github-circle</v-icon>
-                Dodaj rozwiązanie
-              </v-btn>
+              <span>
+                <v-dialog v-model="addGitHubRepoDialog" width="600">
+                  <template v-slot:activator="{ on }">
+                    <v-btn color="primary" dark v-on="on">
+                      <v-icon left>mdi-github-circle</v-icon>
+                      Dodaj rozwiązanie
+                    </v-btn>                    
+                  </template>
+                  <v-card v-if="testsResultsModal">
+                    <v-card-title>Twoje rozwiązanie zostało przetestowane i zapisane</v-card-title>
+
+                    <v-card-text>
+                      <h3>Wyniki testów:</h3>
+                      <v-list>
+                        <v-list-item v-for="(singleResult, index) in this.testResults" :key="index">
+                          <v-list-item-content>{{ singleResult }}</v-list-item-content>
+                        </v-list-item>
+                      </v-list>
+                    </v-card-text>
+
+                    <v-divider></v-divider>
+
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn color="primary" text @click="hideResultDialog">Ok</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                  <v-card v-else>
+                    <v-card-title
+                      class="headline grey lighten-2"
+                      primary-title>
+                      Przesyłanie odpowiedzi
+                    </v-card-title>
+
+                    <v-card-text class="mt-4">
+                      <v-text-field
+                        v-model="gitHubRepo"
+                        outlined
+                        placeholder="Np: https://github.com/User/RepositoryName.git"
+                        label="Link do repozytorium GitHub"></v-text-field>
+                    </v-card-text>
+
+                      <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                        v-if="!sendSolutionLoading"
+                        color="primary"
+                        text
+                        @click="addGitHubRepoDialog=false">Anuluj</v-btn>
+                      <v-btn
+                        color="primary"
+                        :loading="sendSolutionLoading"
+                        text
+                        @click="sendGitHubSolution"
+                      >Wyślij</v-btn>
+                      </v-card-actions>  
+                    </v-card>
+                </v-dialog>
+              </span>
             </div>
           </div>
           <div v-else>
@@ -149,6 +204,8 @@ export default {
       testResults: "",
       fileSendDialog: false,
       file: null,
+      addGitHubRepoDialog: false,
+      gitHubRepo: "",
       solution: null
     };
   },
@@ -209,7 +266,31 @@ export default {
 
     hideResultDialog() {
       this.fileSendDialog = false;
+      this.addGitHubRepoDialog = false;
       this.testsResultsModal = false;
+    },
+
+    sendGitHubSolution () {
+      if (this.gitHubRepo === "" || this.gitHubRepo === undefined || this.gitHubRepo === null) {
+        return
+      }
+
+      this.sendSolutionLoading = true;
+      console.log(this.file);
+
+      let formData = new FormData();
+
+      formData.append("repository", this.gitHubRepo);
+      formData.append("taskPk", this.task.pk);
+      formData.append("solutionType", this.task.solutionType.name);
+
+      this.$store.dispatch("tasks/sendSolution", formData).then(response => {
+        this.sendSolutionLoading = false;
+        this.testsResultsModal = true;
+        this.testResults = response.data.test_results;
+
+        this.$store.dispatch("tasks/getAllTasks");
+      });      
     }
   },
 
