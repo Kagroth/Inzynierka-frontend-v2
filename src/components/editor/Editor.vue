@@ -23,29 +23,35 @@
       </v-col>
     </v-row>
 
-    <v-row style="height: 92%">
+    <v-row style="height: 92%;" class="pt-0 mt-0">
       <!-- KOLOKWIUM -->
-      <v-col v-if="task.taskType.name === 'Test'">
-        <v-tabs-items v-model="tab">
-          <v-tab-item v-for="(exercise, index) in tabs_exercises" :key="`item-${index}`">
-            <v-row>
+      <v-col v-if="task.taskType.name === 'Test'" class="pt-0 mt-0">
+        <v-tabs-items v-model="tab" style="height: 100%;">
+          <v-tab-item v-for="(exercise, index) in tabs_exercises" :key="`item-${index}`" style="height: 100%;"> 
+            <v-row style="max-height: 100%; height: 100%;">
               <v-col class="ma-0 pa-0">
-                <v-card dark height="100%">
-                  <v-card-text>{{ exercise.content }}</v-card-text>
+                <v-card tile dark height="100%">
+                  <v-card-text>
+                    <h3 class="mb-5">Treść zadania:</h3>
+                    {{ exercise.content }}
+                    <v-divider class="mt-5 mb-5"></v-divider>
+                    <h3 class="mb-5">Testy:</h3>
+                    <span v-for="(unit_test_arr_elem, index) in exercise.unit_tests" :key="`arr_elem_test-${index}`">
+                      <p v-for="(unit_test, idx) in unit_test_arr_elem.content.split('\n')" :key="`test-${idx}`">
+                        {{ unit_test }}
+                      </p>
+                    </span>
+                  </v-card-text>
                 </v-card>
               </v-col>
-              <v-col cols="8" class="mt-0 pt-0" style="height: 100%;">
+              <v-col cols="8" class="pa-0">
                 <v-row style="height: 80%;">
-                  <v-col cols="12" class="pt-0 pb-0" style="height: 100%; position: relative">
-                    <v-card dark>
-                      <v-card-text>
+                  <v-col cols="12" class="pt-0 pb-0" style="max-height: 100%;">
                         <prism-editor
                           :code="tabs_exercises_codes[index]"
                           v-model="tabs_exercises_codes[index]"
-                          language="py">
+                          language="java">
                         </prism-editor>
-                      </v-card-text>
-                    </v-card>
                   </v-col>
                 </v-row>
                 <v-row style="height: 22%;">
@@ -116,6 +122,8 @@
 
 <script>
 import "prismjs";
+import "prismjs/components/prism-python";
+import "prismjs/components/prism-java";
 import "prismjs/themes/prism-okaidia.css";
 
 import PrismEditor from "vue-prism-editor"
@@ -220,7 +228,11 @@ export default {
 </script>
 
 <style>
-.v-application code {
+.v-application pre {
+  margin: 0;
+}
+
+.v-application code, .v-application pre code {
   box-shadow: none;
   -webkit-box-shadow: none;
 }
