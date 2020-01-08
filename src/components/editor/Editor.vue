@@ -39,7 +39,11 @@
                   <v-col cols="12" class="pt-0 pb-0" style="height: 100%; position: relative">
                     <v-card dark>
                       <v-card-text>
-                        <v-textarea rows="25" style="height: 100%;" spellcheck="false" v-model="tabs_exercises_codes[index]"  v-on:keydown.tab="editorInputChange(index, $event)"></v-textarea>
+                        <prism-editor
+                          :code="tabs_exercises_codes[index]"
+                          v-model="tabs_exercises_codes[index]"
+                          language="py">
+                        </prism-editor>
                       </v-card-text>
                     </v-card>
                   </v-col>
@@ -62,7 +66,7 @@
       </v-col>
       <!-- CWICZENIE -->
       <v-col v-else>
-        <v-row style="height: 100%">
+        <v-row style="max-height: 100%; height: 100%">
           <v-col class="ma-0 pa-0">
             <v-card dark height="100%">
               <v-card-text>
@@ -81,32 +85,12 @@
           </v-col>
           <v-col cols="8" class="pt-0">
             <v-row style="height: 80%">
-              <v-col cols="12" class="pt-0 pb-0">
-                <v-card dark height="100%">
-                  <v-card-text style="height: 100%;">
-                    <pre v-highlightjs="myCode">
-                      <code class="">
-
-                      </code>
-                    </pre>
-
-                    <textarea 
-                      class="textarea-editor" 
-                      spellcheck="false" 
+              <v-col cols="12" class="pt-0 pb-0" style="max-height: 100%;">                
+                    <prism-editor
+                      :code="myCode"
                       v-model="myCode"
-                      v-on:keydown.tab="editorInputChange(null, $event)"></textarea> 
-                    
-                    <!--
-                    <textarea
-                      rows="25"
-                      cols="100"
-                      spellcheck="false"
-                      v-model="myCode"
-                      v-on:keydown.tab="editorInputChange(null, $event)"
-                    ></textarea>
-                    -->
-                  </v-card-text>
-                </v-card>
+                      language="py">
+                    </prism-editor>
               </v-col>
             </v-row>
             <v-row style="height: 23%">
@@ -131,8 +115,17 @@
 </template>
 
 <script>
+import "prismjs";
+import "prismjs/themes/prism-okaidia.css";
+
+import PrismEditor from "vue-prism-editor"
+
 export default {
   props: ["task"],
+  
+  components: {
+    PrismEditor
+  },
 
   data() {
     return {
@@ -227,64 +220,19 @@ export default {
 </script>
 
 <style>
-/*
-textarea, code {
-  width: 100%;
-		height: auto;
-		min-height: 500px;
-		
-    border: 0;
-		
-    position: absolute;
-		top: 0;
-		left: 0;
-		
-    margin: 0;
-		padding: 20px !important;
-		
-    font-size: 14px;
-		font-family: Consolas,Liberation Mono,Courier,monospace;
-		line-height: 21px;
-		
-    overflow: visible;
-		
-    transition: all 0.5s ease-in-out;
-}
-*/
-.textarea-editor { 
-  font-size: 14px;
-  line-height: 21px;
-  width: 100%;
-  min-height: calc(100% - 2vh);
-  z-index: 2;
-  background: transparent !important;
-  -webkit-text-fill-color: transparent;
-  position: absolute;
-    top: 0;
-    left: 0;
-  /*
-    background: transparent !important;
-		z-index: 2;
-		height: auto;
-		resize: none;
-		color: black;
-    text-shadow: 0px 0px 0px rgba(0, 0, 0, 0);
-		-webkit-text-fill-color: transparent;
-    */
+.v-application code {
+  box-shadow: none;
+  -webkit-box-shadow: none;
 }
 
-code {
-  font-size: 14px !important;
-  line-height: 21px;
-	z-index: 1;  
-  width: 100%;
-  min-height: calc(100% - 2vh);
-  padding: 0;
-  margin: 0;
-  background: transparent !important;
-  position: absolute;
-    top: 0;
-    left: 0;
+.prism-editor-wrapper {
+  height: 100%;
+  max-height: 75vh;
+}
+
+.prism-editor-wrapper > pre {
+  height: 100%;
+  max-height: 75vh;
 }
 
 </style>
