@@ -82,9 +82,17 @@ const actions = {
     try {
       createGroupResponse = await API.createGroup(newGroupData)
       console.log(createGroupResponse)
+      
+      if (createGroupResponse.response) {
+        return createGroupResponse.response
+      }
+
       return createGroupResponse
     } catch (e) {
       console.log(e)
+      return {
+        message: "Nie udalo sie utworzyc grupy"
+      }
     }
   },
 
