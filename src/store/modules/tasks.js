@@ -137,12 +137,17 @@ const actions = {
       createExerciseResponse = await API.createExercise(newExerciseData)
       console.log(createExerciseResponse)
 
-      return {
-        data: createExerciseResponse,
-        message: "Pomyslnie utworzono cwiczenie"
+      if (createExerciseResponse.response) {
+        return createExerciseResponse.response
       }
+      
+      return createExerciseResponse
+    
     } catch (e) {
       console.log(e)
+      return {
+        message: "Nie udalo sie utworzyc cwiczenia"
+      }
     }
   },
 
