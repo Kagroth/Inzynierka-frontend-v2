@@ -1,39 +1,70 @@
 <template>
     <div>
       <v-container>
-        <v-row>
+        <v-row justify="center">
           <v-col cols="6">
-             <h3>{{ test.title }}</h3>
-          </v-col>
-          <v-spacer></v-spacer>
-          <v-col cols="2">
-            <v-btn color="error" @click="deleteTest">Usun</v-btn>
-          </v-col>
-        </v-row>
-        <v-row v-for="(exercise, index) in test.exercises" :key="index">
-          <v-col cols="12">
-            <h4> Zadanie {{ index + 1 }} </h4>
-          </v-col>
-          <v-col>
-            <exercise :pk="exercise.pk"></exercise>
+            <v-card>
+              <v-card-title>
+                <v-row>
+                  <v-col cols="6">
+                     {{ test.title }}
+                  </v-col>
+                  <v-spacer></v-spacer>
+                  <v-col col="2" class="text-right">
+                    <v-btn color="success" icon large disabled>
+                      <v-icon>mdi-pencil</v-icon>
+                    </v-btn>
+                    <v-btn color="error" @click="deleteTest" icon large>
+                      <v-icon>mdi-delete</v-icon>
+                    </v-btn>
+                  </v-col>
+                </v-row>
+              </v-card-title>
+              <v-card-text>
+                <h4>Cwiczenia:</h4>
+                <v-list>
+                  <v-list-item v-for="(exercise, index) in test.exercises" :key="index">
+                    <v-list-item-icon>
+                          <v-icon>mdi-language-{{ exercise.language.name.toLowerCase() }}</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-content>
+                          <v-list-item-title> {{ exercise.title }} </v-list-item-title>
+                          <v-list-item-subtitle>Poziom - {{ exercise.level.name }}</v-list-item-subtitle>
+                        </v-list-item-content>
+                        <v-list-item-action>
+                          <v-btn icon small color="primary" :to="{name: 'ExerciseDetails', params: { pk: exercise.pk }}">
+                            <v-icon>mdi-magnify</v-icon>
+                          </v-btn>
+                        </v-list-item-action>
+                  </v-list-item>
+                </v-list>
+              </v-card-text>
+            </v-card>
           </v-col>
         </v-row>
       </v-container>
     </div>
 </template>
 <script>
-import Exercise from '@/components/exercises/Exercise'
+
+// import Exercise from '@/components/exercises/Exercise'
 
 export default {
   components: {
-    'exercise': Exercise
+    // 'exercise': Exercise
   },
 
   props: ['pk'],
 
   methods: {
     deleteTest () {
-      this.$store.dispatch('tasks/deleteTest', this.test.pk)
+      let confirmation = confirm('Czy na pewno chcesz usunąć kolokwium?')
+
+      if (confirmation) {
+        this.$store.dispatch('tasks/deleteTest', this.test.pk).then(() => {
+          this.$router.push('/tasks/exercises')
+        })
+      } 
     }
   },
 
