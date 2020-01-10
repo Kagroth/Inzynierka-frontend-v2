@@ -220,12 +220,16 @@ const actions = {
       createTaskResponse = await API.createTask(newTaskData)
       console.log(createTaskResponse)
 
-      return {
-        data: createTaskResponse,
-        message: "Zadanie zostalo utworzone"
+      if (createTaskResponse.response) {
+        return createTaskResponse.response
       }
+      
+      return createTaskResponse
     } catch (e) {
       console.log(e)
+      return {
+        message: "Zadanie zostalo utworzone"
+      }
     }
   },
 

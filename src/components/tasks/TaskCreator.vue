@@ -1,5 +1,9 @@
 <template>
   <div>
+    <v-snackbar v-model="snackbar.show" top :color="snackbar.color">
+      {{ snackbar.message }}
+      <v-btn @click="snackbar.show = false" text dark>Ok</v-btn>
+    </v-snackbar>
     <v-form>
       <v-container>
         <v-row justify="center">
@@ -51,69 +55,13 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="success" class="mr-2" :loading="loading">Utwórz</v-btn>
+                <v-btn color="success" class="mr-2" :loading="loading" @click="createTask">Utwórz</v-btn>
               </v-card-actions>
             </v-card>
           </v-col>
         </v-row>
       </v-container>
     </v-form>
-    
-    <v-content>
-      <v-row>
-        <v-col>
-          <v-text-field type="text" v-model="form.title" label="Tytul" required></v-text-field>
-        </v-col>        
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-select :items="taskTypes" v-model="form.taskType" label="Typ">
-            
-          </v-select>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-select :items="allowed_solution_types" v-model="form.solutionType" label="Sposób rozwiązania zadania">
-            <template slot="item" slot-scope="data"> <!-- ten slot odpowiada za to jak obiekty sa wyswietlane w liscie -->
-              {{ data.item.name }}
-            </template>
-            <template slot="selection" slot-scope="data"> <!-- ten slot odpowiada za to jak wybrany obiekt jest wyswietlany -->
-              {{ data.item.name }}
-            </template>
-          </v-select>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-           <v-select :items="exercises" v-model="form.exercise" label="Zadanie">
-            <template slot="item" slot-scope="data"> <!-- ten slot odpowiada za to jak obiekty sa wyswietlane w liscie -->
-              {{ data.item.title }}
-            </template>
-            <template slot="selection" slot-scope="data"> <!-- ten slot odpowiada za to jak wybrany obiekt jest wyswietlany -->
-              {{ data.item.title }}
-            </template>
-          </v-select>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-select :items="groups" v-model="form.group" label="Przypisz do">
-            <template slot="item" slot-scope="data"> <!-- ten slot odpowiada za to jak obiekty sa wyswietlane w liscie -->
-              {{ data.item.name }}
-            </template>
-            <template slot="selection" slot-scope="data"> <!-- ten slot odpowiada za to jak wybrany obiekt jest wyswietlany -->
-              {{ data.item.name }}
-            </template>
-          </v-select>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col>
-          <v-btn color="primary" @click="createTask">Utwórz zadanie</v-btn>
-        </v-col>
-      </v-row>
-    </v-content>
   </div>
 </template>
 
@@ -121,6 +69,13 @@
 export default {
   data () {
     return {
+      loading: false,
+      snackbar: {
+        show: false,
+        color: "",
+        message: ""
+      },
+
       taskTypes: ['Exercise', 'Test'],
       solutionTypes: [],
       selectedGroup: '',
@@ -140,15 +95,42 @@ export default {
 
       for (let field in this.form) {
         if (this.form[field] === '') {
-          alert('Nie podano wszystkich danych')
-          return
+            this.snackbar.message = "Nie podano wszystkich danych"
+            this.snackbar.color ="warning"
+            this.snackbar.show = true
+            return
         }
       }
+      
+      this.loading = true
 
       console.log(this.form)
 
-      this.$store.dispatch('tasks/createTask', this.form).then(responseData => {
-        alert(responseData.message)
+      this.$store.dispatch('tasks/createTask', this.form).then(response => {
+          this.loading = false
+
+          let color = ""        
+
+          if (response.status === 200) {
+            color = "success"  
+          }
+          else {            
+            color = "error"
+          }
+
+          this.snackbar.message = response.data.message
+          this.snackbar.color = color
+          this.snackbar.show = true
+          
+          if (response.status === 200) {
+            this.form = {
+              title: '',
+              taskType: '',
+              solutionType: {},
+              exercise: '',
+              group: {}
+            }
+          }
       })
     }
   },
