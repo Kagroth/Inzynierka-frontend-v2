@@ -178,15 +178,16 @@ const actions = {
       createTestResponse = await API.createTest(newTestData)
       console.log(createTestResponse)
 
-      return {
-        data: createTestResponse,
-        message: 'Test utworzony'
+      if (createTestResponse.response) {
+        return createTestResponse.response
       }
+      
+      return createTestResponse
+      
     } catch (e) {
       console.log(e)
 
       return {
-        data: createTestResponse,
         message: 'Nie udalo sie utworzyc testu'
       }
     }
