@@ -1,5 +1,64 @@
 <template>
   <div>
+    <v-form>
+      <v-container>
+        <v-row justify="center">
+          <v-col cols="6">
+            <v-card>
+              <v-card-title>
+                Tworzenie zadania
+              </v-card-title>
+              <v-card-text>
+                <v-text-field outlined type="text" v-model="form.title" label="Tytul" required></v-text-field>
+                <v-divider class="mb-5"></v-divider>
+                <v-row>
+                  <v-col>                    
+                    <v-select outlined :items="taskTypes" v-model="form.taskType" label="Typ">
+                      
+                    </v-select>                    
+                  </v-col>
+                  <v-col>
+                    <v-select outlined :items="allowed_solution_types" v-model="form.solutionType" label="Sposób rozwiązania zadania">
+                      <template slot="item" slot-scope="data"> <!-- ten slot odpowiada za to jak obiekty sa wyswietlane w liscie -->
+                        {{ data.item.name }}
+                      </template>
+                      <template slot="selection" slot-scope="data"> <!-- ten slot odpowiada za to jak wybrany obiekt jest wyswietlany -->
+                        {{ data.item.name }}
+                      </template>
+                    </v-select>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-select outlined :items="exercises" v-model="form.exercise" label="Zadanie">
+                      <template slot="item" slot-scope="data"> <!-- ten slot odpowiada za to jak obiekty sa wyswietlane w liscie -->
+                        {{ data.item.title }}
+                      </template>
+                      <template slot="selection" slot-scope="data"> <!-- ten slot odpowiada za to jak wybrany obiekt jest wyswietlany -->
+                        {{ data.item.title }}
+                      </template>
+                    </v-select>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-select outlined :items="groups" v-model="form.group" label="Przypisz do">
+                      <template slot="item" slot-scope="data"> <!-- ten slot odpowiada za to jak obiekty sa wyswietlane w liscie -->
+                        {{ data.item.name }}
+                      </template>
+                      <template slot="selection" slot-scope="data"> <!-- ten slot odpowiada za to jak wybrany obiekt jest wyswietlany -->
+                        {{ data.item.name }}
+                      </template>
+                    </v-select>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="success" class="mr-2" :loading="loading">Utwórz</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-form>
+    
     <v-content>
       <v-row>
         <v-col>
@@ -9,7 +68,7 @@
       <v-row>
         <v-col>
           <v-select :items="taskTypes" v-model="form.taskType" label="Typ">
-
+            
           </v-select>
         </v-col>
       </v-row>
