@@ -1,22 +1,45 @@
 <template>
   <v-container>
-    <v-row>
+    <v-row justify="center">
       <v-col cols="6">
-        <h3>{{ exercise.title }}</h3>
+        <v-card>
+          <v-card-title>
+            <v-row>
+              <v-col cols="6">
+                {{ exercise.title }}
+              </v-col>
+              <v-spacer></v-spacer>
+              <v-col cols="3" class="text-right"  v-if="userType.name === 'Teacher'">                
+                <v-btn small color="success" icon large disabled>
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>                                
+                <v-btn small color="error" @click="deleteExercise" icon large>
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>           
+          </v-card-title>
+          <v-card-text>
+            <v-divider class="mb-3"></v-divider>
+            <v-row>
+              <v-col cols="12">
+                Technologia: 
+                <v-icon>mdi-language-{{ exercise.language.name.toLowerCase() }}</v-icon>
+                {{ exercise.language.name }}
+              </v-col>
+              <v-col cols="12">
+                Poziom zaawansowania: 
+                {{ exercise.level.name }}
+              </v-col>
+              <v-col class="text--primary">
+                <v-divider class="mb-5"></v-divider>
+                Tresc: <br>
+                {{ exercise.content }}
+              </v-col>
+            </v-row>
+          </v-card-text>
+        </v-card>
       </v-col>
-      <v-spacer></v-spacer>
-      <v-col cols="1" v-if="userType.name === 'Teacher'">
-        <v-btn small color="error" @click="deleteExercise">Usun</v-btn>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>Technologia - {{ exercise.language.name }}</v-col>
-    </v-row>
-    <v-row>
-      <v-col>Poziom zaawansowania - {{ exercise.level.name }}</v-col>
-    </v-row>
-    <v-row>
-      <v-col> Treść: {{ exercise.content }}</v-col>
     </v-row>
   </v-container>
 </template>
