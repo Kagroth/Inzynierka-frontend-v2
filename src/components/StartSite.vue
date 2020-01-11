@@ -19,7 +19,7 @@
                   <template v-slot:activator>
                     <v-list-item-title>Materialy</v-list-item-title>
                   </template>
-                    <v-list-item link>
+                    <v-list-item link :to="{name: 'MyExercises'}">
                       <v-list-item-icon>
                         <v-icon color="orange">mdi-file-document-box</v-icon>
                       </v-list-item-icon>
@@ -27,7 +27,7 @@
                         <v-list-item-title>Cwiczenia</v-list-item-title>
                       </v-list-item-content>
                     </v-list-item>
-                    <v-list-item link>                    
+                    <v-list-item link :to="{name: 'MyTests'}">                    
                       <v-list-item-icon>
                         <v-icon color="green">mdi-file-document-box-multiple</v-icon>
                       </v-list-item-icon>
