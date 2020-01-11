@@ -30,8 +30,15 @@ export default new VueRouter({
   routes: [
     {
       path: '/',
-      name: 'App',
-      component: StartSite
+      name: 'StartSite',
+      component: StartSite,
+      children: [
+        {
+          path: 'groups',
+          name: 'MyGroups',
+          component: GroupManager,
+        }
+      ]
     },    
     {
       path: '/login',

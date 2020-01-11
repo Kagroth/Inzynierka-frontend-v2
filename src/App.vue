@@ -1,10 +1,14 @@
 <template>
   <div id="app">
-    <v-app>      
+    <v-app>
       <main-nav />
       <v-content>
         <v-container fluid style="height: 100%; width: 100%">
-          <router-view />
+          <v-row>
+            <v-col cols="12">
+              <router-view />
+            </v-col>
+          </v-row>
         </v-container>
       </v-content>
     </v-app>
