@@ -108,7 +108,21 @@ export default new VueRouter({
           name: "MyTests",
           component: TestManager,
           children: [
-            
+            {
+              path: '/',
+              name: 'TestListing',
+              component: TestListing
+            },
+            {
+              path: ':pk',
+              name: 'TestDetails',
+              component: Test
+            },
+            {
+              path: 'newTest',
+              name: 'TestCreator',
+              component: TestCreator
+            },
           ]
         }
       ]
@@ -142,20 +156,7 @@ export default new VueRouter({
       path: '/tasks',
       name: 'MyTasks',
       component: TaskManager,
-      children: [       
-        {
-          path: 'tests',
-          component: TestListing
-        },
-        {
-          path: 'tests/:pk',
-          name: 'TestDetails',
-          component: Test
-        },
-        {
-          path: 'newTest',
-          component: TestCreator
-        },
+      children: [
         {
           path: 'tasks/:pk/solution/:pks',
           name: 'Solution',
