@@ -1,26 +1,29 @@
 <template>
   <div>
-    <v-container>
-      <v-row>
-        <v-col>
-          <h2>Moje Grupy</h2>
-        </v-col>
-        <v-col v-if="userType.name === 'Teacher'"> 
-          <v-btn to="/groups/newGroup" color="success" small>Utwórz grupę</v-btn>
-        </v-col>
-      </v-row>
-
-      <v-divider></v-divider>
-
-      <v-row v-for="group in groups" :key="group.pk">
-        <v-col> 
-          <h3>{{ group.name }}</h3>
-        </v-col>
-        <v-col>
-          <v-btn @click="showGroupDetails(group)" color="primary" small>Szczegóły</v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
+    <v-row>
+      <v-col>
+        <v-btn icon @click="showSearchField = !showSearchField" class="d-inline">
+          <v-icon>mdi-magnify</v-icon>
+        </v-btn>
+        <v-expandable-x-transition>          
+          <v-text-field
+            v-if="showSearchField"
+            v-model="searchForName"
+            style="width: 20%; position: absolute; "
+            class="d-inline-flex ma-0 pa-0"
+            placeholder="Podaj nazwe grupy"
+          ></v-text-field>
+        </v-expandable-x-transition>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="3" v-for="group in groups" :key="group.pk" class="pa-0 ma-0">
+        <v-card tile>
+          <v-card-title @click="showGroupDetails(group)" link>{{ group.name }}</v-card-title>
+          <v-card-subtitle>Liczba czlonkow: {{ group.users.length }}</v-card-subtitle>
+        </v-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -32,50 +35,59 @@ export default {
     //group: Group
   },
 
-  data () {
-    return {}
+  data() {
+    return {
+      showSearchField: false,
+      searchForName: ""
+    };
   },
 
-  methods: {
-    showGroupDetails (group) {
+  methods: {    
+    showGroupDetails(group) {
       this.$router.push({
-        name: 'GroupDetails',
+        name: "GroupDetails",
         params: { name: group.name, group: group }
-      })
+      });
     }
   },
 
   computed: {
     groups: {
-      get () {
-        return this.$store.state.users.groups
+      get() {        
+        if (this.searchForName === "") {
+          return this.$store.state.users.groups;
+        }
+
+        return this.$store.state.users.groups.filter(group => {
+          return group.name.includes(this.searchForName)
+        })
       },
 
-      set (newValue) {}
+      set(newValue) {}
     },
 
     userType: {
-      get () {
-        return this.$store.state.auth.profile.userType
+      get() {
+        return this.$store.state.auth.profile.userType;
       },
 
-      set (newValue) {}
+      set(newValue) {}
     }
   },
 
-  created () {
+  created() {
     this.$store
-      .dispatch('users/loadGroups')
+      .dispatch("users/loadGroups")
       .then(() => {
-        this.groups = this.$store.state.users.groups
+        this.groups = this.$store.state.users.groups;
       })
       .catch(error => {
-        console.log(error)
-        console.log('Nie udalo sie pobrac grup')
-        alert('Nie udalo sie zwrocic grup')
-      })
+        console.log(error);
+        console.log("Nie udalo sie pobrac grup");
+        alert("Nie udalo sie zwrocic grup");
+      });
   }
-}
+};
 </script>
 
 <style scoped>
