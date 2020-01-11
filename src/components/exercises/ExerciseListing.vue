@@ -1,18 +1,5 @@
 <template>
   <div>
-    <v-container>
-      <v-row>
-        <v-col cols="6">
-          <h2>Moje ćwiczenia</h2>
-        </v-col>
-        <v-spacer></v-spacer>
-        <v-col cols="2">
-          <v-btn to="/tasks/newExercise" color="success" small>Utwórz ćwiczenie</v-btn>
-        </v-col>
-      </v-row>
-      
-      <v-divider></v-divider>
-
       <v-row v-for="(exercise, index) in exercises" :key="index" mt-4>
         <v-col cols="6">
           <h3>{{ exercise.title }}</h3>
@@ -22,7 +9,6 @@
           <v-btn @click="showExerciseDetails(exercise)" color="primary" small>Szczegóły</v-btn>
         </v-col>
       </v-row>
-    </v-container>
   </div>
 </template>
 

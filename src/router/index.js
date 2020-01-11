@@ -58,11 +58,6 @@ export default new VueRouter({
           ]
         },
         {
-          path: 'exercises',
-          name: 'ExerciseListing',
-          component: ExerciseListing
-        },
-        {
           path: 'tasks',
           name: 'MyTasks',
           component: TaskManager,
@@ -88,12 +83,33 @@ export default new VueRouter({
         {
           path: 'exercises',
           name: 'MyExercises',
-          component: ExerciseManager
+          component: ExerciseManager,
+          children: [            
+            {
+              path: '/',
+              name: 'ExerciseListing',
+              component: ExerciseListing
+            },            
+            {
+              path: ':pk',
+              name: 'ExerciseDetails',
+              component: Exercise,
+              props: true
+            },             
+            {
+              path: 'newExercise',
+              name: 'ExerciseCreator',
+              component: ExerciseCreator
+            },
+          ]
         },
         {
           path: 'tests',
           name: "MyTests",
-          component: TestManager
+          component: TestManager,
+          children: [
+            
+          ]
         }
       ]
     },    
@@ -126,16 +142,7 @@ export default new VueRouter({
       path: '/tasks',
       name: 'MyTasks',
       component: TaskManager,
-      children: [
-        {
-          path: 'newExercise',
-          component: ExerciseCreator
-        },
-        {
-          path: 'exercise/:pk',
-          name: 'ExerciseDetails',
-          component: Exercise
-        },        
+      children: [       
         {
           path: 'tests',
           component: TestListing
