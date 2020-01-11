@@ -7,9 +7,9 @@ import StartSite from '@/components/StartSite'
 import LoginForm from '@/components/auth/LoginForm'
 import RegisterForm from '@/components/auth/RegisterForm'
 import GroupManager from '@/components/groups/GroupManager'
-import GroupListing from '@/components/groups/GroupListing'
 import GroupCreator from '@/components/groups/GroupCreator'
 import GroupEditor from '@/components/groups/GroupEditor'
+import GroupListing from '@/components/groups/GroupListing'
 import Group from '@/components/groups/Group'
 import TaskManager from '@/components/tasks/TaskManager'
 import TaskListing from '@/components/tasks/TaskListing'
@@ -39,6 +39,28 @@ export default new VueRouter({
           path: 'groups',
           name: 'MyGroups',
           component: GroupManager,
+          children: [
+            {
+              path: '/',
+              name: 'GroupListing',
+              component: GroupListing
+            },
+            {
+              path: 'group/:name',
+              name: 'GroupDetails',
+              component: Group
+            }, 
+          ]
+        },        
+        {
+          path: 'groups/group/:name',
+          name: 'GroupDetails',
+          component: Group
+        },        
+        {
+          path: 'newGroup',
+          name: 'GroupCreator',
+          component: GroupCreator
         },
         {
           path: 'tasks',
@@ -71,11 +93,6 @@ export default new VueRouter({
       component: GroupManager,
       children: [
         {
-          path: 'groups',
-          name: 'GroupListing',
-          component: GroupListing
-        },
-        {
           path: 'group/:name',
           name: 'GroupDetails',
           component: Group
@@ -85,11 +102,6 @@ export default new VueRouter({
           name: 'GroupEditor',
           component: GroupEditor
         },
-        {
-          path: 'newGroup',
-          name: 'GroupCreator',
-          component: GroupCreator
-        }
       ]
     },
     {
