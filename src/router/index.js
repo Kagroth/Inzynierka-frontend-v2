@@ -15,12 +15,14 @@ import TaskManager from '@/components/tasks/TaskManager'
 import TaskListing from '@/components/tasks/TaskListing'
 import TaskCreator from '@/components/tasks/TaskCreator'
 import Task from '@/components/tasks/Task'
+import ExerciseManager from '@/components/exercises/ExerciseManager'
 import ExerciseListing from '@/components/exercises/ExerciseListing'
 import ExerciseCreator from '@/components/exercises/ExerciseCreator'
 import Exercise from '@/components/exercises/Exercise'
 import TestListing from '@/components/tests/TestListing'
 import Test from '@/components/tests/Test'
 import TestCreator from '@/components/tests/TestCreator'
+import TestManager from '@/components/tests/TestManager'
 import Solution from '@/components/solutions/Solution'
 import Editor from '@/components/editor/Editor'
 
@@ -37,6 +39,21 @@ export default new VueRouter({
           path: 'groups',
           name: 'MyGroups',
           component: GroupManager,
+        },
+        {
+          path: 'tasks',
+          name: 'MyTasks',
+          component: TaskManager,
+        },
+        {
+          path: 'exercises',
+          name: 'MyExercises',
+          component: ExerciseManager
+        },
+        {
+          path: 'tests',
+          name: "MyTests",
+          component: TestManager
         }
       ]
     },    
