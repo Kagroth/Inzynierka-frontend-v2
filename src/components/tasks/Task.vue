@@ -1,191 +1,221 @@
 <template>
   <div>
     <v-container>
-      <v-row>
-        <v-col>
-          <h3>{{ task.title }}</h3>
-        </v-col>
-        <!-- Jeżeli zalogowany użytkownik to Student to wyswietl mozliwosc nadeslania rozwiazania-->
-        <v-col v-if="userType.name === 'Student'">
-          <div v-if="task.taskType.name === 'Exercise'">
-            <div v-if="task.solutionType.name === 'File'">
-              <!--
-                <span v-if="hasSolution">
-                  <v-btn color="primary" @click="showSolution">Podglad odpowiedzi</v-btn>
-                </span>
-              -->
-              <span>
-                <v-dialog v-model="fileSendDialog" width="600">
-                  <template v-slot:activator="{ on }">
-                    <v-btn color="success" dark v-on="on">
-                      <v-icon left>mdi-file</v-icon> Przeslij odpowiedz
+      <v-row justify="center">
+        <v-col cols="8">
+          <v-card>
+            <v-card-title>
+              <v-row>
+                <v-col cols="8">{{ task.title }}</v-col>
+                <v-spacer></v-spacer>
+                <v-col cols="2" v-if="userType.name === 'Student'">
+                  <div v-if="task.taskType.name === 'Exercise'">
+                    <div v-if="task.solutionType.name === 'File'">
+                      <!--
+                        <span v-if="hasSolution">
+                          <v-btn color="primary" @click="showSolution">Podglad odpowiedzi</v-btn>
+                        </span>
+                      -->
+                      <span>
+                        <v-dialog v-model="fileSendDialog" width="600">
+                          <template v-slot:activator="{ on }">
+                            <v-btn color="success" v-on="on" rounded>
+                              <v-icon>mdi-file</v-icon>
+                            </v-btn>
+                          </template>
+                          <v-card v-if="testsResultsModal">
+                            <v-card-title>Twoje rozwiązanie zostało przetestowane i zapisane</v-card-title>
+
+                            <v-card-text>
+                              <h3>Wyniki testów:</h3>
+                              <v-list>
+                                <v-list-item
+                                  v-for="(singleResult, index) in this.testResults"
+                                  :key="index"
+                                >
+                                  <v-list-item-content>{{ singleResult }}</v-list-item-content>
+                                </v-list-item>
+                              </v-list>
+                            </v-card-text>
+
+                            <v-divider></v-divider>
+
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn color="primary" text @click="hideResultDialog">Ok</v-btn>
+                            </v-card-actions>
+                          </v-card>
+                          <v-card v-else>
+                            <v-card-title
+                              class="headline grey lighten-2"
+                              primary-title
+                            >Przesyłanie odpowiedzi</v-card-title>
+
+                            <v-card-text>
+                              <v-file-input
+                                v-model="file"
+                                :accept="task.exercise.language.allowed_extension"
+                                label="Wybierz plik"
+                                @click="onFileChange"
+                              ></v-file-input>
+                            </v-card-text>
+
+                            <v-divider></v-divider>
+
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn
+                                v-if="!sendSolutionLoading"
+                                color="primary"
+                                text
+                                @click="fileSendDialog=false"
+                              >Anuluj</v-btn>
+                              <v-btn
+                                color="primary"
+                                :loading="sendSolutionLoading"
+                                text
+                                @click="sendFileSolution"
+                              >Wyślij</v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                      </span>
+                    </div>
+                    <div v-else-if="task.solutionType.name === 'Editor'">
+                      <v-btn
+                        rounded
+                        color="orange"
+                        class="white--text"
+                        :to="{name: 'Editor', params: {task: this.task}}"
+                      >
+                        <v-icon>mdi-play</v-icon>
+                      </v-btn>
+                    </div>
+                    <div v-else>
+                      <span>
+                        <v-dialog v-model="addGitHubRepoDialog" width="600">
+                          <template v-slot:activator="{ on }">
+                            <v-btn color="primary" dark v-on="on" rounded>
+                              <v-icon>mdi-github-circle</v-icon>
+                            </v-btn>
+                          </template>
+                          <v-card v-if="testsResultsModal">
+                            <v-card-title>Twoje rozwiązanie zostało przetestowane i zapisane</v-card-title>
+
+                            <v-card-text>
+                              <h3>Wyniki testów:</h3>
+                              <v-list>
+                                <v-list-item
+                                  v-for="(singleResult, index) in this.testResults"
+                                  :key="index"
+                                >
+                                  <v-list-item-content>{{ singleResult }}</v-list-item-content>
+                                </v-list-item>
+                              </v-list>
+                            </v-card-text>
+
+                            <v-divider></v-divider>
+
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn color="primary" text @click="hideResultDialog">Ok</v-btn>
+                            </v-card-actions>
+                          </v-card>
+                          <v-card v-else>
+                            <v-card-title
+                              class="headline grey lighten-2"
+                              primary-title
+                            >Przesyłanie odpowiedzi</v-card-title>
+
+                            <v-card-text class="mt-4">
+                              <v-text-field
+                                v-model="gitHubRepo"
+                                outlined
+                                placeholder="Np: https://github.com/User/RepositoryName.git"
+                                label="Link do repozytorium GitHub"
+                              ></v-text-field>
+                            </v-card-text>
+
+                            <v-card-actions>
+                              <v-spacer></v-spacer>
+                              <v-btn
+                                v-if="!sendSolutionLoading"
+                                color="primary"
+                                text
+                                @click="addGitHubRepoDialog=false"
+                              >Anuluj</v-btn>
+                              <v-btn
+                                color="primary"
+                                :loading="sendSolutionLoading"
+                                text
+                                @click="sendGitHubSolution"
+                              >Wyślij</v-btn>
+                            </v-card-actions>
+                          </v-card>
+                        </v-dialog>
+                      </span>
+                    </div>
+                  </div>
+                  <div v-else>
+                    <v-btn
+                      color="orange"
+                      class="white--text"
+                      :to="{name: 'Editor', params: {task: this.task}}"
+                    >
+                      <v-icon left>mdi-play-circle</v-icon>Rozwiąż kolokwium
                     </v-btn>
-                  </template>
-                  <v-card v-if="testsResultsModal">
-                    <v-card-title>Twoje rozwiązanie zostało przetestowane i zapisane</v-card-title>
-
-                    <v-card-text>
-                      <h3>Wyniki testów:</h3>
-                      <v-list>
-                        <v-list-item v-for="(singleResult, index) in this.testResults" :key="index">
-                          <v-list-item-content>{{ singleResult }}</v-list-item-content>
-                        </v-list-item>
-                      </v-list>
-                    </v-card-text>
-
-                    <v-divider></v-divider>
-
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="primary" text @click="hideResultDialog">Ok</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                  <v-card v-else>
-                    <v-card-title
-                      class="headline grey lighten-2"
-                      primary-title
-                    >Przesyłanie odpowiedzi</v-card-title>
-
-                    <v-card-text>
-                      <v-file-input
-                        v-model="file"
-                        :accept="task.exercise.language.allowed_extension"
-                        label="Wybierz plik"
-                        @click="onFileChange"
-                      ></v-file-input>
-                    </v-card-text>
-
-                    <v-divider></v-divider>
-
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn
-                        v-if="!sendSolutionLoading"
-                        color="primary"
-                        text
-                        @click="fileSendDialog=false">Anuluj</v-btn>
-                      <v-btn
-                        color="primary"
-                        :loading="sendSolutionLoading"
-                        text
-                        @click="sendFileSolution"
-                      >Wyślij</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                </v-dialog>
-              </span>
-            </div>
-            <div v-else-if="task.solutionType.name === 'Editor'">
-              <v-btn color="orange" class="white--text" :to="{name: 'Editor', params: {task: this.task}}">
-                <v-icon left>mdi-play</v-icon>
-                Rozwiąż zadanie
-              </v-btn>
-            </div>
-            <div v-else>
-              <span>
-                <v-dialog v-model="addGitHubRepoDialog" width="600">
-                  <template v-slot:activator="{ on }">
-                    <v-btn color="primary" dark v-on="on">
-                      <v-icon left>mdi-github-circle</v-icon>
-                      Dodaj rozwiązanie
-                    </v-btn>                    
-                  </template>
-                  <v-card v-if="testsResultsModal">
-                    <v-card-title>Twoje rozwiązanie zostało przetestowane i zapisane</v-card-title>
-
-                    <v-card-text>
-                      <h3>Wyniki testów:</h3>
-                      <v-list>
-                        <v-list-item v-for="(singleResult, index) in this.testResults" :key="index">
-                          <v-list-item-content>{{ singleResult }}</v-list-item-content>
-                        </v-list-item>
-                      </v-list>
-                    </v-card-text>
-
-                    <v-divider></v-divider>
-
-                    <v-card-actions>
-                      <v-spacer></v-spacer>
-                      <v-btn color="primary" text @click="hideResultDialog">Ok</v-btn>
-                    </v-card-actions>
-                  </v-card>
-                  <v-card v-else>
-                    <v-card-title
-                      class="headline grey lighten-2"
-                      primary-title>
-                      Przesyłanie odpowiedzi
-                    </v-card-title>
-
-                    <v-card-text class="mt-4">
-                      <v-text-field
-                        v-model="gitHubRepo"
-                        outlined
-                        placeholder="Np: https://github.com/User/RepositoryName.git"
-                        label="Link do repozytorium GitHub"></v-text-field>
-                    </v-card-text>
-
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn
-                        v-if="!sendSolutionLoading"
-                        color="primary"
-                        text
-                        @click="addGitHubRepoDialog=false">Anuluj</v-btn>
-                      <v-btn
-                        color="primary"
-                        :loading="sendSolutionLoading"
-                        text
-                        @click="sendGitHubSolution"
-                      >Wyślij</v-btn>
-                      </v-card-actions>  
-                    </v-card>
-                </v-dialog>
-              </span>
-            </div>
-          </div>
-          <div v-else>
-            <v-btn color="orange" class="white--text" :to="{name: 'Editor', params: {task: this.task}}">
-              <v-icon left>mdi-play-circle</v-icon>
-              Rozwiąż kolokwium
-            </v-btn>
-          </div>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-card-title>
+            <v-card-subtitle>
+              <v-row>
+                <v-col>
+                  Przypisane do:
+                  <span
+                    v-for="(group, index) in task.assignedTo"
+                    :key="index"
+                  >{{ group.name }},</span>
+                </v-col>
+              </v-row>
+            </v-card-subtitle>
+            <v-card-text class="text--primary">
+              <div v-if="task.taskType.name == 'Exercise'">
+                <h3 class="mb-3">Cwiczenie:</h3>
+                <exercise :pk="task.exercise.pk"></exercise>
+              </div>
+              <div v-else>
+                <h3 class="mb-3">Cwiczenia:</h3>
+                <v-expansion-panels multiple="true" flat>
+                    <v-expansion-panel
+                      v-for="(exercise, index) in task.test.exercises"
+                      :key="index"
+                    >
+                      <v-expansion-panel-header>{{ index + 1 }} {{ exercise.title }}</v-expansion-panel-header>
+                      <v-expansion-panel-content>
+                        <exercise :pk="exercise.pk"></exercise>
+                      </v-expansion-panel-content>
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+              </div>
+              <v-divider class="mt-5 mb-5"></v-divider>
+              <div>
+                <h3>Rozwiązania nadeslali:</h3>
+                <span v-if="userType.name === 'Teacher'">
+                  <v-row>
+                    <v-col cols="4" v-for="(solution, index) in task.solution" :key="index">
+                      {{ solution.user.username }}
+                      <v-btn color="primary" icon small @click="showSolutionAsTeacher(solution.pk)">
+                        <v-icon>mdi-magnify</v-icon>
+                      </v-btn>
+                    </v-col>                    
+                  </v-row>
+                </span>
+              </div>
+            </v-card-text>
+          </v-card>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col>Przypisane do:</v-col>
-      </v-row>
-      <v-row v-for="(group, index) in task.assignedTo" :key="index">
-        <v-col>{{ group.name }}</v-col>
-      </v-row>
-      <v-row v-if="task.taskType.name == 'Exercise'">
-        <v-col>
-          <exercise :pk="task.exercise.pk"></exercise>
-        </v-col>
-      </v-row>
-      <v-row v-else>
-        <v-col cols="12">
-          <v-expansion-panels multiple="true">
-            <v-expansion-panel v-for="(exercise, index) in task.test.exercises" :key="index">
-              <v-expansion-panel-header>{{ exercise.title }}</v-expansion-panel-header>
-              <v-expansion-panel-content>{{ exercise.content }}</v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
-        </v-col>
-      </v-row>
-
-      <v-divider></v-divider>
-
-      <span v-if="userType.name === 'Teacher'">
-        <v-row>
-          <v-col>Rozwiązania nadeslali:</v-col>
-        </v-row>
-        <v-row v-for="(solution, index) in task.solution" :key="index">
-          <v-col>{{ solution.user.username }}</v-col>
-          <v-col>
-            <v-btn color="primary" small @click="showSolutionAsTeacher(solution.pk)">Podglad</v-btn>
-          </v-col>
-        </v-row>
-      </span>
     </v-container>
   </div>
 </template>
@@ -270,9 +300,13 @@ export default {
       this.testsResultsModal = false;
     },
 
-    sendGitHubSolution () {
-      if (this.gitHubRepo === "" || this.gitHubRepo === undefined || this.gitHubRepo === null) {
-        return
+    sendGitHubSolution() {
+      if (
+        this.gitHubRepo === "" ||
+        this.gitHubRepo === undefined ||
+        this.gitHubRepo === null
+      ) {
+        return;
       }
 
       this.sendSolutionLoading = true;
@@ -290,7 +324,7 @@ export default {
         this.testResults = response.data.test_results;
 
         this.$store.dispatch("tasks/getAllTasks");
-      });      
+      });
     }
   },
 
