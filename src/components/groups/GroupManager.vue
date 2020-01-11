@@ -1,14 +1,16 @@
 <template>
     <div>
-        <v-container>
-            <router-view></router-view>
-        </v-container>
+        <group-listing></group-listing>
     </div>
 </template>
 
 <script>
+import GroupListing from "@/components/groups/GroupListing"
+
 export default {
-    
+    components: {
+        GroupListing
+    }    
 }
 </script>
 
