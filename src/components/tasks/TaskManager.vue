@@ -1,32 +1,45 @@
 
 <template>
   <div>
-    <v-container>
-      <v-row justify="center">
-        <v-spacer></v-spacer>
-        <v-col cols="2">
-          <v-btn to="/tasks/tasks">Zadania</v-btn>
-        </v-col>
-        <v-col cols="2" v-if="userType.name === 'Teacher'">
-          <v-btn to="/tasks/exercises">Ćwiczenia</v-btn>
-        </v-col>
-        <v-col cols v-if="userType.name === 'Teacher'">
-          <v-btn to="/tasks/tests">Kolokwia</v-btn>
-        </v-col>
-        <v-spacer></v-spacer>
-      </v-row>
-      <v-row>
-        <v-col cols="12">
-          <router-view></router-view>
-        </v-col>
-      </v-row>
-    </v-container>
+    <v-card>
+      <v-card-title>
+        <v-row v-if="currentRoute.name === 'TaskListing'">
+          <v-col>Moje zadania</v-col>
+          <v-spacer></v-spacer>
+          <v-col>
+            <v-btn color="success" :to="{name: 'TaskCreator'}">
+              <v-icon>mdi-plus</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-card-title>
+      <v-card-text>
+        <router-view></router-view>
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
 <script>
+
 export default {
+  created() {
+    this.$router.push({ name: "TaskListing" });
+  },
+
+  watch: {
+    $route(to, from) {
+      if (to.name === "MyTasks") {
+        this.$router.push({ name: "TaskListing" });
+      }
+    }
+  },
+
   computed: {
+    currentRoute() {
+      return this.$route;
+    },
+
     userType() {
       return this.$store.state.auth.profile.userType;
     }

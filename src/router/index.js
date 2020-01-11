@@ -49,23 +49,41 @@ export default new VueRouter({
               path: 'group/:name',
               name: 'GroupDetails',
               component: Group
+            },                  
+            {
+              path: 'newGroup',
+              name: 'GroupCreator',
+              component: GroupCreator
             }, 
           ]
-        },        
+        },
         {
-          path: 'groups/group/:name',
-          name: 'GroupDetails',
-          component: Group
-        },        
-        {
-          path: 'newGroup',
-          name: 'GroupCreator',
-          component: GroupCreator
+          path: 'exercises',
+          name: 'ExerciseListing',
+          component: ExerciseListing
         },
         {
           path: 'tasks',
           name: 'MyTasks',
           component: TaskManager,
+          children: [
+            {
+              path: '/',
+              name: 'TaskListing',
+              component: TaskListing
+            },
+            {
+              path: 'newTask',
+              name: 'TaskCreator',
+              component: TaskCreator
+            },            
+            {
+              path: ':pk',
+              name: 'TaskDetails',
+              component: Task,
+              props: true
+            },
+          ]
         },
         {
           path: 'exercises',
@@ -109,24 +127,6 @@ export default new VueRouter({
       name: 'MyTasks',
       component: TaskManager,
       children: [
-        {
-          path: 'tasks',
-          name: 'TaskListing',
-          component: TaskListing
-        },
-        {
-          path: 'tasks/:pk',
-          name: 'TaskDetails',
-          component: Task
-        },
-        {
-          path: 'newTask',
-          component: TaskCreator
-        },
-        {
-          path: 'exercises',
-          component: ExerciseListing
-        },
         {
           path: 'newExercise',
           component: ExerciseCreator
