@@ -5,24 +5,32 @@
         <v-btn icon @click="showSearchField = !showSearchField" class="d-inline">
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
-        <v-expandable-x-transition>
           <v-text-field
             v-if="showSearchField"
             v-model="searchForName"
-            style="width: 20%; position: absolute; "
+            style="width: 30%; position: absolute; "
             class="d-inline-flex ma-0 pa-0"
-            placeholder="Podaj nazwe cwiczenia lub jezyk programowani"
+            placeholder="Podaj nazwe cwiczenia lub jezyk programowania"
           ></v-text-field>
-        </v-expandable-x-transition>
       </v-col>
     </v-row>
-    <v-row v-for="(exercise, index) in exercises" :key="index" mt-4>
-      <v-col cols="6">
-        <h3>{{ exercise.title }}</h3>
-      </v-col>
-      <v-spacer></v-spacer>
-      <v-col cols="2">
-        <v-btn @click="showExerciseDetails(exercise)" color="primary" small>Szczegóły</v-btn>
+    <v-row  mt-4>
+      <v-col v-for="(exercise, index) in exercises" :key="index" cols="4">
+        <v-card>
+          <v-card-title @click="showExerciseDetails(exercise)">
+            {{ exercise.title }}
+          </v-card-title>
+          <v-card-subtitle>
+            Technologia:
+            <v-icon>mdi-language-{{ exercise.language.name.toLowerCase() }}</v-icon>
+            {{ exercise.language.name }}
+            
+            <br>
+
+            Poziom zaawansowania:
+            {{ exercise.level.name }}
+          </v-card-subtitle>
+        </v-card>
       </v-col>
     </v-row>
   </div>
