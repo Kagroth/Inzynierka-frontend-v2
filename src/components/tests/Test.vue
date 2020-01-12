@@ -32,7 +32,7 @@
                           <v-list-item-subtitle>Poziom - {{ exercise.level.name }}</v-list-item-subtitle>
                         </v-list-item-content>
                         <v-list-item-action>
-                          <v-btn icon small color="primary" :to="{name: 'ExerciseDetails', params: { pk: exercise.pk }}">
+                          <v-btn icon small color="primary" :to="{name: 'ExerciseDetails', params: { pk: exercise.pk, redirected: true }}">
                             <v-icon>mdi-magnify</v-icon>
                           </v-btn>
                         </v-list-item-action>

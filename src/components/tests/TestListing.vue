@@ -5,7 +5,6 @@
         <v-btn icon @click="showSearchField = !showSearchField" class="d-inline">
           <v-icon>mdi-magnify</v-icon>
         </v-btn>
-        <v-expandable-x-transition>
           <v-text-field
             v-if="showSearchField"
             v-model="searchForName"
@@ -13,15 +12,18 @@
             class="d-inline-flex ma-0 pa-0"
             placeholder="Podaj nazwe kolokwium"
           ></v-text-field>
-        </v-expandable-x-transition>
       </v-col>
     </v-row>
-    <v-row v-for="(test, index) in tests" :key="index">
-      <v-col>
-        <h3>{{ test.title }}</h3>
-      </v-col>
-      <v-col>
-        <v-btn @click="showTestDetails(test)" color="primary" small>Szczegóły</v-btn>
+    <v-row>
+      <v-col v-for="(test, index) in tests" :key="index" cols="4">
+        <v-card>
+          <v-card-title @click="showTestDetails(test)">
+            {{ test.title }}
+          </v-card-title>
+          <v-card-subtitle>
+            Ilość zadań: {{ test.exercises.length }}
+          </v-card-subtitle>
+        </v-card>
       </v-col>
     </v-row>
   </div>
