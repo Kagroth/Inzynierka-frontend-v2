@@ -17,7 +17,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="3" v-for="group in groups" :key="group.pk" class="pa-0 ma-0">
+      <v-col cols="3" v-for="group in groups" :key="group.pk" class="pa-1">
         <v-card tile>
           <v-card-title @click="showGroupDetails(group)" link>{{ group.name }}</v-card-title>
           <v-card-subtitle>Liczba czlonkow: {{ group.users.length }}</v-card-subtitle>
