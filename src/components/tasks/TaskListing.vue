@@ -17,33 +17,66 @@
       </v-col>
     </v-row>
     <!-- Zadania w toku -->
-    <v-row>
-      <v-col>
-        Zadania w toku:
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col v-for="(task, index) in activeTasks" :key="`activeTask-${index}`" cols="4">
-        <v-card tile>
-          <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
-          <v-card-subtitle>
-            Typ: {{ task.taskType.name }} <br>
-            Rozwiązanie: {{ task.solutionType.name }}
-          </v-card-subtitle>
-          <v-card-text class="text--primary">
-            Przypisane do: {{ task.assignedTo[0].name }} <br>
-            Rozwiazania: 
-            <v-progress-circular
-              color="primary"
-              size="48"
-              :value="task.solution.length / task.assignedTo[0].users.length * 100"
-            >
-              {{ task.solution.length }} / {{ task.assignedTo[0].users.length }}
-            </v-progress-circular>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
+    <span v-if="userType.name === 'Student'">
+      <v-row>        
+        <v-col>
+          Aktywne zadania:
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col v-for="(task, index) in activeTasks" :key="`activeTask-${index}`" cols="4">
+          <v-card tile>
+            <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            <v-card-subtitle>
+              Typ: {{ task.taskType.name }} <br>
+              Rozwiązanie: {{ task.solutionType.name }}
+            </v-card-subtitle>
+            <v-card-text class="text--primary">
+              Przypisane do: {{ task.assignedTo[0].name }} <br>
+              Rozwiązanie: 
+              <span v-if="hasSolution(task)">
+                Rozwiazanie zapisane
+                <v-icon color="success" small>mdi-check</v-icon>
+              </span>
+              <span v-else>
+                Oczekuje na rozwiązanie
+                <v-icon color="info" small>mdi-pencil</v-icon>
+              </span>              
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </span>
+    <span v-else>      
+      <v-row>
+        <v-col>
+          Zadania w toku:
+        </v-col>
+      </v-row>
+       <v-row>
+        <v-col v-for="(task, index) in activeTasks" :key="`activeTask-${index}`" cols="4">
+          <v-card tile>
+            <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            <v-card-subtitle>
+              Typ: {{ task.taskType.name }} <br>
+              Rozwiązanie: {{ task.solutionType.name }}
+            </v-card-subtitle>
+            <v-card-text class="text--primary">
+              Przypisane do: {{ task.assignedTo[0].name }} <br>
+              Rozwiazania: 
+              <v-progress-circular
+                :color="task.solution.length === task.assignedTo[0].users.length ? 'success' : 'primary'"
+                size="48"
+                :value="task.solution.length / task.assignedTo[0].users.length * 100"
+              >
+                {{ task.solution.length }} / {{ task.assignedTo[0].users.length }}
+              </v-progress-circular>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </span>
+   
     <!-- Zadania do oceny -->
     <v-row>
       <v-col>
@@ -88,6 +121,14 @@ export default {
 
     showTaskDetails(task) {
       this.$router.push({ name: "TaskDetails", params: { pk: task.pk } });
+    },
+
+    hasSolution(taskToCheck) {
+      let sol = taskToCheck.solution.find(solution => {
+        return solution.user.username === this.$store.state.auth.username;
+      });
+
+      return sol !== undefined;
     }
   },
 
@@ -110,7 +151,7 @@ export default {
 
     userType() {
       return this.$store.state.auth.profile.userType;
-    }
+    },
   }
 };
 </script>

@@ -6,7 +6,7 @@
         <v-row v-if="currentRoute.name === 'TaskListing'">
           <v-col>Moje zadania</v-col>
           <v-spacer></v-spacer>
-          <v-col>
+          <v-col v-if="userType.name === 'Teacher'">
             <v-btn color="success" :to="{name: 'TaskCreator'}">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
@@ -24,6 +24,7 @@
 
 export default {
   created() {
+    this.$store.dispatch('tasks/getAllTasks');
     this.$router.push({ name: "TaskListing" });
   },
 
