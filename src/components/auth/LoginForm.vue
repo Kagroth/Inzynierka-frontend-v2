@@ -26,7 +26,7 @@
                   requried
                   outlined
                 ></v-text-field>
-                <v-btn color="primary" @click="loginUser" :loading="loading">Zaloguj</v-btn>
+                <v-btn color="primary" @click="loginUser" :loading="loading" :disabled="disabled">Zaloguj</v-btn>
               </v-form>
             </v-card-text>
           </v-card>
@@ -43,6 +43,7 @@ export default {
   data() {
     return {
       loading: false,
+      disabled: false,
       snackbar: {
         show: false,
         color: "",
@@ -88,6 +89,7 @@ export default {
           responseData.data !== undefined &&
           responseData.data.status === 200
         ) {
+          this.disabled = true;
           this.snackbar.message =
             "Pomyslnie zalogowano. Nastąpi przekierowanie";
           this.snackbar.color = "success";
@@ -97,6 +99,7 @@ export default {
             this.$router.push("/");
           }, 2000);
         } else {
+
           this.snackbar.message = responseData.message;
           this.snackbar.color = "error";
           this.snackbar.show = true;
