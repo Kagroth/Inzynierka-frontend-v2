@@ -67,7 +67,7 @@
             </v-list>
           </v-navigation-drawer>
       </v-col>
-      <v-col>
+      <v-col cols="8">
         <router-view></router-view>
       </v-col>
     </v-row>
