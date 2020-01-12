@@ -3,7 +3,7 @@
     <v-row>
       <!-- Boczne menu -->
       <v-col cols="2" v-if="isLogged">
-        <v-navigation-drawer dark>
+        <v-navigation-drawer dark permanent>
             <v-list nav>              
               <v-list-item link :to="{name: 'MyTasks'}">
                 <v-list-item-icon>
