@@ -21,8 +21,12 @@
 
 <script>
 export default {
+  props: ['redirected'],
+
   created() {
-    this.$router.push({ name: "ExerciseListing" });
+    if (!this.$route.params.redirected) {
+      this.$router.push({ name: "ExerciseListing" });
+    }    
   },
 
   watch: {
