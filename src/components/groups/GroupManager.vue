@@ -5,7 +5,7 @@
         <v-row v-if="currentRoute.name === 'GroupListing'">
           <v-col>Moje grupy</v-col>
           <v-spacer></v-spacer>
-          <v-col>
+          <v-col v-if="userType.name === 'Teacher'">
             <v-btn color="success" :to="{name: 'GroupCreator'}">
               <v-icon>mdi-plus</v-icon>
             </v-btn>
@@ -40,7 +40,11 @@ export default {
   computed: {
     currentRoute() {
       return this.$route;
-    }
+    },
+
+    userType() {
+      return this.$store.state.auth.profile.userType;
+    },
   }
 };
 </script>
