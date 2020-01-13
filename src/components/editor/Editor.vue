@@ -25,7 +25,7 @@
     <v-divider></v-divider>
     <v-row style="height: 92%;" class="pt-0 mt-0">
       <!-- KOLOKWIUM -->
-      <v-col v-if="task.taskType.name === 'Test'" class="pt-0 mt-0">
+      <v-col v-if="task.taskType.name === 'Test'" class="mt-0 mb-0 pt-0 pb-0">
         <v-tabs-items v-model="tab" style="height: 100%;">
           <v-tab-item v-for="(exercise, index) in tabs_exercises" :key="`item-${index}`" style="height: 100%;"> 
             <v-row style="max-height: 100%; height: 100%;">
@@ -44,20 +44,29 @@
                   </v-card-text>
                 </v-card>
               </v-col>
+              <v-divider vertical></v-divider>
               <v-col cols="8" class="pa-0">
-                <v-row style="height: 80%;">
+                <v-row style="height: 70%;">
                   <v-col cols="12" class="pt-0 pb-0" style="max-height: 100%;">
+                    <v-card dark tile height="100%">
+                      <v-card-text style="height: 100%">                        
                         <prism-editor
                           :code="tabs_exercises_codes[index]"
                           v-model="tabs_exercises_codes[index]"
-                          language="java">
+                          :language="tabs_exercises[index].language.name.toLowerCase()">
                         </prism-editor>
+                      </v-card-text>
+                    </v-card>
                   </v-col>
                 </v-row>
-                <v-row style="height: 22%;">
-                  <v-col cols="12">
-                    <v-card dark height="100%">
+                <v-divider></v-divider>
+                <v-row style="height: 29.9%;">
+                  <v-col cols="12" class="pt-0 pb-0" style="max-height: 100%;">
+                    <v-card dark tile style="max-height: 100%; height: 100%; overflow-y: scroll;">
                       <v-card-text>
+                        <span>
+                          {{ responseMessage }}
+                        </span>
                         <span v-for="(test_r, index) in tabs_solutions_results[index]" :key="`item-${index}`">
                           {{ test_r }} <br>
                         </span> 
@@ -98,7 +107,7 @@
                     <prism-editor
                       :code="myCode"
                       v-model="myCode"
-                      language="py">
+                      :language="task.exercise.language.name">
                     </prism-editor>
                   </v-card-text>
                 </v-card>
@@ -243,6 +252,10 @@ export default {
   -webkit-box-shadow: none;
   font-size: 1em;
   background-color: transparent;
+}
+
+.v-application pre code::before {
+  content: "";
 }
 
 .prism-editor-wrapper {
