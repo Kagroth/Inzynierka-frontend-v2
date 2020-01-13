@@ -31,11 +31,20 @@
                           <v-list-item-title> {{ exercise.title }} </v-list-item-title>
                           <v-list-item-subtitle>Poziom - {{ exercise.level.name }}</v-list-item-subtitle>
                         </v-list-item-content>
-                        <v-list-item-action>
-                          <v-btn icon small color="primary" :to="{name: 'ExerciseDetails', params: { pk: exercise.pk, redirected: true }}">
-                            <v-icon>mdi-magnify</v-icon>
-                          </v-btn>
+                        <v-list-item-action>                            
+                              <v-btn icon small color="primary" @click="showExercise(exercise.pk)">
+                                <v-icon>mdi-magnify</v-icon>
+                              </v-btn>
                         </v-list-item-action>
+                        <v-dialog v-model="showExerciseModal" width="600">
+                            <exercise :pk="exercisePkToShow"></exercise>
+                            <v-card tile>
+                              <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn color="primary" text @click="showExerciseModal=false">Zamknij</v-btn>                            
+                              </v-card-actions>
+                            </v-card>
+                        </v-dialog>
                   </v-list-item>
                 </v-list>
               </v-card-text>
@@ -47,14 +56,24 @@
 </template>
 <script>
 
-// import Exercise from '@/components/exercises/Exercise'
+import Exercise from '@/components/exercises/Exercise'
 
 export default {
   components: {
-    // 'exercise': Exercise
+     'exercise': Exercise
   },
 
   props: ['pk'],
+
+  data() {
+    return {
+      showExerciseModal: false,
+      exercisePkToShow: 0,
+    }
+  },
+
+  created() {
+  },
 
   methods: {
     deleteTest () {
@@ -65,8 +84,13 @@ export default {
           this.$router.push('/tasks/exercises')
         })
       } 
+    },
+
+    showExercise(pk) {
+      this.showExerciseModal = true
+      this.exercisePkToShow = pk
     }
-  },
+  }, 
 
   computed: {
     test () {

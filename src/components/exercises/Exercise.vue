@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card tile>
     <v-card-title>
       <v-row>
         <v-col cols="6">{{ exercise.title }}</v-col>
