@@ -199,9 +199,9 @@
                   </v-expansion-panels>
               </div>
               <v-divider class="mt-5 mb-5"></v-divider>
-              <div>
+              <div v-if="userType.name === 'Teacher'">
                 <h3>Rozwiązania nadeslali:</h3>
-                <span v-if="userType.name === 'Teacher'">
+                <span>
                   <v-row>
                     <v-col cols="4" v-for="(solution, index) in task.solution" :key="index">
                       {{ solution.user.username }}
