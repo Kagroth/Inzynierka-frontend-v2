@@ -1,20 +1,19 @@
 <template>
   <div>
-    <v-container>
       <v-row>
         <v-col cols="4">
           <h3>{{ group.name }}</h3>
         </v-col>
         <v-spacer></v-spacer>
-        <span v-if="userType.name === 'Teacher'">
-          <v-col cols="1">
-            <v-btn @click="editGroup" color="success" small>Edytuj</v-btn>
-          </v-col>
-          <v-col cols="1">
-            <v-btn @click="deleteGroup" color="error" small>Usuń</v-btn>
-          </v-col>
-        </span>
-      </v-row>
+        <v-col cols="2" v-if="userType.name === 'Teacher'">
+          <v-btn class="mr-4" @click="editGroup" color="success" small>
+              <v-icon>mdi-pencil</v-icon>
+            </v-btn>            
+            <v-btn @click="deleteGroup" color="error" small>
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+        </v-col>
+        </v-row>
 
       <v-divider></v-divider>
 
@@ -24,13 +23,20 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col>Imię i nazwisko</v-col>
-        <v-col>Email</v-col>
-      </v-row>
-      <v-row v-for="(user, index) in group.users" :key="index">
-        <v-col>{{user.first_name}} {{ user.last_name}}</v-col>
-        <v-col>{{ user.email }}</v-col>
-      </v-row>
+        <v-col>
+          <v-list>
+            <v-list-item v-for="(user, index) in group.users" :key="index">
+              <v-list-item-icon>
+                <v-icon>mdi-account</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>{{ user.first_name }} {{ user.last_name }}</v-list-item-title>
+                <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </v-col>
+      </v-row>      
 
       <v-divider></v-divider>
 
@@ -68,7 +74,6 @@
           </v-col>
         </v-row>
       </span>
-    </v-container>
   </div>
 </template>
 
