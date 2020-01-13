@@ -8,7 +8,6 @@ import LoginForm from '@/components/auth/LoginForm'
 import RegisterForm from '@/components/auth/RegisterForm'
 import GroupManager from '@/components/groups/GroupManager'
 import GroupCreator from '@/components/groups/GroupCreator'
-import GroupEditor from '@/components/groups/GroupEditor'
 import GroupListing from '@/components/groups/GroupListing'
 import Group from '@/components/groups/Group'
 import TaskManager from '@/components/tasks/TaskManager'
@@ -124,7 +123,7 @@ export default new VueRouter({
               component: TestCreator
             },
           ]
-        }
+        }        
       ]
     },    
     {
@@ -135,23 +134,7 @@ export default new VueRouter({
       path: '/register',
       component: RegisterForm
     },
-    {
-      path: '/groups',
-      name: '/MyGroups',
-      component: GroupManager,
-      children: [
-        {
-          path: 'group/:name',
-          name: 'GroupDetails',
-          component: Group
-        },
-        {
-          path: 'group/:name/edit',
-          name: 'GroupEditor',
-          component: GroupEditor
-        },
-      ]
-    },
+    
     {
       path: '/tasks',
       name: 'MyTasks',

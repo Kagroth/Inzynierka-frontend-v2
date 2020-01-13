@@ -22,7 +22,7 @@
         </v-btn>
       </v-col>
     </v-row>
-
+    <v-divider></v-divider>
     <v-row style="height: 92%;" class="pt-0 mt-0">
       <!-- KOLOKWIUM -->
       <v-col v-if="task.taskType.name === 'Test'" class="pt-0 mt-0">
@@ -71,10 +71,10 @@
         </v-tabs-items>
       </v-col>
       <!-- CWICZENIE -->
-      <v-col v-else>
+      <v-col v-else class="mt-0 mb-0 pt-0 pb-0">
         <v-row style="max-height: 100%; height: 100%">
           <v-col class="ma-0 pa-0">
-            <v-card dark height="100%">
+            <v-card dark tile height="100%">
               <v-card-text>
                 <h3 class="mb-5">Treść zadania:</h3>
                 {{ task.exercise.content }}
@@ -89,19 +89,25 @@
               
             </v-card>
           </v-col>
-          <v-col cols="8" class="pt-0">
-            <v-row style="height: 80%">
-              <v-col cols="12" class="pt-0 pb-0" style="max-height: 100%;">                
+          <v-divider vertical></v-divider>
+          <v-col cols="8" class="pa-0">
+            <v-row style="height: 70%">
+              <v-col cols="12" class="pt-0 pb-0" style="max-height: 100%;">
+                <v-card dark tile height="100%">
+                  <v-card-text style="height: 100%">                                    
                     <prism-editor
                       :code="myCode"
                       v-model="myCode"
                       language="py">
                     </prism-editor>
+                  </v-card-text>
+                </v-card>
               </v-col>
             </v-row>
-            <v-row style="height: 23%">
-              <v-col cols="12">
-                <v-card dark height="100%">
+            <v-divider></v-divider>
+            <v-row style="height: 29.9%;">
+              <v-col cols="12" class="pt-0 pb-0" style="max-height: 100%;">
+                <v-card dark tile style="max-height: 100%; height: 100%; overflow-y: scroll;">
                   <v-card-text>
                     <span>
                       {{ responseMessage }}
@@ -235,6 +241,8 @@ export default {
 .v-application code, .v-application pre code {
   box-shadow: none;
   -webkit-box-shadow: none;
+  font-size: 1em;
+  background-color: transparent;
 }
 
 .prism-editor-wrapper {

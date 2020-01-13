@@ -3,9 +3,9 @@
     <v-app>
       <main-nav />
       <v-content>
-        <v-container fluid style="height: 100%; width: 100%">
-          <v-row>
-            <v-col cols="12">
+        <v-container fluid style="height: 100%; width: 100%" class="pt-0 pb-0 mt-0">
+          <v-row style="height: 100%">
+            <v-col cols="12" class="pt-0 pb-0 mt-0 mb-0">
               <router-view />
             </v-col>
           </v-row>
