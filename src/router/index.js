@@ -123,6 +123,11 @@ export default new VueRouter({
               component: TestCreator
             },
           ]
+        },
+        {
+          path: 'solution/:pk',
+          name: 'Solution',
+          component: Solution,
         }        
       ]
     },    
