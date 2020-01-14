@@ -290,7 +290,7 @@ export default {
     showSolutionAsTeacher(pk) {
       this.$router.push({
         name: "Solution",
-        params: { pk: this.task.pk, pks: pk }
+        params: { pk: pk }
       });
     },
 
