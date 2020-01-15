@@ -1,4 +1,5 @@
 <template>
+  <!-- Widok dla Nauczyciela -->
   <div v-if="userType.name === 'Teacher'">
     <div v-if="task.taskType.name === 'Exercise'">
       <v-card tile>
@@ -20,7 +21,7 @@
         <v-card-actions>
           <v-row class="pa-0 ma-0" align="baseline">
             <v-spacer></v-spacer>
-            <v-col cols="2">
+            <v-col cols="2" class="pa-0 ma-0">
               <v-select outlined rounded label="Ocena" :items="[2, 3, 3.5, 4, 4.5, 5]"></v-select>
             </v-col>
             <v-col cols="1">
@@ -29,18 +30,59 @@
           </v-row>
         </v-card-actions>
       </v-card>
-      <h4>{{ task.title }}</h4>
-      <span style="white-space: pre-wrap;">{{ task.exercise.solution }}</span>
     </div>
     <div v-else>
-      <span
-        v-for="(exercise, index) in task.test.exercises"
-        :key="index"
-        style="white-space: pre-wrap;"
-      >
-        <h4>{{ exercise.title }}</h4>
-        <span>{{ exercise.solution }}</span>
-      </span>
+      <v-row>
+        <v-col>
+          <h3> {{ task.test.title }} </h3>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <h4> Roziwazanie uzytkownika: {{ solutionAuthor.first_name }} {{ solutionAuthor.last_name }} </h4>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col  
+          cols="12"
+          v-for="(exercise, index) in task.test.exercises"
+          :key="index">
+           <v-card
+              class="mb-4"
+              style="white-space: pre-wrap;">
+              <v-card-title>
+                {{ exercise.title }}
+              </v-card-title>
+              <v-card-text class="text--primary">
+                 <v-row>
+                  <v-col>{{ exercise.content }}</v-col>
+                </v-row>
+                <v-divider></v-divider>
+                <v-row>
+                  <v-col>
+                    <h4>Rozwiazanie:</h4>
+                    {{ exercise.solution }}
+                  </v-col>
+                </v-row>
+                <v-divider></v-divider>
+              </v-card-text>
+              <v-card-actions>
+                <v-row class="pa-0 ma-0" align="baseline">
+                  <v-spacer></v-spacer>
+                  <v-col cols="2" class="pa-0 ma-0">
+                    <v-select outlined rounded label="Ocena" :items="[2, 3, 3.5, 4, 4.5, 5]"></v-select>
+                  </v-col>
+                </v-row>
+              </v-card-actions>
+            </v-card>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-spacer></v-spacer>        
+        <v-col cols="1">
+           <v-btn large rounded color="primary">Oceń</v-btn>
+        </v-col>
+      </v-row>
     </div>
   </div>
 </template>
@@ -55,7 +97,6 @@ export default {
   },
 
   created() {
-    console.log(this.$route.params.pks);
     this.$store
       .dispatch("tasks/getSolution", this.$route.params.pk)
       .then(response => {
