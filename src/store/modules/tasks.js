@@ -276,6 +276,27 @@ const actions = {
     } catch (e) {
       console.log(e)
     }
+  },
+
+  async closeTask({commit}, updateData) {
+    let closeTaskResponse = {}
+
+    try {
+      closeTaskResponse = await API.closeTask(updateData)
+
+      if (closeTaskResponse.response) {
+        return closeTaskResponse.response
+      }
+
+      return closeTaskResponse
+    }
+    catch (e) {
+      console.log(e)
+      
+      return {
+        message: "Blad zakonczenia zadania"
+      }
+    }
   }
 }
 

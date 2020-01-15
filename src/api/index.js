@@ -171,5 +171,9 @@ export default {
 
   getSolutionTypes () {
     return this.sendRequest('solution_types/', 'get')
+  },
+
+  closeTask (updateData) {
+    return this.sendRequest('tasks/' + updateData.pk + '/', 'put', updateData)
   }
 }

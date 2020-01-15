@@ -166,6 +166,11 @@
                     </v-btn>
                   </div>
                 </v-col>
+                <v-col v-else>
+                  <v-btn color="warning" @click="closeTask">Zakończ zadanie
+                    <v-icon right>mdi-lock</v-icon>
+                  </v-btn>
+                </v-col>
               </v-row>
             </v-card-title>
             <v-card-subtitle>
@@ -325,6 +330,17 @@ export default {
 
         this.$store.dispatch("tasks/getAllTasks");
       });
+    },
+
+    closeTask() {
+      let closeTaskData = {}
+      
+      closeTaskData.pk = this.task.pk
+      closeTaskData.mode = "CLOSE"
+
+      this.$store.dispatch('tasks/closeTask', closeTaskData).then(response => {
+        console.log(response)
+      })
     }
   },
 
