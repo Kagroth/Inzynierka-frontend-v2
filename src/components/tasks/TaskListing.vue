@@ -84,7 +84,26 @@
       </v-col>
     </v-row>
     <v-row>
-
+      <v-col v-for="(task, index) in inactiveTasks" :key="`inactiveTask-${index}`" cols="4">
+        <v-card tile>
+            <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            <v-card-subtitle>
+              Typ: {{ task.taskType.name }} <br>
+              Rozwiązanie: {{ task.solutionType.name }}
+            </v-card-subtitle>
+            <v-card-text class="text--primary">
+              Przypisane do: {{ task.assignedTo[0].name }} <br>
+              Rozwiazania: 
+              <v-progress-circular
+                :color="task.solution.length === task.assignedTo[0].users.length ? 'success' : 'primary'"
+                size="48"
+                :value="task.solution.length / task.assignedTo[0].users.length * 100"
+              >
+                {{ task.solution.length }} / {{ task.assignedTo[0].users.length }}
+              </v-progress-circular>
+            </v-card-text>
+          </v-card>
+      </v-col>
     </v-row>
     <!-- Zadania ocenione -->
     <v-row>
@@ -143,10 +162,24 @@ export default {
 
     inactiveTasks() {
       let inactiveTasksTemp = this.$store.state.tasks.tasks.filter(task => {
-        return !task.isActive
+        return !task.isActive && !task.solution.rate
       })
 
       return this.filterTasksByName(inactiveTasksTemp)
+    },
+
+    endedTasks() {
+      let inactiveTasksTemp = this.$store.state.tasks.tasks.filter(task => {
+        return !task.isActive
+      })
+
+      let ratedTasksTemp = inactiveTasksTemp.filter(task => {
+        return task.solution.length > 0 && task.solution.every(solution => {
+          return !solution.rate
+        })
+      })
+
+      return this.filterTasksByName(ratedTasksTemp)
     },
 
     userType() {
