@@ -1,5 +1,9 @@
 <template>
   <div>
+    <v-snackbar v-model="snackbar.show" top :color="snackbar.color">
+      {{ snackbar.message }}
+      <v-btn @click="snackbar.show = false" text dark>Ok</v-btn>
+    </v-snackbar>
     <v-container>
       <v-row justify="center">
         <v-col cols="8">
@@ -167,9 +171,12 @@
                   </div>
                 </v-col>
                 <v-col v-else>
-                  <v-btn color="warning" @click="closeTask">Zakończ zadanie
+                  <v-btn v-if="task.isActive" color="warning" @click="closeTask" :loading="loading">Zakończ zadanie
                     <v-icon right>mdi-lock</v-icon>
                   </v-btn>
+                  <div v-else>
+                    Zadanie zamkniete
+                  </div>
                 </v-col>
               </v-row>
             </v-card-title>
@@ -205,15 +212,28 @@
               </div>
               <v-divider class="mt-5 mb-5"></v-divider>
               <div v-if="userType.name === 'Teacher'">
-                <h3>Rozwiązania nadeslali:</h3>
+                <h3>Rozwiązania:</h3>
                 <span>
                   <v-row>
-                    <v-col cols="4" v-for="(solution, index) in task.solution" :key="index">
-                      {{ solution.user.username }}
-                      <v-btn color="primary" icon small @click="showSolutionAsTeacher(solution.pk)">
-                        <v-icon>mdi-magnify</v-icon>
-                      </v-btn>
-                    </v-col>                    
+                    <v-col cols="4" v-for="(groupMember, index) in task.assignedTo[0].users" :key="index">                      
+                      <span v-if="task.solution.length > 0">
+                        {{ groupMember.first_name }} {{groupMember.last_name }}                        
+                        <span v-for="(solution, idx) in task.solution" :key="idx">                        
+                          <v-btn v-if="solution.user.username === groupMember.username" color="primary" icon small @click="showSolutionAsTeacher(solution.pk)">
+                            <v-icon>mdi-magnify</v-icon>
+                          </v-btn>
+                          <v-btn v-else icon small color="error" @click="showSolutionAsTeacher(solution.pk)">
+                            <v-icon>mdi-magnify</v-icon>
+                          </v-btn>
+                        </span>                        
+                      </span>
+                      <span v-else>
+                          {{ groupMember.first_name }} {{groupMember.last_name }}                          
+                          <v-btn icon small color="error" @click="showSolutionAsTeacher(solution.pk)">
+                            <v-icon>mdi-magnify</v-icon>
+                          </v-btn>
+                        </span>
+                    </v-col>                  
                   </v-row>
                 </span>
               </div>
@@ -234,6 +254,13 @@ export default {
 
   data() {
     return {
+      loading: false,
+      snackbar: {
+        show: false,
+        color: "",
+        message: ""
+      },
+
       sendSolutionLoading: false,
       testsResultsModal: false,
       testResults: "",
@@ -292,7 +319,7 @@ export default {
       }
     },
 
-    showSolutionAsTeacher(pk) {
+    showSolutionAsTeacher(pk = null) {
       this.$router.push({
         name: "Solution",
         params: { pk: pk }
@@ -333,13 +360,31 @@ export default {
     },
 
     closeTask() {
+      this.loading = true
+
       let closeTaskData = {}
       
       closeTaskData.pk = this.task.pk
       closeTaskData.mode = "CLOSE"
 
       this.$store.dispatch('tasks/closeTask', closeTaskData).then(response => {
+        this.loading = false
+        let color = ""
+
+        if (response.status === 200) {
+          color = "success"  
+        }
+        else {            
+          color = "error"
+        }
+
+        this.snackbar.message = response.data.message
+        this.snackbar.color = color
+        this.snackbar.show = true
+
         console.log(response)
+
+        this.$store.dispatch('tasks/getAllTasks')
       })
     }
   },
