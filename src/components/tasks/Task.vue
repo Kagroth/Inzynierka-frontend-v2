@@ -15,12 +15,12 @@
                 <v-col cols="2" v-if="userType.name === 'Student'">
                   <div v-if="task.taskType.name === 'Exercise'">
                     <div v-if="task.solutionType.name === 'File'">
-                      <!--
                         <span v-if="hasSolution">
-                          <v-btn color="primary" @click="showSolution">Podglad odpowiedzi</v-btn>
+                          <v-btn rounded color="primary" @click="showSolution()">
+                            <v-icon>mdi-magnify</v-icon>
+                          </v-btn>
                         </span>
-                      -->
-                      <span>
+                      <span v-else>
                         <v-dialog v-model="fileSendDialog" width="600">
                           <template v-slot:activator="{ on }">
                             <v-btn color="success" v-on="on" rounded>
@@ -306,7 +306,7 @@ export default {
 
     showSolution() {
       if (this.solution !== undefined) {
-        let pks = this.task.solution.find(solution => {
+        let pk = this.task.solution.find(solution => {
           console.log(solution.user.username);
           console.log(this.$store.state.auth.username);
           return solution.user.username === this.$store.state.auth.username;
@@ -314,7 +314,7 @@ export default {
 
         this.$router.push({
           name: "Solution",
-          params: { pk: this.task.pk, pks: pks }
+          params: { pk: pk }
         });
       }
     },
@@ -410,6 +410,7 @@ export default {
         console.log(this.$store.state.auth.username);
         return solution.user.username === this.$store.state.auth.username;
       });
+
       console.log(sol);
       return sol !== undefined;
     }
