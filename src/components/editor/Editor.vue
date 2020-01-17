@@ -7,6 +7,17 @@
           <v-tab v-for="(exercise, index) in tabsExercises" :key="index">
             <v-icon color="blue" left>mdi-language-{{ exercise.language.name.toLowerCase() }}</v-icon>
             {{ exercise.title }}
+            <span v-if="tabsSolutionsResults[index].result">
+              <v-icon right small v-if="tabsSolutionsResults[index].result" color="success">              
+                mdi-checkbox-marked-circle               
+              </v-icon>
+              <v-icon right small v-else color="warning">
+                mdi-alert-circle
+              </v-icon>
+            </span>            
+            <v-icon v-else right small>
+              mdi-checkbox-blank-circle-outline
+            </v-icon>
           </v-tab>
         </v-tabs>
       </v-col>
@@ -69,7 +80,7 @@
                         </span>
                         <br>
                         <span v-for="(test_r, index) in tabsSolutionsResults[index]" :key="`item-${index}`">
-                          {{ test_r }} <br>
+                          {{ test_r.test_results }} <br>
                         </span> 
                       </v-card-text>
                     </v-card>
@@ -170,7 +181,9 @@ export default {
     if (this.task.taskType.name === 'Test') {
       this.tabsExercises = this.task.test.exercises
       this.tabsExercisesCodes = this.tabsExercises.map(exercise => "")
-      this.tabsSolutionsResults = this.tabsExercises.map(exercise => "")
+      this.tabsSolutionsResults = this.tabsExercises.map(exercise => {
+        return {}
+      })
     }
   },
 
@@ -210,7 +223,8 @@ export default {
             this.testResults = response.data.test_results
           }
           else {
-            this.tabsSolutionsResults[this.tab] = response.data.test_results
+            this.tabsSolutionsResults[this.tab].test_results = response.data.test_results
+            this.tabsSolutionsResults[this.tab].result = response.data.result
             this.tabsResponseMessages[this.tab] = response.data.message
           }
         }
