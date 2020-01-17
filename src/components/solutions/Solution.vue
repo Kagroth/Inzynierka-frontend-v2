@@ -1,5 +1,10 @@
 <template>
-  <!-- Widok dla Nauczyciela -->
+  <div v-if="noSolution">
+    Użytkownik {{ solutionAuthor.first_name }} {{ solutionAuthor.last_name }} jeszcze nie przyslal rozwiazania
+    
+  </div>
+  <div v-else>
+    <!-- Widok dla Nauczyciela -->
   <div v-if="userType.name === 'Teacher'">
     <div v-if="task.taskType.name === 'Exercise'">
       <v-card tile>
@@ -102,6 +107,20 @@
             </v-col>
           </v-row>
           <v-divider></v-divider>
+          <v-row>
+            <v-col>
+              <v-expansion-panels tile style="white-space: pre-wrap">
+                <v-expansion-panel>
+                  <v-expansion-panel-header>
+                    Wyniki testów
+                  </v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    {{ solution.solution_exercise[0].test_results }}
+                  </v-expansion-panel-content>                   
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </v-col>
+          </v-row>
         </v-card-text>
 
         <v-card-actions>
@@ -126,32 +145,46 @@
       <v-row>
         <v-col  
           cols="12"
-          v-for="(exercise, index) in task.test.exercises"
+          v-for="(sol_exercise, index) in solution.solution_test.solution_exercises"
           :key="index">
            <v-card
               class="mb-4"
               style="white-space: pre-wrap;">
               <v-card-title>
-                {{ exercise.title }}
+                {{ sol_exercise.exercise.title }}
               </v-card-title>
               <v-card-text class="text--primary">
                  <v-row>
-                  <v-col>{{ exercise.content }}</v-col>
+                  <v-col>{{ sol_exercise.exercise.content }}</v-col>
                 </v-row>
                 <v-divider></v-divider>
                 <v-row>
                   <v-col>
                     <h4>Rozwiazanie:</h4>
-                    {{ exercise.solution }}
+                    {{ sol_exercise.solution_value }}
                   </v-col>
                 </v-row>
                 <v-divider></v-divider>
+                <v-row>
+                <v-col>
+                  <v-expansion-panels tile style="white-space: pre-wrap">
+                    <v-expansion-panel>
+                      <v-expansion-panel-header>
+                        Wyniki testów
+                      </v-expansion-panel-header>
+                      <v-expansion-panel-content>
+                        {{ sol_exercise.test_results }}
+                      </v-expansion-panel-content>                   
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+                </v-col>
+              </v-row>
               </v-card-text>
               <v-card-actions>
                 <v-row class="pa-0 ma-0" align="baseline">
                   <v-spacer></v-spacer>
-                  <v-col v-if="solution.solution_exercise[0].rate">
-                    {{ solution.solution_exercise[0].rate }}
+                  <v-col v-if="sol_exercise.rate">
+                    {{ sol_exercise }}
                   </v-col>
                   <v-col v-else cols="3">
                     Oczekuje na ocene
@@ -173,12 +206,15 @@
       </v-row>
     </div>
   </div>
+  </div>
+
 </template>
 
 <script>
 export default {
   data() {
     return {
+      noSolution: false,
       solution: {},
       solutionAuthor: {},
       task: {}
@@ -186,6 +222,13 @@ export default {
   },
 
   created() {
+    if (this.$route.params.pk === null) {
+      this.noSolution = true
+      this.solutionAuthor = this.$route.params.contextUser
+
+      return
+    }
+
     this.$store
       .dispatch("tasks/getSolution", this.$route.params.pk)
       .then(response => {
