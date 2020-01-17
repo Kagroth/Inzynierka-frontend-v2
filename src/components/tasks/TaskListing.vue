@@ -83,7 +83,32 @@
         Zadania do oceny:
       </v-col>
     </v-row>
-    <v-row>
+    <span v-if="userType.name === 'Student'">
+      <v-row>
+      <v-col v-for="(task, index) in inactiveTasks" :key="`inactiveTask-${index}`" cols="4">
+        <v-card tile>
+            <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            <v-card-subtitle>
+              Typ: {{ task.taskType.name }} <br>
+              Rozwiązanie: {{ task.solutionType.name }}
+            </v-card-subtitle>
+            <v-card-text class="text--primary">
+              Przypisane do: {{ task.assignedTo[0].name }} <br>
+              Rozwiązanie: 
+              <span v-if="hasSolution(task)">
+                Rozwiazanie zapisane
+                <v-icon color="success" small>mdi-check</v-icon>
+              </span>
+              <span v-else>
+                Nie udzielono odpowiedzi
+                <v-icon color="warning" small>mdi-exclamation</v-icon>
+              </span> 
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>           
+    </span>
+    <v-row v-else>
       <v-col v-for="(task, index) in inactiveTasks" :key="`inactiveTask-${index}`" cols="4">
         <v-card tile>
             <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
