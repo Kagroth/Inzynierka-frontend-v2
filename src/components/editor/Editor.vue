@@ -4,7 +4,7 @@
     <v-row class="grey darken-3" align="center" style="height: 8%">
       <v-col v-if="task.taskType.name === 'Test'" class="ma-0 pa-0">
         <v-tabs left dark show-arrows v-model="tab" @change="onExerciseTabChange">
-          <v-tab v-for="(exercise, index) in tabs_exercises" :key="index">
+          <v-tab v-for="(exercise, index) in tabsExercises" :key="index">
             <v-icon color="blue" left>mdi-language-{{ exercise.language.name.toLowerCase() }}</v-icon>
             {{ exercise.title }}
           </v-tab>
@@ -27,7 +27,7 @@
       <!-- KOLOKWIUM -->
       <v-col v-if="task.taskType.name === 'Test'" class="mt-0 mb-0 pt-0 pb-0">
         <v-tabs-items v-model="tab" style="height: 100%;">
-          <v-tab-item v-for="(exercise, index) in tabs_exercises" :key="`item-${index}`" style="height: 100%;"> 
+          <v-tab-item v-for="(exercise, index) in tabsExercises" :key="`item-${index}`" style="height: 100%;"> 
             <v-row style="max-height: 100%; height: 100%;">
               <v-col class="ma-0 pa-0">
                 <v-card tile dark height="100%">
@@ -51,9 +51,9 @@
                     <v-card dark tile height="100%">
                       <v-card-text style="height: 100%">                        
                         <prism-editor
-                          :code="tabs_exercises_codes[index]"
-                          v-model="tabs_exercises_codes[index]"
-                          :language="tabs_exercises[index].language.name.toLowerCase()">
+                          :code="tabsExercisesCodes[index]"
+                          v-model="tabsExercisesCodes[index]"
+                          :language="tabsExercises[index].language.name.toLowerCase()">
                         </prism-editor>
                       </v-card-text>
                     </v-card>
@@ -65,9 +65,10 @@
                     <v-card dark tile style="max-height: 100%; height: 100%; overflow-y: scroll;">
                       <v-card-text>
                         <span>
-                          {{ responseMessage }}
+                          {{ tabsResponseMessages[index] }}
                         </span>
-                        <span v-for="(test_r, index) in tabs_solutions_results[index]" :key="`item-${index}`">
+                        <br>
+                        <span v-for="(test_r, index) in tabsSolutionsResults[index]" :key="`item-${index}`">
                           {{ test_r }} <br>
                         </span> 
                       </v-card-text>
@@ -153,10 +154,11 @@ export default {
   data() {
     return {
       tab: 0,
-      tabs_exercises: [],
-      tabs_exercises_codes: [],
-      tabs_solutions_results: [],
-      myCode: "def myFun(a, b):\n\treturn a + b",
+      tabsExercises: [],
+      tabsExercisesCodes: [],
+      tabsSolutionsResults: [],
+      tabsResponseMessages: [],
+      myCode: "",
       sendSolutionLoading: false,
       responseMessage: "",
       testResults: null,
@@ -166,43 +168,23 @@ export default {
   created() {
     console.log(this.task);
     if (this.task.taskType.name === 'Test') {
-      this.tabs_exercises = this.task.test.exercises
-      this.tabs_exercises_codes = this.tabs_exercises.map(exercise => "")
-      this.tabs_solutions_results = this.tabs_exercises.map(exercise => "")
+      this.tabsExercises = this.task.test.exercises
+      this.tabsExercisesCodes = this.tabsExercises.map(exercise => "")
+      this.tabsSolutionsResults = this.tabsExercises.map(exercise => "")
     }
   },
 
   methods: {
-    // Obsługa tabulacji w edytorze
-    editorInputChange(index=null, event) {
-      //event.target.selectionStart = event.target.selectionStart + 5
-      console.log(event)
-      console.log(index)    
-      console.log(event.target.selectionStart)  
-      let start = event.target.selectionStart
-      let end = event.target.selectionEnd
-      
-      if (index !== null) {
-        let val = this.tabs_exercises_codes[index]
-        console.log(val)
-
-        this.tabs_exercises_codes[index] = val.substring(0, start) + '\t' + val.substring(end) 
+    runSolution () {
+      if (this.task.taskType.name === 'Test') {
+        if (this.tabsExercisesCodes[this.tab].length === 0) {
+          return
+        }
       }
       else {
-        let val = this.myCode
-
-        this.myCode = val.substring(0, start) + '\t' + val.substring(end);
-      }
-      
-      event.target.selectionStart = event.target.selectionEnd = start + 1
-      event.preventDefault()
-
-      this.$forceUpdate()
-    },
-
-    runSolution () {
-      if (this.myCode.length === 0) {
-        return 
+        if (this.myCode.length === 0) {
+          return
+        }
       }
 
       this.sendSolutionLoading = true
@@ -216,8 +198,8 @@ export default {
         formData.append('solution', this.myCode)
       }
       else {
-        formData.append('solution', this.tabs_exercises_codes[this.tab])
-        formData.append('exercisePk', this.tabs_exercises[this.tab].pk)
+        formData.append('solution', this.tabsExercisesCodes[this.tab])
+        formData.append('exercisePk', this.tabsExercises[this.tab].pk)
       }
 
       this.$store.dispatch('tasks/sendSolution', formData).then(response => {
@@ -228,7 +210,8 @@ export default {
             this.testResults = response.data.test_results
           }
           else {
-            this.tabs_solutions_results[this.tab] = response.data.test_results
+            this.tabsSolutionsResults[this.tab] = response.data.test_results
+            this.tabsResponseMessages[this.tab] = response.data.message
           }
         }
       })
@@ -236,7 +219,7 @@ export default {
 
     onExerciseTabChange () {
       console.log('Current exercise: ')
-      console.log(this.tabs_exercises[this.tab])
+      console.log(this.tabsExercises[this.tab])
     }
   }
 };
