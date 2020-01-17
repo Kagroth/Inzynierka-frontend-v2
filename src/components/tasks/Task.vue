@@ -16,17 +16,42 @@
                   <div v-if="task.taskType.name === 'Exercise'">
                     <div v-if="task.solutionType.name === 'File'">
                         <span v-if="hasSolution">
-                          <v-btn rounded color="primary" @click="showSolution()">
-                            <v-icon>mdi-magnify</v-icon>
-                          </v-btn>
+                          <v-menu offset-y>
+                            <template v-slot:activator="{ on }">
+                              <v-btn rounded v-on="on" color="primary">
+                                <v-icon>mdi-menu</v-icon>
+                              </v-btn>
+                            </template>
+                            <v-list nav>
+                              <v-list-item @click="showSolution()">
+                                <v-list-item-icon>
+                                  <v-icon>mdi-magnify</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>                                  
+                                  <v-list-item-title>
+                                    Podgląd
+                                  </v-list-item-title>
+                                </v-list-item-content>
+                              </v-list-item>
+                              <v-list-item @click="fileSendDialog = true">
+                                <v-list-item-icon>
+                                  <v-icon>mdi-file</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                  <v-list-item-title>
+                                    Przeslij ponownie
+                                  </v-list-item-title>
+                                </v-list-item-content>
+                              </v-list-item>
+                            </v-list>
+                          </v-menu>
                         </span>
                       <span v-else>
-                        <v-dialog v-model="fileSendDialog" width="600">
-                          <template v-slot:activator="{ on }">
-                            <v-btn color="success" v-on="on" rounded>
-                              <v-icon>mdi-file</v-icon>
-                            </v-btn>
-                          </template>
+                        <v-btn color="success" v-on="on" @click="fileSendDialog = true" rounded>
+                          <v-icon>mdi-file</v-icon>
+                        </v-btn>                        
+                      </span>
+                      <v-dialog v-model="fileSendDialog" width="600">
                           <v-card v-if="testsResultsModal">
                             <v-card-title>Twoje rozwiązanie zostało przetestowane i zapisane</v-card-title>
 
@@ -83,7 +108,6 @@
                             </v-card-actions>
                           </v-card>
                         </v-dialog>
-                      </span>
                     </div>
                     <div v-else-if="task.solutionType.name === 'Editor'">
                       <v-btn
@@ -219,17 +243,17 @@
                       <span v-if="task.solution.length > 0">
                         {{ groupMember.first_name }} {{groupMember.last_name }}                        
                         <span v-for="(solution, idx) in task.solution" :key="idx">                        
-                          <v-btn v-if="solution.user.username === groupMember.username" color="primary" icon small @click="showSolutionAsTeacher(solution.pk)">
+                          <v-btn v-if="solution.user.username === groupMember.username" color="primary" icon small @click="showSolutionAsTeacher(solution.pk, groupMember)">
                             <v-icon>mdi-magnify</v-icon>
                           </v-btn>
-                          <v-btn v-else icon small color="error" @click="showSolutionAsTeacher(solution.pk)">
+                          <v-btn v-else icon small color="error" @click="showSolutionAsTeacher(null, groupMember)">
                             <v-icon>mdi-magnify</v-icon>
                           </v-btn>
                         </span>                        
                       </span>
                       <span v-else>
                           {{ groupMember.first_name }} {{groupMember.last_name }}                          
-                          <v-btn icon small color="error" @click="showSolutionAsTeacher(solution.pk)">
+                          <v-btn icon small color="error" @click="showSolutionAsTeacher(null, groupMember)">
                             <v-icon>mdi-magnify</v-icon>
                           </v-btn>
                         </span>
@@ -319,10 +343,10 @@ export default {
       }
     },
 
-    showSolutionAsTeacher(pk = null) {
+    showSolutionAsTeacher(pk = null, contextUser = null) {
       this.$router.push({
         name: "Solution",
-        params: { pk: pk }
+        params: { pk: pk, contextUser: contextUser }
       });
     },
 
