@@ -297,6 +297,27 @@ const actions = {
         message: "Blad zakonczenia zadania"
       }
     }
+  },
+
+  async rateSolution({commit}, updateData) {
+    let rateSolutionResponse = {}
+
+    try {
+      rateSolutionResponse = await API.rateSolution(updateData)
+
+      if (rateSolutionResponse.response) {
+        return rateSolutionResponse.response
+      }
+
+      return rateSolutionResponse
+    }
+    catch (e) {
+      console.log(e)
+
+      return {
+        message: "Blad oceniania rozwiazania"
+      }
+    }
   }
 }
 

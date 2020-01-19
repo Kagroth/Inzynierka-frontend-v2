@@ -8,16 +8,16 @@
   <div v-if="userType.name === 'Teacher'">
     <div v-if="task.taskType.name === 'Exercise'">
       <v-card tile>
-        <v-card-title>{{ task.title }}</v-card-title>
+        <v-card-title>{{ solution.task.title }}</v-card-title>
         <v-card-text class="text--primary" style="white-space: pre-wrap;">
           <v-row>
-            <v-col>{{ task.exercise.content }}</v-col>
+            <v-col>{{ solution.task.exercise.content }}</v-col>
           </v-row>
           <v-divider></v-divider>
           <v-row>
             <v-col>
               <h4>Rozwiazanie:</h4>
-              {{ task.exercise.solution }}
+              {{ solution.task.exercise.solution }}
             </v-col>
           </v-row>
           <v-divider></v-divider>
@@ -27,10 +27,10 @@
           <v-row class="pa-0 ma-0" align="baseline">
             <v-spacer></v-spacer>
             <v-col cols="2" class="pa-0 ma-0">
-              <v-select outlined rounded label="Ocena" :items="[2, 3, 3.5, 4, 4.5, 5]"></v-select>
+              <v-select outlined rounded label="Ocena" :items="[2, 3, 3.5, 4, 4.5, 5]" v-model="solutionRates[0].rate"></v-select>
             </v-col>
             <v-col cols="1">
-              <v-btn large rounded color="primary">Oceń</v-btn>
+              <v-btn large rounded color="primary" @click="rateSolution">Oceń</v-btn>
             </v-col>
           </v-row>
         </v-card-actions>
@@ -75,7 +75,7 @@
                 <v-row class="pa-0 ma-0" align="baseline">
                   <v-spacer></v-spacer>
                   <v-col cols="2" class="pa-0 ma-0">
-                    <v-select outlined rounded label="Ocena" :items="[2, 3, 3.5, 4, 4.5, 5]"></v-select>
+                    <v-select outlined rounded label="Ocena" :items="[2, 3, 3.5, 4, 4.5, 5]" v-model="solutionRates[index].rate"></v-select>
                   </v-col>
                 </v-row>
               </v-card-actions>
@@ -85,7 +85,7 @@
       <v-row>
         <v-spacer></v-spacer>        
         <v-col cols="1">
-           <v-btn large rounded color="primary">Oceń</v-btn>
+           <v-btn large rounded color="primary" @click="rateSolution">Oceń</v-btn>
         </v-col>
       </v-row>
     </div>
@@ -126,8 +126,8 @@
         <v-card-actions>
           <v-row class="pa-0 ma-0" align="baseline">
             <v-spacer></v-spacer>
-            <v-col v-if="solution.solution_exercise[0].rate">
-              {{ solution.solution_exercise[0].rate }}
+            <v-col v-if="solution.solution_exercise[0].rate" cols="2">
+              Ocena: {{ solution.solution_exercise[0].rate }}
             </v-col>
             <v-col v-else cols="3">
               Oczekuje na ocene
@@ -217,7 +217,9 @@ export default {
       noSolution: false,
       solution: {},
       solutionAuthor: {},
-      task: {}
+      task: {},
+
+      solutionRates: {}
     };
   },
 
@@ -236,6 +238,13 @@ export default {
         this.solutionAuthor = response.data.data.user;
         this.task = response.data.data.task;
 
+        this.solutionRates = this.solution.solution_exercise.map(solExercise => {
+          return {
+            pk: solExercise.pk,
+            rate: solExercise.rate
+          }
+        })
+
         if (this.task.taskType.name === "Exercise") {
           this.task.exercise.solution = JSON.parse(
             JSON.stringify(response.data.data.solutionValue)
@@ -253,6 +262,30 @@ export default {
           }
         }
       });
+  },
+
+  methods: {
+    rateSolution() {
+
+      for (let solRate of this.solutionRates) {
+        console.log(solRate)
+        if (solRate.rate === null || solRate.rate === undefined) {
+          return
+        }
+      }
+
+      let rateSolutionData = {}
+      
+      rateSolutionData.pk = this.solution.pk
+      rateSolutionData.solRates = this.solutionRates
+      rateSolutionData.mode = "RATE"
+
+      this.$store.dispatch('tasks/rateSolution', rateSolutionData).then(response => {
+        console.log(response)
+      }).catch(error => {
+        console.log(error)
+      })
+    }
   },
 
   computed: {

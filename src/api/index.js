@@ -175,5 +175,9 @@ export default {
 
   closeTask (updateData) {
     return this.sendRequest('tasks/' + updateData.pk + '/', 'put', updateData)
+  },
+
+  rateSolution (updateData) {
+    return this.sendRequest('solutions/' + updateData.pk + '/', 'put', updateData)
   }
 }
