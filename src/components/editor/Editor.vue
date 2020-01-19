@@ -7,7 +7,7 @@
           <v-tab v-for="(exercise, index) in tabsExercises" :key="index">
             <v-icon color="blue" left>mdi-language-{{ exercise.language.name.toLowerCase() }}</v-icon>
             {{ exercise.title }}
-            <span v-if="tabsSolutionsResults[index].result">
+            <span v-if="tabsSolutionsResults[index].result !== undefined && tabsSolutionsResults[index].result !== null">
               <v-icon right small v-if="tabsSolutionsResults[index].result" color="success">              
                 mdi-checkbox-marked-circle               
               </v-icon>
@@ -26,10 +26,16 @@
         {{ task.exercise.title }}
       </v-col>
       <v-spacer></v-spacer>
-      <v-col cols="2" class="pa-0 ma-0">
+      <v-col cols="2" class="pa-0 ma-0 text-right">
         <v-btn color="orange" class="white--text" :loading="sendSolutionLoading" @click="runSolution">
           <v-icon left>mdi-play</v-icon>
           Uruchom
+        </v-btn>
+      </v-col>
+      <v-col cols="1">
+        <v-btn color="success" :disabled="isReadyToSave" @click="commitSolutions">
+          <v-icon left>mdi-file</v-icon>
+          Zapisz
         </v-btn>
       </v-col>
     </v-row>
@@ -79,8 +85,8 @@
                           {{ tabsResponseMessages[index] }}
                         </span>
                         <br>
-                        <span v-for="(test_r, index) in tabsSolutionsResults[index]" :key="`item-${index}`">
-                          {{ test_r.test_results }} <br>
+                        <span v-for="(test_r, index) in tabsSolutionsResults[index].test_results" :key="`item-${index}`">
+                          {{ test_r }} <br>
                         </span> 
                       </v-card-text>
                     </v-card>
@@ -165,6 +171,8 @@ export default {
   data() {
     return {
       tab: 0,
+      // wprowadzane po to, aby wyniki testow byly zapisywane dla zadania (zakladki) z ktorej uruchomiono wykonywanie testow
+      executionContextTab: 0,
       tabsExercises: [],
       tabsExercisesCodes: [],
       tabsSolutionsResults: [],
@@ -173,16 +181,20 @@ export default {
       sendSolutionLoading: false,
       responseMessage: "",
       testResults: null,
+      isReadyToSave: true,
     };
   },
 
   created() {
     console.log(this.task);
+
     if (this.task.taskType.name === 'Test') {
       this.tabsExercises = this.task.test.exercises
       this.tabsExercisesCodes = this.tabsExercises.map(exercise => "")
       this.tabsSolutionsResults = this.tabsExercises.map(exercise => {
-        return {}
+        return {
+          result: null
+        }
       })
     }
   },
@@ -201,6 +213,7 @@ export default {
       }
 
       this.sendSolutionLoading = true
+      this.executionContextTab = this.tab
 
       let formData = new FormData()
 
@@ -211,8 +224,8 @@ export default {
         formData.append('solution', this.myCode)
       }
       else {
-        formData.append('solution', this.tabsExercisesCodes[this.tab])
-        formData.append('exercisePk', this.tabsExercises[this.tab].pk)
+        formData.append('solution', this.tabsExercisesCodes[this.executionContextTab])
+        formData.append('exercisePk', this.tabsExercises[this.executionContextTab].pk)
       }
 
       this.$store.dispatch('tasks/sendSolution', formData).then(response => {
@@ -221,21 +234,41 @@ export default {
           this.responseMessage = response.data.message
           if (this.task.taskType.name === 'Exercise') {            
             this.testResults = response.data.test_results
+            this.isReadyToSave = !response.data.result
           }
           else {
-            this.tabsSolutionsResults[this.tab].test_results = response.data.test_results
-            this.tabsSolutionsResults[this.tab].result = response.data.result
-            this.tabsResponseMessages[this.tab] = response.data.message
+            this.tabsSolutionsResults[this.executionContextTab].test_results = response.data.test_results
+            this.tabsSolutionsResults[this.executionContextTab].result = response.data.result
+            this.tabsResponseMessages[this.executionContextTab] = response.data.message
+
+            let isNotNull = function (element, index, array) {
+              return element.result !== null
+            }
+
+            this.isReadyToSave = !this.tabsSolutionsResults.every(isNotNull)
+          }
+        }
+        else {
+          if (this.task.taskType.name === 'Exercise') {            
+            this.responseMessage = "Nie udalo sie przetestowac kodu"
+          }
+          else {
+            this.tabsResponseMessages[this.executionContextTab] = "Nie udalo sie przetestowac kodu"
           }
         }
       })
+    },
+
+    commitSolutions () {
+      alert("Twoje odpowiedzi zostaly zapisane")
+      this.$router.push({name: 'TaskListing'})
     },
 
     onExerciseTabChange () {
       console.log('Current exercise: ')
       console.log(this.tabsExercises[this.tab])
     }
-  }
+  },
 };
 </script>
 
