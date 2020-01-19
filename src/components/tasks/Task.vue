@@ -12,7 +12,7 @@
               <v-row>
                 <v-col cols="8">{{ task.title }}</v-col>
                 <v-spacer></v-spacer>
-                <v-col cols="2" v-if="userType.name === 'Student'">
+                <v-col cols="2" v-if="userType.name === 'Student' && task.isActive">
                   <div v-if="task.taskType.name === 'Exercise'">
                     <div v-if="task.solutionType.name === 'File'">
                         <span v-if="hasSolution">
@@ -186,13 +186,17 @@
                   </div>
                   <div v-else>
                     <v-btn
+                      rounded
                       color="orange"
                       class="white--text"
                       :to="{name: 'Editor', params: {task: this.task}}"
                     >
-                      <v-icon left>mdi-play-circle</v-icon>Rozwiąż kolokwium
+                      <v-icon>mdi-play</v-icon>
                     </v-btn>
                   </div>
+                </v-col>
+                <v-col cols="4" v-else-if="userType.name === 'Student' && !task.isActive">
+                  Zadanie zamkniete
                 </v-col>
                 <v-col v-else>
                   <v-btn v-if="task.isActive" color="warning" @click="closeTask" :loading="loading">Zakończ zadanie
