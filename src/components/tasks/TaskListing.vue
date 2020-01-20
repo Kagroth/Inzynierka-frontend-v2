@@ -64,13 +64,11 @@
             <v-card-text class="text--primary">
               Przypisane do: {{ task.assignedTo[0].name }} <br>
               Rozwiazania: 
-              <v-progress-circular
-                :color="task.solution.length === task.assignedTo[0].users.length ? 'success' : 'primary'"
-                size="48"
-                :value="task.solution.length / task.assignedTo[0].users.length * 100"
-              >
-                {{ task.solution.length }} / {{ task.assignedTo[0].users.length }}
-              </v-progress-circular>
+              <v-rating v-model="task.solution.length">
+                <template v-slot:item="props">
+                  <v-icon small :color="props.isFilled ? 'primary': 'error'">mdi-account</v-icon>
+                </template>
+              </v-rating>
             </v-card-text>
           </v-card>
         </v-col>
@@ -119,13 +117,11 @@
             <v-card-text class="text--primary">
               Przypisane do: {{ task.assignedTo[0].name }} <br>
               Rozwiazania: 
-              <v-progress-circular
-                :color="task.solution.length === task.assignedTo[0].users.length ? 'success' : 'primary'"
-                size="48"
-                :value="task.solution.length / task.assignedTo[0].users.length * 100"
-              >
-                {{ task.solution.length }} / {{ task.assignedTo[0].users.length }}
-              </v-progress-circular>
+              <v-rating v-model="task.solution.length">
+                <template v-slot:item="props">
+                  <v-icon small :color="props.isFilled ? 'primary': 'error'">mdi-account</v-icon>
+                </template>
+              </v-rating>
             </v-card-text>
           </v-card>
       </v-col>
