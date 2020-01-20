@@ -64,7 +64,7 @@
             <v-card-text class="text--primary">
               Przypisane do: {{ task.assignedTo[0].name }} <br>
               Rozwiazania: 
-              <v-rating v-model="task.solution.length">
+              <v-rating v-model="task.solution.length" :length="task.assignedTo[0].users.length">
                 <template v-slot:item="props">
                   <v-icon small :color="props.isFilled ? 'primary': 'error'">mdi-account</v-icon>
                 </template>
@@ -117,7 +117,7 @@
             <v-card-text class="text--primary">
               Przypisane do: {{ task.assignedTo[0].name }} <br>
               Rozwiazania: 
-              <v-rating v-model="task.solution.length">
+              <v-rating v-model="task.solution.length" :length="task.assignedTo[0].users.length">
                 <template v-slot:item="props">
                   <v-icon small :color="props.isFilled ? 'primary': 'error'">mdi-account</v-icon>
                 </template>
@@ -177,7 +177,11 @@ export default {
 
     inactiveTasks() {
       let inactiveTasksTemp = this.$store.state.tasks.tasks.filter(task => {
-        return !task.isActive && !task.solution.rate
+        let hasSomeUnratedSolutions = function (elem, index, array) {
+          return elem.rate === null
+        }
+
+        return !task.isActive && task.solution.every(hasSomeUnratedSolutions)
       })
 
       return this.filterTasksByName(inactiveTasksTemp)
@@ -190,7 +194,7 @@ export default {
 
       let ratedTasksTemp = inactiveTasksTemp.filter(task => {
         return task.solution.length > 0 && task.solution.every(solution => {
-          return !solution.rate
+          return !!solution.rate
         })
       })
 
