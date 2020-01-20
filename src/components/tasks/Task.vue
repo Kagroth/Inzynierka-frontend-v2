@@ -243,24 +243,21 @@
                 <h3>Rozwiązania:</h3>
                 <span>
                   <v-row>
-                    <v-col cols="4" v-for="(groupMember, index) in task.assignedTo[0].users" :key="index">                      
-                      <span v-if="task.solution.length > 0">
-                        {{ groupMember.first_name }} {{groupMember.last_name }}                        
-                        <span v-for="(solution, idx) in task.solution" :key="idx">                        
-                          <v-btn v-if="solution.user.username === groupMember.username" color="primary" icon small @click="showSolutionAsTeacher(solution.pk, groupMember)">
-                            <v-icon>mdi-magnify</v-icon>
-                          </v-btn>
-                          <v-btn v-else icon small color="error" @click="showSolutionAsTeacher(null, groupMember)">
-                            <v-icon>mdi-magnify</v-icon>
-                          </v-btn>
-                        </span>                        
-                      </span>
-                      <span v-else>
-                          {{ groupMember.first_name }} {{groupMember.last_name }}                          
-                          <v-btn icon small color="error" @click="showSolutionAsTeacher(null, groupMember)">
-                            <v-icon>mdi-magnify</v-icon>
-                          </v-btn>
+                    <v-col cols="4" v-for="(groupMember, index) in task.assignedTo[0].users" :key="`index-${index}`"> 
+                        {{ groupMember.first_name }} {{groupMember.last_name }}
+                        
+                        <span v-if="isUserHasSolution(groupMember.username)">
+                          <span v-for="(solution, idx) in task.solution" :key="idx">                        
+                            <v-btn v-if="solution.user.username === groupMember.username" color="primary" icon small @click="showSolutionAsTeacher(solution.pk, groupMember)">
+                              <v-icon>mdi-magnify</v-icon>
+                            </v-btn>
+                          </span>
                         </span>
+                        <span v-else>
+                          <v-btn icon small color="error" @click="showSolutionAsTeacher(null, groupMember)">
+                              <v-icon>mdi-magnify</v-icon>
+                            </v-btn>
+                        </span>   
                     </v-col>                  
                   </v-row>
                 </span>
@@ -414,6 +411,14 @@ export default {
 
         this.$store.dispatch('tasks/getAllTasks')
       })
+    },
+
+    isUserHasSolution(username) {
+      let usernamesWithSolutions = this.task.solution.map(sol => {
+          return sol.user.username
+      })
+      
+      return usernamesWithSolutions.includes(username)
     }
   },
 
