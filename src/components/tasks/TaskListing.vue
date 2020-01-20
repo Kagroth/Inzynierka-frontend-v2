@@ -74,7 +74,7 @@
         </v-col>
       </v-row>
     </span>
-   
+    
     <!-- Zadania do oceny -->
     <v-row>
       <v-col>
@@ -124,12 +124,6 @@
               </v-rating>
             </v-card-text>
           </v-card>
-      </v-col>
-    </v-row>
-    <!-- Zadania ocenione -->
-    <v-row>
-      <v-col>
-        Ocenione:
       </v-col>
     </v-row>
   </div>

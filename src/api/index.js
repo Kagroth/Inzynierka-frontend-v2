@@ -179,5 +179,9 @@ export default {
 
   rateSolution (updateData) {
     return this.sendRequest('solutions/' + updateData.pk + '/', 'put', updateData)
+  },
+
+  getUserData (pk) {
+    return this.sendRequest('users/' + pk + '/', 'get')
   }
 }

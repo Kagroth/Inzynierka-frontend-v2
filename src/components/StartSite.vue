@@ -47,7 +47,7 @@
                 </v-list-item-content>
               </v-list-item>
               
-               <v-list-item link v-if="userType.name === 'Teacher'" disabled>
+               <v-list-item link v-if="userType.name === 'Teacher'" :to="{name: 'SolutionListing'}">
                   <v-list-item-icon>
                     <v-icon>mdi-star</v-icon>
                   </v-list-item-icon>
@@ -56,7 +56,7 @@
                   </v-list-item-content>
                 </v-list-item>
 
-              <v-list-item v-else link disabled>
+              <v-list-item v-else link :to="{name: 'SolutionListing'}">
                 <v-list-item-icon>
                   <v-icon>mdi-magnify</v-icon>
                 </v-list-item-icon>

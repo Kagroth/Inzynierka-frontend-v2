@@ -127,6 +127,26 @@ const actions = {
     } catch (e) {
       console.log(e)
     }
+  },
+
+  async getUserData ({ commit }, pk) {    
+    try {
+      let getUserDataResponse = await API.getUserData(pk)
+      console.log(getUserDataResponse)
+      
+      if (getUserDataResponse.response) {
+        return getUserDataResponse.response
+      }
+
+      return getUserDataResponse
+    }
+    catch (e) {
+      console.log(e)
+
+      return {
+        message: "Nie udalo sie pobrac danych uzytkownika"
+      }
+    }
   }
 }
 

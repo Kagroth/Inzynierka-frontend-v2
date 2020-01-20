@@ -183,8 +183,8 @@
               <v-card-actions>
                 <v-row class="pa-0 ma-0" align="baseline">
                   <v-spacer></v-spacer>
-                  <v-col v-if="sol_exercise.rate">
-                    {{ sol_exercise }}
+                  <v-col v-if="sol_exercise.rate" cols="2">
+                    Ocena: {{ sol_exercise.rate }}
                   </v-col>
                   <v-col v-else cols="3">
                     Oczekuje na ocene

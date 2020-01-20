@@ -23,6 +23,8 @@ import Test from '@/components/tests/Test'
 import TestCreator from '@/components/tests/TestCreator'
 import TestManager from '@/components/tests/TestManager'
 import Solution from '@/components/solutions/Solution'
+import SolutionListing from '@/components/solutions/SolutionListing'
+import UserData from '@/components/solutions/UserData'
 import Editor from '@/components/editor/Editor'
 
 Vue.use(VueRouter)
@@ -128,6 +130,17 @@ export default new VueRouter({
           path: 'solution/:pk',
           name: 'Solution',
           component: Solution,
+        },
+        {
+          path: 'solutions',
+          name: 'SolutionListing',
+          component: SolutionListing
+        },
+        {
+          path: 'profile/:pk',
+          name: 'UserData',
+          component: UserData,
+          props: true
         }        
       ]
     },    
