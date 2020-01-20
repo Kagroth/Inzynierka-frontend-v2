@@ -20,7 +20,14 @@
       <v-col cols="3" v-for="group in groups" :key="group.pk" class="pa-1">
         <v-card tile>
           <v-card-title @click="showGroupDetails(group)" link>{{ group.name }}</v-card-title>
-          <v-card-subtitle>Liczba czlonkow: {{ group.users.length }}</v-card-subtitle>
+          <v-card-subtitle>Liczba czlonkow: 
+            <v-icon small>mdi-account</v-icon>
+            {{ group.users.length }} <br>
+            Aktywne zadania:
+            <v-icon small>mdi-calendar</v-icon>
+            {{ group.activeTasks.length }}
+            
+          </v-card-subtitle>
         </v-card>
       </v-col>
     </v-row>
