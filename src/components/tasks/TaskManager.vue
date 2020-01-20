@@ -23,8 +23,17 @@
 <script>
 
 export default {
+  data() {
+    return {
+      solutions: []
+    }
+  },
+
   created() {
     this.$store.dispatch('tasks/getAllTasks');
+    this.$store.dispatch('tasks/getAllSolutions').then(response => {
+      this.solutions = response.data
+    });
     this.$router.push({ name: "TaskListing" });
   },
 

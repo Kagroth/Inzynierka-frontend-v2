@@ -253,12 +253,18 @@ const actions = {
       getAllSolutionResponse = await API.getAllSolutions()
       console.log(getAllSolutionResponse)
 
-      return {
-        data: getAllSolutionResponse,
-        message: 'Pobrano wszystkie rozwiazania'
+      if (getAllSolutionResponse.response) {
+        return getAllSolutionResponse.response
       }
+
+      return getAllSolutionResponse
+
     } catch (e) {
       console.log(e)
+
+      return {
+        message: "Nie udalo sie pobrac rozwiazan"
+      }
     }
   },
 
