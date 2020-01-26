@@ -75,11 +75,53 @@
                       :disabled="unitTestFormShow()"
                       small
                     >Dodaj test</v-btn>
+                    <v-btn icon @click="displayTooltip = !displayTooltip">                          
+                          <v-icon color="accent">mdi-help-circle</v-icon>
+                        </v-btn>                    
                   </v-col>
                 </v-row>
+                <v-row v-if="displayTooltip">
+                  <v-col>
+                    <span v-if="form.language.name === 'Python'">
+                          Aplikacja wykorzystuje bibliotekę 'unittest' do przeprowadzania testów jednostkowych.
+                          Poniższy formularz pozwala na zdefiniowanie testów do tego ćwiczenia.
+                          Do formularza należy wpisać asercje oddzielone znakami nowej linii.
+                          <br>
+                          Przykładowa metoda:
+                          <v-card>
+                            <v-card-text>
+                              self.assertEqual(moja_funkcja(1, 1), 2) <br>
+                              self.assertEqual(moja_funkcja(2, 2), 4)
+                            </v-card-text>
+                          </v-card> 
+                          <br>
+                          <a href="https://docs.python.org/3/library/unittest.html#assert-methods">
+                            Link do dostępnych asercji.
+                          </a>    
+                        </span>
+                        <span v-else-if="form.language.name === 'Java'">
+                          Aplikacja wykorzystuje bibliotekę "JUnit" do przeprowadzania testów jednostkowych.
+                          Poniższy formularz pozwala na zdefiniowanie testów do tego ćwiczenia.
+                          Do formularza należy wpisać asercje oddzielone średnikiem ";".
+                          <br>
+                          Przykładowa metoda:
+                          <v-card>
+                            <v-card-text>
+                              assertEquals(mojaFunkcja(1, 1), 2); <br>
+                              assertEquals(mojaFunkcja(2, 2), 4);
+                            </v-card-text>
+                          </v-card> 
+                          <br>
+                          <a href="https://junit.org/junit5/docs/5.0.1/api/org/junit/jupiter/api/Assertions.html">
+                            Link do dostępnych asercji.
+                          </a>
+                        </span>
+                  </v-col>
+                </v-row>
+                <v-divider></v-divider>
                 <v-row v-for="(unit_test, index) in form.unitTests" :key="index">
                   <v-col>
-                    <v-textarea outlined v-model="form.unitTests[index]" required></v-textarea>
+                    <v-textarea outlined v-model="form.unitTests[index]" required placeholder="Wprowadź asercje"></v-textarea>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -106,6 +148,7 @@ export default {
         color: "",
         message: ""
       },
+      displayTooltip: false,
 
       levels: [],
       languages: [],
@@ -168,11 +211,15 @@ export default {
     addUnitTest(event) {
       event.preventDefault();
 
+      if (this.form.unitTests.length === 1) {
+        return
+      }
+
       this.form.unitTests.push("");
     },
 
     unitTestFormShow() {
-      if (["Python", "Java"].includes(this.form.language.name)) return false;
+      if (this.languages.includes(this.form.language)) return false;
       else return true;
     }
   },
