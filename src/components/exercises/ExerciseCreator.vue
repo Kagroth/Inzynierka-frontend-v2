@@ -85,7 +85,7 @@
                     <span v-if="form.language.name === 'Python'">
                           Aplikacja wykorzystuje bibliotekę 'unittest' do przeprowadzania testów jednostkowych.
                           Poniższy formularz pozwala na zdefiniowanie testów do tego ćwiczenia.
-                          Do formularza należy wpisać asercje oddzielone znakami nowej linii.
+                          W formularzu należy wpisać asercje oddzielone znakami nowej linii.
                           <br>
                           Przykładowa metoda:
                           <v-card>
@@ -102,7 +102,8 @@
                         <span v-else-if="form.language.name === 'Java'">
                           Aplikacja wykorzystuje bibliotekę "JUnit" do przeprowadzania testów jednostkowych.
                           Poniższy formularz pozwala na zdefiniowanie testów do tego ćwiczenia.
-                          Do formularza należy wpisać asercje oddzielone średnikiem ";".
+                          W formularzu należy wpisać asercje zakończone średnikiem ";" 
+                          i oddzielone znakiem nowej linii .
                           <br>
                           Przykładowa metoda:
                           <v-card>
