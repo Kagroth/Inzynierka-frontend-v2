@@ -275,10 +275,11 @@ const actions = {
       getSolutionResponse = await API.getSolution(pk)
       console.log(getSolutionResponse)
 
-      return {
-        data: getSolutionResponse,
-        message: 'Pobrano roziwazanie'
+      if (getSolutionResponse.response) {
+        return getSolutionResponse.response
       }
+
+      return getSolutionResponse
     } catch (e) {
       console.log(e)
     }

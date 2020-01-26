@@ -1,6 +1,6 @@
 <template>
   <div v-if="noSolution">
-    Użytkownik {{ solutionAuthor.first_name }} {{ solutionAuthor.last_name }} jeszcze nie przyslal rozwiazania
+    Użytkownik {{ solutionAuthor.first_name }} {{ solutionAuthor.last_name }} nie przyslal rozwiazania
     
   </div>
   <div v-else>
@@ -234,9 +234,16 @@ export default {
     this.$store
       .dispatch("tasks/getSolution", this.$route.params.pk)
       .then(response => {
-        this.solution = response.data.data
-        this.solutionAuthor = response.data.data.user;
-        this.task = response.data.data.task;
+        console.log(response)
+
+        this.solution = response.data
+        this.solutionAuthor = response.data.user;
+        this.task = response.data.task;
+
+        if (response.status === 400) {
+          this.noSolution = true
+          return
+        }
 
         this.solutionRates = this.solution.solution_exercise.map(solExercise => {
           return {
@@ -247,10 +254,10 @@ export default {
 
         if (this.task.taskType.name === "Exercise") {
           this.task.exercise.solution = JSON.parse(
-            JSON.stringify(response.data.data.solutionValue)
+            JSON.stringify(response.data.solutionValue)
           );
         } else {
-          let solutions = response.data.data.solutionValue.map(
+          let solutions = response.data.solutionValue.map(
             singleSolution => {
               return JSON.parse(JSON.stringify(singleSolution));
             }
