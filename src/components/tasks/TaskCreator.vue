@@ -23,12 +23,7 @@
                   </v-col>
                   <v-col>
                     <v-select outlined :items="allowed_solution_types" v-model="form.solutionType" label="Sposób rozwiązania zadania">
-                      <template slot="item" slot-scope="data"> <!-- ten slot odpowiada za to jak obiekty sa wyswietlane w liscie -->
-                        {{ data.item.name }}
-                      </template>
-                      <template slot="selection" slot-scope="data"> <!-- ten slot odpowiada za to jak wybrany obiekt jest wyswietlany -->
-                        {{ data.item.name }}
-                      </template>
+                      
                     </v-select>
                   </v-col>
                   <v-col cols="12">
@@ -76,7 +71,15 @@ export default {
         message: ""
       },
 
-      taskTypes: ['Exercise', 'Test'],
+      taskTypes: [
+        {
+          value: "Exercise",
+          text: "Ćwiczenie"
+        },
+        {
+          value: "Test",
+          text: "Kolokwium"
+        }],
       solutionTypes: [],
       selectedGroup: '',
       form: {
@@ -147,7 +150,7 @@ export default {
 
     allowed_solution_types () {
       if (this.form.taskType === 'Test') {
-        return this.solutionTypes.filter(solType => solType.name === 'Editor')
+        return this.solutionTypes.filter(solType => solType.value === 'Editor')
       }
 
       return this.solutionTypes
@@ -186,7 +189,25 @@ export default {
       .dispatch('tasks/getSolutionTypesAll')
       .then(data => {
         console.log(data)
-        this.solutionTypes = data
+        this.solutionTypes = data.map(solutionType => {
+          let value = solutionType.name;
+          let text = ""; 
+
+          if (solutionType.name === 'File') {
+            text = "Plik"
+          }
+          else if (solutionType.name === 'Editor') {
+            text = "Edytor"
+          }
+          else {
+            text = "Repozytorium GitHub"
+          }
+
+          return {
+            value: value,
+            text: text
+          }
+        })
       })
       .catch(() => {
         console.log("Nie udalo sie pobrac rodzajow rozwiazan")
