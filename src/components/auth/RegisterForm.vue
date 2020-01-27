@@ -37,7 +37,16 @@ import { required, sameAs, minLength, alpha, alphaNum, email } from 'vuelidate/l
 export default {
   data () {
     return {
-      userTypes: ['Student', 'Teacher'],
+      userTypes: [
+        {
+          value: 'Student',
+          text: 'Student'
+        },
+        {
+          value: 'Teacher',
+          text: 'Nauczyciel'
+        }
+      ],
       loading: false,
       snackbar: {
         show: false,
