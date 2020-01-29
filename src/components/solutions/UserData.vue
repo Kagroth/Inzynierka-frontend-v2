@@ -15,11 +15,14 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="(solution, index) in userData.solutions" :key="index">
-                    <td>{{ solution.task.title }}</td>
-                    <td>{{ solution.rate || "Brak oceny"}}</td>
+                  <tr v-for="(task, index) in userData.tasks" :key="index">
+                    <td>{{ task.title }}</td>
+                    <td v-if="getSolution(task) !== undefined">
+                      {{ getSolution(task).rate || "Brak oceny" }}
+                    </td>
+                    <td v-else>{{ "Brak rozwiazania "}}</td>
                     <td>
-                      <v-btn icon color="primary" @click="showSolution(solution.pk)">
+                      <v-btn icon color="primary" @click="showSolution(getSolution(task).pk)">
                         <v-icon>mdi-magnify</v-icon>
                       </v-btn>
                     </td>
@@ -53,6 +56,14 @@ export default {
   },
 
   methods: {
+     getSolution(task) {
+       let sol = task.solution.find(sol => {
+         return sol.user.pk === this.userData.user.pk
+       })
+
+       return sol
+     },
+
      showSolution(pk) {
       this.$router.push({
         name: "Solution",
