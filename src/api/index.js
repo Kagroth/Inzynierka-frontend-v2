@@ -183,5 +183,9 @@ export default {
 
   getUserData (pk) {
     return this.sendRequest('users/' + pk + '/', 'get')
+  },
+
+  getTeachersStudents () {
+    return this.sendRequest('my_students/', 'get')
   }
 }

@@ -76,6 +76,25 @@ const actions = {
     }
   },
 
+  async loadTeachersStudents () {
+    let loadTeachersStudentsResponse = {}
+
+    try {
+      loadTeachersStudentsResponse = await API.getTeachersStudents()
+
+      if (loadTeachersStudentsResponse.response) {
+        return loadTeachersStudentsResponse.response
+      }
+
+      return loadTeachersStudentsResponse
+    } catch(e) {
+      console.log(e)
+      return {
+        message: "Nie udalo sie pobrac studentow"
+      }
+    }
+  },
+
   async createGroup ({ commit }, newGroupData) {
     let createGroupResponse = {}
 

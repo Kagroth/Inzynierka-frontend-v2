@@ -30,35 +30,15 @@
           </v-card-text>
         </v-card>
         <v-card v-else>
-          <v-card-title></v-card-title>
+          <v-card-title>Studenci:</v-card-title>
           <v-card-text>
-            <v-expansion-panels>
-              <v-expansion-panel v-for="(group, index) in groups" :key="index">
-                <v-expansion-panel-header>Grupa: {{ group.name }}</v-expansion-panel-header>
-                <v-expansion-panel-content>
-                  <v-simple-table>
-                    <template>
-                      <thead>
-                        <tr class="text-center">
-                          <th>Student</th>
-                          <th>Podgląd</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr v-for="(user, index) in group.users" :key="`index-user-${index}`">
-                          <td>{{ user.first_name }} {{ user.last_name }}</td>
-                          <td>
-                            <v-btn icon color="primary" @click="inspectUser(user.pk)">
-                              <v-icon>mdi-magnify</v-icon>
-                            </v-btn>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
-                </v-expansion-panel-content>
-              </v-expansion-panel>
-            </v-expansion-panels>
+            <v-list>
+              <v-list-item v-for="(student, index) in students" :key="index">
+                <v-list-item-content>
+                  <v-list-item-title @click="inspectUser(student.pk)"> {{ student.first_name }} {{ student.last_name }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>           
           </v-card-text>
         </v-card>
       </v-col>
@@ -70,17 +50,17 @@
 export default {
   data() {
     return {
+      students: [],
       solutions: []
     };
   },
 
   created() {
-    this.$store.dispatch("users/loadGroups");
-    this.$store.dispatch("tasks/getAllSolutions").then(response => {
+    this.$store.dispatch('users/loadTeachersStudents').then(response => {
       if (response.status === 200) {
-        this.solutions = response.data;
+        this.students = response.data
       }
-    });
+    })
   },
 
   methods: {
@@ -104,9 +84,6 @@ export default {
       return this.$store.state.auth.profile.userType;
     },
 
-    groups() {
-      return this.$store.state.users.groups;
-    }
   }
 };
 </script>
