@@ -177,11 +177,7 @@ export default {
 
     inactiveTasks() {
       let inactiveTasksTemp = this.$store.state.tasks.tasks.filter(task => {
-        let hasSomeUnratedSolutions = function (elem, index, array) {
-          return elem.rate === null
-        }
-
-        return !task.isActive && task.solution.every(hasSomeUnratedSolutions)
+        return !task.isActive && !task.isRated
       })
 
       return this.filterTasksByName(inactiveTasksTemp)
@@ -189,16 +185,10 @@ export default {
 
     endedTasks() {
       let inactiveTasksTemp = this.$store.state.tasks.tasks.filter(task => {
-        return !task.isActive
+        return !task.isActive && task.isRated
       })
 
-      let ratedTasksTemp = inactiveTasksTemp.filter(task => {
-        return task.solution.length > 0 && task.solution.every(solution => {
-          return !!solution.rate
-        })
-      })
-
-      return this.filterTasksByName(ratedTasksTemp)
+      return this.filterTasksByName(inactiveTasksTemp)
     },
 
     userType() {

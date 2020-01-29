@@ -221,11 +221,14 @@
                   v-else-if="userType.name === 'Student' && !task.isActive"
                 >Zadanie zamkniete</v-col>
                 <v-col v-else>
-                  <v-btn v-if="task.isActive" color="warning" @click="closeTask" :loading="loading">
+                  <v-btn v-if="task.isActive" color="warning" @click="changeTaskState(`LOCK`)" :loading="loading">
                     Zakończ zadanie
                     <v-icon right>mdi-lock</v-icon>
                   </v-btn>
-                  <div v-else>Zadanie zamkniete</div>
+                  <div v-else-if="task.isRated">Zadanie zamkniete</div>
+                  <div v-else>
+                    <v-btn color="success" @click="changeTaskState(`CLOSE`)" :loading="loading">Zapisz oceny i zamknij zadanie</v-btn>
+                  </div>
                 </v-col>
               </v-row>
             </v-card-title>
@@ -418,13 +421,19 @@ export default {
       });
     },
 
-    closeTask() {
+    changeTaskState(stateToSet) {
+      console.log(stateToSet)
+      if (!['LOCK', 'CLOSE'].includes(stateToSet)) {
+        console.log("Niepoprawny parametr" + stateToSet)
+        return
+      }
+
       this.loading = true;
 
       let closeTaskData = {};
 
       closeTaskData.pk = this.task.pk;
-      closeTaskData.mode = "CLOSE";
+      closeTaskData.mode = stateToSet;
 
       this.$store.dispatch("tasks/closeTask", closeTaskData).then(response => {
         this.loading = false;
