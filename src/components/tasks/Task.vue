@@ -23,7 +23,7 @@
                             </v-btn>
                           </template>
                           <v-list nav>
-                            <v-list-item @click="showSolution()">
+                            <v-list-item @click="showSolution">
                               <v-list-item-icon>
                                 <v-icon>mdi-magnify</v-icon>
                               </v-list-item-icon>
@@ -106,7 +106,11 @@
                       </v-dialog>
                     </div>
                     <div v-else-if="task.solutionType.name === 'Editor'">
+                      <v-btn v-if="hasSolution" rounded color="primary" @click="showSolution">
+                        <v-icon>mdi-magnify</v-icon>
+                      </v-btn>
                       <v-btn
+                        v-else
                         rounded
                         color="orange"
                         class="white--text"
@@ -146,67 +150,71 @@
                       <span v-else>
                         <v-btn color="primary" rounded @click="addGitHubRepoDialog = true">
                           <v-icon>mdi-github-circle</v-icon>
-                        </v-btn>                        
+                        </v-btn>
                       </span>
                       <v-dialog v-model="addGitHubRepoDialog" width="600">
-                          <v-card v-if="testsResultsModal">
-                            <v-card-title>Twoje rozwiązanie zostało przetestowane i zapisane</v-card-title>
+                        <v-card v-if="testsResultsModal">
+                          <v-card-title>Twoje rozwiązanie zostało przetestowane i zapisane</v-card-title>
 
-                            <v-card-text>
-                              <h3>Wyniki testów:</h3>
-                              <v-list>
-                                <v-list-item
-                                  v-for="(singleResult, index) in this.testResults"
-                                  :key="index"
-                                >
-                                  <v-list-item-content>{{ singleResult }}</v-list-item-content>
-                                </v-list-item>
-                              </v-list>
-                            </v-card-text>
+                          <v-card-text>
+                            <h3>Wyniki testów:</h3>
+                            <v-list>
+                              <v-list-item
+                                v-for="(singleResult, index) in this.testResults"
+                                :key="index"
+                              >
+                                <v-list-item-content>{{ singleResult }}</v-list-item-content>
+                              </v-list-item>
+                            </v-list>
+                          </v-card-text>
 
-                            <v-divider></v-divider>
+                          <v-divider></v-divider>
 
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                              <v-btn color="primary" text @click="hideResultDialog">Ok</v-btn>
-                            </v-card-actions>
-                          </v-card>
-                          <v-card v-else>
-                            <v-card-title
-                              class="headline grey lighten-2"
-                              primary-title
-                            >Przesyłanie odpowiedzi</v-card-title>
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="primary" text @click="hideResultDialog">Ok</v-btn>
+                          </v-card-actions>
+                        </v-card>
+                        <v-card v-else>
+                          <v-card-title
+                            class="headline grey lighten-2"
+                            primary-title
+                          >Przesyłanie odpowiedzi</v-card-title>
 
-                            <v-card-text class="mt-4">
-                              <v-text-field
-                                v-model="gitHubRepo"
-                                outlined
-                                placeholder="Np: https://github.com/User/RepositoryName.git"
-                                label="Link do repozytorium GitHub"
-                              ></v-text-field>
-                            </v-card-text>
+                          <v-card-text class="mt-4">
+                            <v-text-field
+                              v-model="gitHubRepo"
+                              outlined
+                              placeholder="Np: https://github.com/User/RepositoryName.git"
+                              label="Link do repozytorium GitHub"
+                            ></v-text-field>
+                          </v-card-text>
 
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
-                              <v-btn
-                                v-if="!sendSolutionLoading"
-                                color="primary"
-                                text
-                                @click="addGitHubRepoDialog = false"
-                              >Anuluj</v-btn>
-                              <v-btn
-                                color="primary"
-                                :loading="sendSolutionLoading"
-                                text
-                                @click="sendGitHubSolution"
-                              >Wyślij</v-btn>
-                            </v-card-actions>
-                          </v-card>
-                        </v-dialog>
+                          <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn
+                              v-if="!sendSolutionLoading"
+                              color="primary"
+                              text
+                              @click="addGitHubRepoDialog = false"
+                            >Anuluj</v-btn>
+                            <v-btn
+                              color="primary"
+                              :loading="sendSolutionLoading"
+                              text
+                              @click="sendGitHubSolution"
+                            >Wyślij</v-btn>
+                          </v-card-actions>
+                        </v-card>
+                      </v-dialog>
                     </div>
                   </div>
                   <div v-else>
+                    <v-btn v-if="hasSolution" rounded color="primary" @click="showSolution">
+                      <v-icon>mdi-magnify</v-icon>
+                    </v-btn>
                     <v-btn
+                      v-else
                       rounded
                       color="orange"
                       class="white--text"
@@ -221,13 +229,22 @@
                   v-else-if="userType.name === 'Student' && !task.isActive"
                 >Zadanie zamkniete</v-col>
                 <v-col v-else>
-                  <v-btn v-if="task.isActive" color="warning" @click="changeTaskState(`LOCK`)" :loading="loading">
+                  <v-btn
+                    v-if="task.isActive"
+                    color="warning"
+                    @click="changeTaskState(`LOCK`)"
+                    :loading="loading"
+                  >
                     Zakończ zadanie
                     <v-icon right>mdi-lock</v-icon>
                   </v-btn>
                   <div v-else-if="task.isRated">Zadanie zamkniete</div>
                   <div v-else>
-                    <v-btn color="success" @click="changeTaskState(`CLOSE`)" :loading="loading">Zapisz oceny i zamknij zadanie</v-btn>
+                    <v-btn
+                      color="success"
+                      @click="changeTaskState(`CLOSE`)"
+                      :loading="loading"
+                    >Zapisz oceny i zamknij zadanie</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -250,7 +267,7 @@
               </div>
               <div v-else>
                 <h3 class="mb-3">Cwiczenia:</h3>
-                <v-expansion-panels multiple="true" flat>
+                <v-expansion-panels :multiple="true" flat>
                   <v-expansion-panel v-for="(exercise, index) in task.test.exercises" :key="index">
                     <v-expansion-panel-header>{{ index + 1 }} {{ exercise.title }}</v-expansion-panel-header>
                     <v-expansion-panel-content>
@@ -262,42 +279,62 @@
               <v-divider class="mt-5 mb-5"></v-divider>
               <div v-if="userType.name === 'Teacher'">
                 <h3>Rozwiązania:</h3>
-                <span>
-                  <v-row>
-                    <v-col
-                      cols="4"
-                      v-for="(groupMember, index) in task.assignedTo[0].users"
-                      :key="`index-${index}`"
-                    >
-                      {{ groupMember.first_name }} {{groupMember.last_name }}
-                      <span
-                        v-if="isUserHasSolution(groupMember.username)"
+                <v-row>
+                  <v-col>
+                    <v-list>
+                      <v-list-item
+                        v-for="(groupMember, index) in task.assignedTo[0].users"
+                        :key="`index-${index}`"
                       >
-                        <span v-for="(solution, idx) in task.solution" :key="idx">
-                          <v-btn
-                            v-if="solution.user.username === groupMember.username"
-                            color="primary"
-                            icon
-                            small
-                            @click="showSolutionAsTeacher(solution.pk, groupMember)"
-                          >
-                            <v-icon>mdi-magnify</v-icon>
-                          </v-btn>
-                        </span>
-                      </span>
-                      <span v-else>
-                        <v-btn
-                          icon
-                          small
-                          color="error"
-                          @click="showSolutionAsTeacher(null, groupMember)"
-                        >
-                          <v-icon>mdi-magnify</v-icon>
-                        </v-btn>
-                      </span>
-                    </v-col>
-                  </v-row>
-                </span>
+                        <v-list-item-content>
+                          <v-list-item-title>
+                            <v-row>
+                              <v-col>{{ groupMember.first_name }} {{groupMember.last_name }}</v-col>
+                              <v-col v-if="isUserHasSolution(groupMember.username)">
+                                <span v-for="(solution, idx) in task.solution" :key="idx">
+                                    <span v-if="solution.user.username === groupMember.username">
+                                      <span v-if="solution.rate">
+                                        {{ solution.rate }}
+                                      </span>
+                                      <span v-else>
+                                        Brak oceny
+                                      </span>
+                                    </span>
+                                </span>
+                              </v-col>
+                              <v-col v-else>Oczekuje na rozwiazanie</v-col>
+                            </v-row>
+                          </v-list-item-title>
+                        </v-list-item-content>
+                        <v-list-item-action>
+                          <span v-if="isUserHasSolution(groupMember.username)">
+                            <span v-for="(solution, idx) in task.solution" :key="idx">
+                              <v-btn
+                                v-if="solution.user.username === groupMember.username"
+                                color="primary"
+                                icon
+                                small
+                                @click="showSolutionAsTeacher(solution.pk, groupMember)"
+                              >
+                                <v-icon>mdi-magnify</v-icon>
+                              </v-btn>
+                            </span>
+                          </span>
+                          <span v-else>
+                            <v-btn
+                              icon
+                              small
+                              color="error"
+                              @click="showSolutionAsTeacher(null, groupMember)"
+                            >
+                              <v-icon>mdi-magnify</v-icon>
+                            </v-btn>
+                          </span>
+                        </v-list-item-action>
+                      </v-list-item>
+                    </v-list>
+                  </v-col>
+                </v-row>
               </div>
             </v-card-text>
           </v-card>
@@ -422,10 +459,10 @@ export default {
     },
 
     changeTaskState(stateToSet) {
-      console.log(stateToSet)
-      if (!['LOCK', 'CLOSE'].includes(stateToSet)) {
-        console.log("Niepoprawny parametr" + stateToSet)
-        return
+      console.log(stateToSet);
+      if (!["LOCK", "CLOSE"].includes(stateToSet)) {
+        console.log("Niepoprawny parametr" + stateToSet);
+        return;
       }
 
       this.loading = true;
@@ -466,11 +503,9 @@ export default {
 
   computed: {
     task() {
-      let contextTask = this.$store.state.tasks.tasks.filter(
+      return this.$store.state.tasks.tasks.find(
         task => task.pk === this.$route.params.pk
       );
-      // filter zwraca tablicę, dlatego trzeba zwrócić pierwszy obiekt explicit
-      return contextTask[0];
     },
 
     userType() {
