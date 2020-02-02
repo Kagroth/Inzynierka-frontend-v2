@@ -34,11 +34,17 @@
           <v-card-text>
             <v-list>
               <v-list-item v-for="(student, index) in students" :key="index">
+                <v-list-item-icon>
+                  <v-icon>mdi-account</v-icon>
+                </v-list-item-icon>
                 <v-list-item-content>
-                  <v-list-item-title @click="inspectUser(student.pk)"> {{ student.first_name }} {{ student.last_name }}</v-list-item-title>
+                  <v-list-item-title
+                    @click="inspectUser(student.pk)"
+                  >{{ student.first_name }} {{ student.last_name }}</v-list-item-title>
+                  <v-list-item-subtitle>{{ student.email }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-            </v-list>           
+            </v-list>
           </v-card-text>
         </v-card>
       </v-col>
@@ -56,11 +62,11 @@ export default {
   },
 
   created() {
-    this.$store.dispatch('users/loadTeachersStudents').then(response => {
+    this.$store.dispatch("users/loadTeachersStudents").then(response => {
       if (response.status === 200) {
-        this.students = response.data
+        this.students = response.data;
       }
-    })
+    });
   },
 
   methods: {
@@ -72,18 +78,17 @@ export default {
     },
 
     inspectUser(pk) {
-        this.$router.push({
-            name: "UserData",
-            params: { pk: pk }
-        })
+      this.$router.push({
+        name: "UserData",
+        params: { pk: pk }
+      });
     }
   },
 
   computed: {
     userType() {
       return this.$store.state.auth.profile.userType;
-    },
-
+    }
   }
 };
 </script>
