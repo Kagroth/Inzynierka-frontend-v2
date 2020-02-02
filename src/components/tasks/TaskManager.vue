@@ -31,10 +31,14 @@ export default {
 
   created() {
     this.$store.dispatch('tasks/getAllTasks');
+    this.$store.dispatch('tasks/getAllExercises');
     this.$store.dispatch('tasks/getAllSolutions').then(response => {
       this.solutions = response.data
     });
-    this.$router.push({ name: "TaskListing" });
+
+    if (this.$route.name === 'MyTasks') {
+      this.$router.push({ name: "TaskListing" });
+    }
   },
 
   watch: {
