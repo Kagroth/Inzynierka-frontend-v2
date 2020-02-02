@@ -32,7 +32,9 @@
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title @click="inspectUser(user.pk)">{{ user.first_name }} {{ user.last_name }}</v-list-item-title>
+              <v-list-item-title
+                @click="inspectUser(user.pk)"
+              >{{ user.first_name }} {{ user.last_name }}</v-list-item-title>
               <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -48,10 +50,23 @@
       </v-col>
     </v-row>
     <span v-if="group.activeTasks.length > 0">
-      <v-row v-for="(task, index) in group.activeTasks" :key="index">
-        <v-col>{{ task.title }}</v-col>
+      <v-row>
         <v-col>
-          <v-btn @click="showTaskDetails(task)" color="primary" small>Szczegóły</v-btn>
+          <v-list>
+            <v-list-item v-for="(task, index) in group.activeTasks" :key="index">
+              <v-list-item-icon v-if="task.taskType.name === 'Exercise'">
+                <v-icon>mdi-file-document-box</v-icon>
+              </v-list-item-icon>
+              <v-list-item-icon v-else>
+                <v-icon>mdi-file-document-box-multiple</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title @click="showTaskDetails(task)">
+                  {{ task.title }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-col>
       </v-row>
     </span>
@@ -69,10 +84,23 @@
           <h3>Zadania zarchiwizowane:</h3>
         </v-col>
       </v-row>
-      <v-row v-for="(task, index) in group.archivedTasks" :key="index">
-        <v-col>{{ task.title }}</v-col>
+      <v-row>
         <v-col>
-          <v-btn color="primary" small disabled>Szczegoly</v-btn>
+          <v-list>
+            <v-list-item v-for="(task, index) in group.archivedTasks" :key="index">
+              <v-list-item-icon v-if="task.taskType.name === 'Exercise'">
+                <v-icon>mdi-file-document-box</v-icon>
+              </v-list-item-icon>
+              <v-list-item-icon v-else>
+                <v-icon>mdi-file-document-box-multiple</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title @click="showTaskDetails(task)">
+                  {{ task.title }}
+                </v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-col>
       </v-row>
     </span>
@@ -102,7 +130,7 @@ export default {
       if (confirmation) {
         console.log(this.group);
         this.$store.dispatch("users/deleteGroup", this.group.pk).then(() => {
-          this.$router.push({name: 'GroupListing'});
+          this.$router.push({ name: "GroupListing" });
         });
       }
     },
