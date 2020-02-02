@@ -42,7 +42,6 @@ export default {
   props: ["pk"],
 
   created() {
-    this.$store.dispatch("tasks/getAllExercises");
   },
 
   methods: {
@@ -76,6 +75,25 @@ export default {
       let contextExercise = this.$store.state.tasks.exercises.find(
         exercise => exercise.pk === filterParam
       );
+
+      console.log(contextExercise)
+
+      if (contextExercise === undefined || contextExercise === null) {
+        /*
+          Wszystkie taski sa mapowane na tablice cwiczen. Ze wzgledu na to ze w kolokwium znajduje sie tablica z cwiczeniami
+          trzeba uzyc flatMap aby pozbyc sie zagniezdzonej tablicy. 
+        */
+        let exercises = this.$store.state.tasks.tasks.flatMap(task => {
+          if (task.taskType.name === 'Exercise') {
+            return task.exercise
+          }
+          else {
+            return task.test.exercises
+          }
+        })
+
+        return exercises.find(exercise => exercise.pk === filterParam)
+      }
 
       return contextExercise;
     },
