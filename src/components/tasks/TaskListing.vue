@@ -28,7 +28,7 @@
           <v-card tile>
             <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
             <v-card-subtitle>
-              Typ: {{ task.taskType.name }} <br>
+              Typ: {{ polishTaskTypesNames[task.taskType.name] }} <br>
               Rozwiązanie: {{ task.solutionType.name }}
             </v-card-subtitle>
             <v-card-text class="text--primary">
@@ -58,7 +58,7 @@
           <v-card tile>
             <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
             <v-card-subtitle>
-              Typ: {{ task.taskType.name }} <br>
+              Typ: {{ polishTaskTypesNames[task.taskType.name] }} <br>
               Rozwiązanie: {{ task.solutionType.name }}
             </v-card-subtitle>
             <v-card-text class="text--primary">
@@ -87,7 +87,7 @@
         <v-card tile>
             <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
             <v-card-subtitle>
-              Typ: {{ task.taskType.name }} <br>
+              Typ: {{ polishTaskTypesNames[task.taskType.name] }} <br>
               Rozwiązanie: {{ task.solutionType.name }}
             </v-card-subtitle>
             <v-card-text class="text--primary">
@@ -111,7 +111,7 @@
         <v-card tile>
             <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
             <v-card-subtitle>
-              Typ: {{ task.taskType.name }} <br>
+              Typ: {{ polishTaskTypesNames[task.taskType.name] }} <br>
               Rozwiązanie: {{ task.solutionType.name }}
             </v-card-subtitle>
             <v-card-text class="text--primary">
@@ -133,6 +133,7 @@
 export default {
   data() {
     return {
+      polishTaskTypesNames: {},
       showSearchField: false,
       searchForName: ""
     }
@@ -140,6 +141,8 @@ export default {
 
   created() {
     this.$store.dispatch("tasks/getAllTasks");
+    this.polishTaskTypesNames['Exercise'] = 'Ćwiczenie';
+    this.polishTaskTypesNames['Test'] = 'Kolokwium';
   },
 
   methods: {
