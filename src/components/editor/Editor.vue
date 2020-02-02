@@ -190,12 +190,21 @@ export default {
 
     if (this.task.taskType.name === 'Test') {
       this.tabsExercises = this.task.test.exercises
-      this.tabsExercisesCodes = this.tabsExercises.map(exercise => "")
+      this.tabsExercisesCodes = this.tabsExercises.map(exercise => {
+        if (exercise.language.name === 'Java') {
+          return "package com.myapp;\n\npublic class Solution { \n  // Tu wprowadź swój kod\n}"
+        }
+      })
       this.tabsSolutionsResults = this.tabsExercises.map(exercise => {
         return {
           result: null
         }
       })
+    }
+    else {
+      if (this.task.exercise.language.name === 'Java') {
+        this.myCode = "package com.myapp;\n\npublic class Solution { \n  // Tu wprowadź swój kod\n}"
+      }
     }
   },
 
