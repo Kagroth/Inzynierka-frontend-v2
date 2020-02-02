@@ -148,7 +148,7 @@ export default {
   },
 
   created () {
-
+    this.$store.dispatch("tasks/getAllExercises");
   },
 
   computed: {
