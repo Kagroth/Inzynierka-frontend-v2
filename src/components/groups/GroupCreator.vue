@@ -121,6 +121,7 @@ export default {
           if (response.status === 200) {
             this.form.groupName = ""
             this.form.selectedUsers = []
+            this.usersList = this.usersList.map(elem => { return false })
           }
         })
     }
