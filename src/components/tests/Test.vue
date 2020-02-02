@@ -11,9 +11,11 @@
                   </v-col>
                   <v-spacer></v-spacer>
                   <v-col col="2" class="text-right">
+                    <!--
                     <v-btn color="success" icon large disabled>
                       <v-icon>mdi-pencil</v-icon>
                     </v-btn>
+                    -->
                     <v-btn color="error" @click="deleteTest" icon large>
                       <v-icon>mdi-delete</v-icon>
                     </v-btn>
