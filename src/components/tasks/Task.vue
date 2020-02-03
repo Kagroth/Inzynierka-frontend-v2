@@ -400,6 +400,9 @@ export default {
         this.testResults = response.data.test_results;
 
         this.$store.dispatch("tasks/getAllTasks");
+      }).catch(error => {
+        this.sendSolutionLoading = false;
+        console.log(error);
       });
     },
 
