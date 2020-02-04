@@ -11,19 +11,29 @@
     <div v-if="userType.name === 'Teacher'">
       <div v-if="task.taskType.name === 'Exercise'">
         <v-card tile>
-          <v-card-title>{{ solution.task.title }}</v-card-title>
+          <v-card-title>{{ task.title }}</v-card-title>
           <v-card-text class="text--primary" style="white-space: pre-wrap;">
             <v-row>
-              <v-col>{{ solution.task.exercise.content }}</v-col>
+              <v-col>{{ task.exercise.content }}</v-col>
             </v-row>
             <v-divider></v-divider>
             <v-row>
               <v-col>
                 <h4>Rozwiazanie:</h4>
-                {{ solution.task.exercise.solution }}
+                {{ solution.solution_exercise[0].solution_value }}
               </v-col>
             </v-row>
             <v-divider></v-divider>
+            <v-row>
+              <v-col>
+                <v-expansion-panels tile style="white-space: pre-wrap">
+                  <v-expansion-panel>
+                    <v-expansion-panel-header>Wyniki testów</v-expansion-panel-header>
+                    <v-expansion-panel-content>{{ solution.solution_exercise[0].test_results }}</v-expansion-panel-content>
+                  </v-expansion-panel>
+                </v-expansion-panels>
+              </v-col>
+            </v-row>
           </v-card-text>
 
           <v-card-actions>
@@ -55,30 +65,40 @@
       <div v-else>
         <v-row>
           <v-col>
-            <h3>{{ task.test.title }}</h3>
+            <h3>{{ task.title }}</h3>
           </v-col>
         </v-row>
         <v-row>
           <v-col>
-            <h4>Roziwazanie uzytkownika: {{ solutionAuthor.first_name }} {{ solutionAuthor.last_name }}</h4>
+            <h4>Rozwiązanie użytkownika: {{ solutionAuthor.first_name }} {{ solutionAuthor.last_name }}</h4>
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="12" v-for="(exercise, index) in task.test.exercises" :key="index">
+          <v-col cols="12" v-for="(sol_exercise, index) in solution.solution_test.solution_exercises" :key="index">
             <v-card class="mb-4" style="white-space: pre-wrap;">
-              <v-card-title>{{ exercise.title }}</v-card-title>
+              <v-card-title>{{ sol_exercise.exercise.title }}</v-card-title>
               <v-card-text class="text--primary">
                 <v-row>
-                  <v-col>{{ exercise.content }}</v-col>
+                  <v-col>{{ sol_exercise.exercise.content }}</v-col>
                 </v-row>
                 <v-divider></v-divider>
                 <v-row>
                   <v-col>
                     <h4>Rozwiazanie:</h4>
-                    {{ exercise.solution }}
+                    {{ sol_exercise.solution_value }}
                   </v-col>
                 </v-row>
                 <v-divider></v-divider>
+                <v-row>
+              <v-col>
+                <v-expansion-panels tile style="white-space: pre-wrap">
+                  <v-expansion-panel>
+                    <v-expansion-panel-header>Wyniki testów</v-expansion-panel-header>
+                    <v-expansion-panel-content>{{ sol_exercise.test_results }}</v-expansion-panel-content>
+                  </v-expansion-panel>
+                </v-expansion-panels>
+              </v-col>
+            </v-row>
               </v-card-text>
               <v-card-actions>
                 <v-row class="pa-0 ma-0" align="baseline">
@@ -156,7 +176,7 @@
       <div v-else>
         <v-row>
           <v-col>
-            <h3>{{ task.test.title }}</h3>
+            <h3>{{ task.title }}</h3>
           </v-col>
         </v-row>
         <v-row>

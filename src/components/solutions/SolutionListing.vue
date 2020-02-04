@@ -62,9 +62,23 @@ export default {
   },
 
   created() {
-    this.$store.dispatch("users/loadTeachersStudents").then(response => {
+    let actionToDispatch = '';
+
+    if (this.userType.name === 'Student') {
+      actionToDispatch = 'tasks/getAllSolutions';
+    }
+    else {
+      actionToDispatch = 'users/loadTeachersStudents'
+    }
+
+    this.$store.dispatch(actionToDispatch).then(response => {
       if (response.status === 200) {
-        this.students = response.data;
+        if (this.userType.name === 'Student') {
+          this.solutions = response.data
+        }
+        else {
+          this.students = response.data
+        }
       }
     });
   },
