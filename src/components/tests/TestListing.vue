@@ -17,9 +17,11 @@
     <v-row>
       <v-col v-for="(test, index) in tests" :key="index" cols="4">
         <v-card>
-          <v-card-title @click="showTestDetails(test)">
-            {{ test.title }}
-          </v-card-title>
+          <v-hover v-slot:default="{ hover }">
+            <v-card-title :class="hover ? 'title-link' : ''" @click="showTestDetails(test)">
+              {{ test.title }}
+            </v-card-title>
+          </v-hover>
           <v-card-subtitle>
             Ilość zadań: {{ test.exercises.length }}
           </v-card-subtitle>
@@ -70,4 +72,12 @@ export default {
 </script>
 
 <style scoped>
+.v-card {
+  cursor: default;
+}
+
+.title-link {
+  cursor: pointer;
+  color: lightblue;
+}
 </style>

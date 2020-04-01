@@ -100,6 +100,10 @@ export default {
 </script>
 
 <style scoped>
+.v-card {
+  cursor: default;
+}
+
 .title-link {
   cursor: pointer;
   color: lightblue;

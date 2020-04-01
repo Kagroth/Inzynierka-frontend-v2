@@ -17,9 +17,11 @@
     <v-row  mt-4>
       <v-col v-for="(exercise, index) in exercises" :key="index" cols="4">
         <v-card>
-          <v-card-title @click="showExerciseDetails(exercise)">
-            {{ exercise.title }}
-          </v-card-title>
+          <v-hover v-slot:default="{ hover }">
+            <v-card-title :class="hover ? 'title-link' : ''" @click="showExerciseDetails(exercise)">
+              {{ exercise.title }}
+            </v-card-title>
+          </v-hover>
           <v-card-subtitle>
             Technologia:
             <v-icon>mdi-language-{{ exercise.language.name.toLowerCase() }}</v-icon>
@@ -80,4 +82,12 @@ export default {
 </script>
 
 <style scoped>
+.v-card {
+  cursor: default;
+}
+
+.title-link {
+  cursor: pointer;
+  color: lightblue;
+}
 </style>

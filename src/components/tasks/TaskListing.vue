@@ -26,7 +26,9 @@
       <v-row>
         <v-col v-for="(task, index) in activeTasks" :key="`activeTask-${index}`" cols="4">
           <v-card tile>
-            <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            <v-hover v-slot:default="{ hover }">
+              <v-card-title :class="hover ? 'title-link' : ''" @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            </v-hover>
             <v-card-subtitle>
               Typ: {{ polishTaskTypesNames[task.taskType.name] }} <br>
               Rozwiązanie: {{ task.solutionType.name }}
@@ -56,7 +58,9 @@
        <v-row>
         <v-col v-for="(task, index) in activeTasks" :key="`activeTask-${index}`" cols="4">
           <v-card tile>
-            <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            <v-hover v-slot:default="{ hover }">
+              <v-card-title :class="hover ? 'title-link' : ''" @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            </v-hover>
             <v-card-subtitle>
               Typ: {{ polishTaskTypesNames[task.taskType.name] }} <br>
               Rozwiązanie: {{ task.solutionType.name }}
@@ -64,11 +68,7 @@
             <v-card-text class="text--primary">
               Przypisane do: {{ task.assignedTo[0].name }} <br>
               Rozwiazania: 
-              <v-rating v-model="task.solution.length" :length="task.assignedTo[0].users.length">
-                <template v-slot:item="props">
-                  <v-icon small :color="props.isFilled ? 'primary': 'error'">mdi-account</v-icon>
-                </template>
-              </v-rating>
+              {{ task.solution.length }} / {{ task.assignedTo[0].users.length }}  <v-icon small color="primary">mdi-account</v-icon>
             </v-card-text>
           </v-card>
         </v-col>
@@ -85,7 +85,9 @@
       <v-row>
       <v-col v-for="(task, index) in inactiveTasks" :key="`inactiveTask-${index}`" cols="4">
         <v-card tile>
-            <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            <v-hover v-slot:default="{ hover }">
+              <v-card-title :class="hover ? 'title-link' : ''" @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            </v-hover>
             <v-card-subtitle>
               Typ: {{ polishTaskTypesNames[task.taskType.name] }} <br>
               Rozwiązanie: {{ task.solutionType.name }}
@@ -109,7 +111,9 @@
     <v-row v-else>
       <v-col v-for="(task, index) in inactiveTasks" :key="`inactiveTask-${index}`" cols="4">
         <v-card tile>
-            <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            <v-hover v-slot:default="{ hover }">
+              <v-card-title :class="hover ? 'title-link' : ''" @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            </v-hover>
             <v-card-subtitle>
               Typ: {{ polishTaskTypesNames[task.taskType.name] }} <br>
               Rozwiązanie: {{ task.solutionType.name }}
@@ -117,11 +121,7 @@
             <v-card-text class="text--primary">
               Przypisane do: {{ task.assignedTo[0].name }} <br>
               Rozwiazania: 
-              <v-rating v-model="task.solution.length" :length="task.assignedTo[0].users.length">
-                <template v-slot:item="props">
-                  <v-icon small :color="props.isFilled ? 'primary': 'error'">mdi-account</v-icon>
-                </template>
-              </v-rating>
+              {{ task.solution.length }} / {{ task.assignedTo[0].users.length }}  <v-icon small color="primary">mdi-account</v-icon>
             </v-card-text>
           </v-card>
       </v-col>
@@ -202,4 +202,12 @@ export default {
 </script>
 
 <style scoped>
+.v-card {
+  cursor: default;
+}
+
+.title-link {
+  cursor: pointer;
+  color: lightblue;
+}
 </style>

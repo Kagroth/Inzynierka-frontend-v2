@@ -40,7 +40,13 @@
                 <v-list-item-content>
                   <v-list-item-title
                     @click="inspectUser(student.pk)"
-                  >{{ student.first_name }} {{ student.last_name }}</v-list-item-title>
+                  >
+                    <v-hover v-slot:default="{ hover }">
+                      <span :class="hover ? 'title-link' : ''">
+                        {{ student.first_name }} {{ student.last_name }}
+                      </span>
+                    </v-hover>
+                  </v-list-item-title>
                   <v-list-item-subtitle>{{ student.email }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -106,3 +112,14 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.v-card {
+  cursor: default;
+}
+
+.title-link {
+  cursor: pointer;
+  color: lightblue;
+}
+</style>
