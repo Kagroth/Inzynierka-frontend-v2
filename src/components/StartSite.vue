@@ -21,7 +21,7 @@
                   </template>
                     <v-list-item link :to="{name: 'MyExercises'}" title="Wyświetl wszystkie ćwiczenia i utwórz nowe">
                       <v-list-item-icon>
-                        <v-icon color="orange">mdi-file-document-box</v-icon>
+                        <v-icon color="orange">mdi-text-box</v-icon>
                       </v-list-item-icon>
                       <v-list-item-content>
                         <v-list-item-title>Cwiczenia</v-list-item-title>
@@ -29,7 +29,7 @@
                     </v-list-item>
                     <v-list-item link :to="{name: 'MyTests'}" title="Wyświetl wszystkie kolokwia i utwórz nowe z istniejących ćwiczeń">                    
                       <v-list-item-icon>
-                        <v-icon color="green">mdi-file-document-box-multiple</v-icon>
+                        <v-icon color="green">mdi-text-box-multiple</v-icon>
                       </v-list-item-icon>
                       <v-list-item-content>
                         <v-list-item-title>Kolokwia</v-list-item-title>
