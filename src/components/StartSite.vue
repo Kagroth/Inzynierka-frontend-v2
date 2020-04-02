@@ -38,7 +38,8 @@
                 </v-list-group>              
               </span>
 
-              <v-list-item link :to="{name: 'MyGroups'}" title="Wyświetl swoje grupy użytkowników lub utwórz nowe grupy">
+              <v-list-item link :to="{name: 'MyGroups'}" 
+                :title="userType.name === 'Teacher' ?  'Wyświetl swoje grupy użytkowników lub utwórz nowe grupy' : 'Wyświetl grupy do których należysz'">
                 <v-list-item-icon>
                   <v-icon>mdi-account-group</v-icon>
                 </v-list-item-icon>
