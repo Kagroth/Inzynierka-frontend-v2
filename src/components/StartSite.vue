@@ -63,7 +63,7 @@
                 <template v-slot:activator>
                   <v-list-item-title>Społeczność</v-list-item-title>
                 </template>
-                <v-list-item link title="Wyświetl swoich studentów i zaproś nowych użytkowników">
+                <v-list-item link :to="{name: 'Students'}" title="Wyświetl swoich studentów i zaproś nowych użytkowników">
                   <v-list-item-icon>
                     <v-icon>mdi-account</v-icon>
                   </v-list-item-icon>

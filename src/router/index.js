@@ -26,6 +26,7 @@ import Solution from '@/components/solutions/Solution'
 import SolutionListing from '@/components/solutions/SolutionListing'
 import UserData from '@/components/solutions/UserData'
 import Editor from '@/components/editor/Editor'
+import StudentManager from '@/components/students/StudentManager'
 
 Vue.use(VueRouter)
 
@@ -36,6 +37,11 @@ export default new VueRouter({
       name: 'StartSite',
       component: StartSite,
       children: [
+        {
+          path: 'students',
+          name: 'Students',
+          component: StudentManager,
+        },
         {
           path: 'groups',
           name: 'MyGroups',
