@@ -6,11 +6,9 @@
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="2" v-if="userType.name === 'Teacher'">
-        <!--
           <v-btn class="mr-4" @click="editGroup" color="success" small>
               <v-icon>mdi-pencil</v-icon>
-            </v-btn>    
-        -->
+            </v-btn>   
         <v-btn @click="deleteGroup" color="error" small>
           <v-icon>mdi-delete</v-icon>
         </v-btn>

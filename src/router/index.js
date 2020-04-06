@@ -8,6 +8,7 @@ import LoginForm from '@/components/auth/LoginForm'
 import RegisterForm from '@/components/auth/RegisterForm'
 import GroupManager from '@/components/groups/GroupManager'
 import GroupCreator from '@/components/groups/GroupCreator'
+import GroupEditor from '@/components/groups/GroupEditor'
 import GroupListing from '@/components/groups/GroupListing'
 import Group from '@/components/groups/Group'
 import TaskManager from '@/components/tasks/TaskManager'
@@ -61,7 +62,12 @@ export default new VueRouter({
               path: 'newGroup',
               name: 'GroupCreator',
               component: GroupCreator
-            }, 
+            },
+            {
+              path: 'group/:name/edit',
+              name: 'GroupEditor',
+              component: GroupEditor
+            } 
           ]
         },
         {
