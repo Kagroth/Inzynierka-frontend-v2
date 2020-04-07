@@ -202,56 +202,13 @@ export default {
         pk: "",
         oldName: "",
         groupName: "",
-        selectedUsers: [],
+        usersToAdd: [],
         usersToRemove: []
       }
     };
   },
 
   methods: {
-    addUser() {
-      if (this.currentSelectedUser === null) {
-        return;
-      }
-
-      if (this.form.selectedUsers.includes(this.currentSelectedUser)) {
-        return;
-      }
-
-      this.form.selectedUsers.push(this.currentSelectedUser);
-    },
-
-    removeSelectedUser(user) {
-      this.form.selectedUsers = this.form.selectedUsers.filter(
-        selectedUser => selectedUser !== user
-      );
-    },
-
-    removeUserFromGroup(user) {
-      if (this.form.usersToRemove.includes(user)) {
-        return;
-      }
-
-      this.contextGroup.users = this.contextGroup.users.filter(
-        selectedUser => selectedUser !== user
-      );
-      this.form.usersToRemove.push(user);
-    },
-
-    /*
-    undoRemove (user) {
-      if (this.contextGroup.users.includes(user)) {
-        return
-      }
-
-      if (this.contextGroup.users.length === 0) {
-        console.log('Cos tu sie dzieje')
-      }
-
-      this.form.usersToRemove = this.form.usersToRemove.filter(selectedUser => selectedUser !== user)
-      this.contextGroup.users.push(user)     
-    },
-*/
     saveGroupChanges(event) {
       event.preventDefault();
 
@@ -260,14 +217,18 @@ export default {
         return;
       }
 
+      this.form.usersToAdd = this.addUsersContext.selectedUsers;
+      this.form.usersToRemove = this.removeUsersContext.selectedUsers;
+
       this.$store
         .dispatch("users/updateGroup", this.form)
         .then(response => {
+          console.log(response);
           let message = response.data.message;
           alert(message);
 
-          if (message === "Grupa została zaktualizowana") {
-            this.$router.push("/groups");
+          if (response.status === 200) {
+            this.$router.push({ name: "GroupListing" });
           }
         })
         .catch(() => {

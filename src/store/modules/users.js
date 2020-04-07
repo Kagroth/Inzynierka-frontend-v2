@@ -122,10 +122,11 @@ const actions = {
       updateGroupResponse = await API.updateGroup(changedGroupData)
       console.log(updateGroupResponse)
 
-      return {
-        data: updateGroupResponse,
-        message: 'Grupa zostala zaktualizowana'
+      if (updateGroupResponse.response) {
+        return updateGroupResponse.response
       }
+
+      return updateGroupResponse
     } catch (e) {
       console.log(e)
     }
