@@ -187,5 +187,9 @@ export default {
 
   getTeachersStudents () {
     return this.sendRequest('my_students/', 'get')
+  },
+
+  testRegistrationHashView (data) {
+    return this.sendRequest('reset_password/', 'get')
   }
 }

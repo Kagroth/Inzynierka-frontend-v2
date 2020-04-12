@@ -123,6 +123,15 @@
                 <v-list-item-title>Moje wyniki</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
+
+            <v-list-item link to="email_test">
+              <v-list-item-icon>
+                <v-icon>mdi-email</v-icon>
+              </v-list-item-icon>
+              <v-list-item-content>
+                <v-list-item-title>Testowanie maila</v-list-item-title>
+              </v-list-item-content>
+            </v-list-item>
           </v-list>
         </v-navigation-drawer>
       </v-col>
