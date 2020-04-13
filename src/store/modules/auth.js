@@ -124,6 +124,42 @@ const actions = {
         message: 'Uzyskanie linku zostalo zakonczone niepowodzeniem'
       }
     }
+  },
+
+  async verifyResetPasswordHash(context, hash_string) {
+    let verifyHashResponse = {}
+
+    try {
+      verifyHashResponse = await API.verifyResetPasswordHash(hash_string)
+
+      if (verifyHashResponse.response) {
+        return verifyHashResponse.response
+      }
+
+      return verifyHashResponse
+    } catch (e) {
+      return {
+        message: 'Brak mozliwosci zmiany hasla'
+      }
+    }
+  },
+
+  async setNewPassword(context, updateData) {
+    let setNewPasswordResponse = {}
+
+    try {
+      setNewPasswordResponse = await API.setNewPassword(updateData)
+
+      if (setNewPasswordResponse.response) {
+        return setNewPasswordResponse.response
+      }
+
+      return setNewPasswordResponse
+    } catch (e) {
+      return {
+        message: "Nastapil blad podczas proby zmiany hasla"
+      }
+    }
   }
 }
 

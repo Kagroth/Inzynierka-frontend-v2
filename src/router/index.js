@@ -7,6 +7,7 @@ import StartSite from '@/components/StartSite'
 import LoginForm from '@/components/auth/LoginForm'
 import RegisterForm from '@/components/auth/RegisterForm'
 import ObtainResetPasswordLinkForm from '@/components/auth/ObtainResetPasswordLinkForm'
+import ResetPasswordForm from '@/components/auth/ResetPasswordForm'
 import GroupManager from '@/components/groups/GroupManager'
 import GroupCreator from '@/components/groups/GroupCreator'
 import GroupEditor from '@/components/groups/GroupEditor'
@@ -173,6 +174,11 @@ export default new VueRouter({
       path: '/obtain_reset_password_link',
       name: 'ObtainResetPasswordLink',
       component: ObtainResetPasswordLinkForm
+    },
+    {
+      path: '/reset_password/:hash_string',
+      name: 'ResetPasswordForm',
+      component: ResetPasswordForm
     },
     {
       path: '/tasks',
