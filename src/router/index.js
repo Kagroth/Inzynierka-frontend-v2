@@ -6,6 +6,7 @@ import VueRouter from 'vue-router'
 import StartSite from '@/components/StartSite'
 import LoginForm from '@/components/auth/LoginForm'
 import RegisterForm from '@/components/auth/RegisterForm'
+import ObtainResetPasswordLinkForm from '@/components/auth/ObtainResetPasswordLinkForm'
 import GroupManager from '@/components/groups/GroupManager'
 import GroupCreator from '@/components/groups/GroupCreator'
 import GroupEditor from '@/components/groups/GroupEditor'
@@ -168,7 +169,11 @@ export default new VueRouter({
       path: '/register',
       component: RegisterForm
     },
-    
+    {
+      path: '/obtain_reset_password_link',
+      name: 'ObtainResetPasswordLink',
+      component: ObtainResetPasswordLinkForm
+    },
     {
       path: '/tasks',
       name: 'MyTasks',

@@ -189,6 +189,10 @@ export default {
     return this.sendRequest('my_students/', 'get')
   },
 
+  obtainResetPasswordLink(formWithEmail) {
+    return this.sendRequest('reset_password/', 'post', formWithEmail)
+  },
+
   testRegistrationHashView (data) {
     return this.sendRequest('reset_password/', 'get')
   }

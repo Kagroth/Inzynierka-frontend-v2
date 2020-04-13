@@ -106,6 +106,24 @@ const actions = {
         message: 'Niepoprawne dane logowania'
       }
     }
+  },
+
+  async obtainResetPasswordLink (context, formWithEmail) {
+    let obtainResponse = {}
+
+    try {
+      obtainResponse = await API.obtainResetPasswordLink(formWithEmail)
+      
+      if (obtainResponse.response) {
+        return obtainResponse.response
+      }
+
+      return obtainResponse
+    } catch (e) {
+      return {
+        message: 'Uzyskanie linku zostalo zakonczone niepowodzeniem'
+      }
+    }
   }
 }
 
