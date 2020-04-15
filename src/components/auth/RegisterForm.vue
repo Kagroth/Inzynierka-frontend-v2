@@ -101,7 +101,7 @@ export default {
         email: "",
         password: "",
         passwordRepeat: "",
-        userType: "Teacher"
+        userType: "Student"
       }
     };
   },
@@ -170,7 +170,7 @@ export default {
           this.snackbar.show = true;
           this.snackbar.message =
             response.data.message +
-            " .Nastapi przekierowanie do strny logowania";
+            " .Nastapi przekierowanie do strony logowania";
 
           setTimeout(() => {
             this.$router.push("/login");
