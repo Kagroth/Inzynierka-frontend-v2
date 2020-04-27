@@ -149,10 +149,13 @@
                       </span>
                       <span v-else>
                         <v-btn color="primary" rounded @click="addGitHubRepoDialog = true">
-                          <v-icon>mdi-github-circle</v-icon>
+                          <v-icon>mdi-github</v-icon>
                         </v-btn>
                       </span>
+
+                      <!-- Okno z wynikiem testowania oraz formularzem w którym podajemy adres repozytorium i plik z rozwiązaniem -->
                       <v-dialog v-model="addGitHubRepoDialog" width="600" persistent scrollable>
+                        <!-- Wynik testowania -->
                         <v-card v-if="testsResultsModal">
                           <v-card-title>Twoje rozwiązanie zostało przetestowane i zapisane</v-card-title>
 
@@ -175,6 +178,7 @@
                             <v-btn color="primary" text @click="hideResultDialog">Ok</v-btn>
                           </v-card-actions>
                         </v-card>
+                        <!-- Formularz do udzielenia odpowiedzi -->
                         <v-stepper v-else v-model="gitHubStepperModel" style="overflow-y: scroll;">
                               <v-stepper-header>
                                 <v-stepper-step :complete="gitHubStepperModel > 1" step="1" :rules="firstStepCompleteRules">Podaj adres repozytorium</v-stepper-step>
@@ -182,11 +186,12 @@
                                 <v-stepper-step :complete="gitHubStepperModel > 2" step="2">Wybierz plik</v-stepper-step>
                               </v-stepper-header>
                               <v-stepper-items>
+                                <!-- Krok pierwszy - podanie adresu repozytorium -->
                                 <v-stepper-content step="1">
                                   <v-card flat tile>
                                     <v-card-text>                                      
                                       <v-text-field
-                                        v-model="gitHubRepo"
+                                        v-model="ghSolutionRepositoryURL"
                                         placeholder="Np: https://github.com/User/RepositoryName.git"
                                         label="Link do repozytorium"
                                       ></v-text-field>
@@ -210,14 +215,18 @@
                                   </v-row>                             
                                 </v-stepper-content>
                                 
+                                <!-- Krok drugi - wybranie pliku -->
                                 <v-stepper-content step="2">
                                   <v-card flat tile>
                                     <v-card-text  v-if="firstStepCompleteRules[0]()">
                                       <v-progress-circular indeterminate v-if="gitHubLoadingFiles"></v-progress-circular>
                                       <div v-else>
-                                        <v-radio-group>
-                                          <v-radio v-for="(repoElem, index) in repoFiles" :key="`repo-${index}`" :label="repoElem.name" :value="repoElem.name"></v-radio>
+                                        <v-radio-group v-if="repoFiles.length > 0" v-model="selectedRepositoryElem">
+                                          <v-radio v-for="(repoElem, index) in repoFiles" :key="`repo-${index}`" :label="repoElem.name" :value="repoElem"></v-radio>
                                         </v-radio-group>
+                                        <div v-else>
+                                          Brak odpowiednich plików
+                                        </div>
                                       </div>
                                     </v-card-text>
                                     <v-card-text v-else>
@@ -242,8 +251,7 @@
                                   </v-row>  
                                 </v-stepper-content>
                               </v-stepper-items>
-                            </v-stepper>
-                        
+                            </v-stepper>                        
                       </v-dialog>
                     </div>
                   </div>
@@ -405,8 +413,11 @@ export default {
       fileSendDialog: false,
       file: null,
       addGitHubRepoDialog: false,
-      gitHubRepo: "",
-      gitHubFileName: "",
+
+      ghSolutionRepositoryURL: "",
+
+      selectedRepositoryElem: {},
+
       gitHubLoadingFiles: false,
       repoContent: {},
       solution: null
@@ -487,10 +498,21 @@ export default {
 
     sendGitHubSolution() {
       if (
-        this.gitHubRepo === "" ||
-        this.gitHubRepo === undefined ||
-        this.gitHubRepo === null
+        this.ghSolutionRepositoryURL === "" ||
+        this.ghSolutionRepositoryURL === undefined ||
+        this.ghSolutionRepositoryURL === null
       ) {
+        alert("Nie wybrano repozytorium")
+        return;
+      }
+
+      if (
+        this.selectedRepositoryElem === "" ||
+        this.selectedRepositoryElem === undefined ||
+        this.selectedRepositoryElem === null
+      ) {
+        alert("Nie wybrano pliku")
+
         return;
       }
 
@@ -499,7 +521,9 @@ export default {
 
       let formData = new FormData();
 
-      formData.append("repository", this.gitHubRepo);
+      formData.append('repositoryURL', this.ghSolutionRepositoryURL)
+      formData.append('filename', this.selectedRepositoryElem.name)
+      formData.append('fileDownloadURL', this.selectedRepositoryElem.download_url)
       formData.append("taskPk", this.task.pk);
       formData.append("solutionType", this.task.solutionType.name);
 
@@ -557,7 +581,7 @@ export default {
     async getFilesOfRepo() {
       this.gitHubLoadingFiles = true
 
-      let arr = this.gitHubRepo.split("/")
+      let arr = this.ghSolutionRepositoryURL.split("/")
       const username = arr[3]
       const repoName = arr[4]
       console.log(arr)
@@ -628,7 +652,7 @@ export default {
     
       const isCorrect = () => {
         const regex = /^([A-Za-z0-9]+@|http(|s):\/\/)([A-Za-z0-9.]+(:\d+)?)(?::|\/)([\d/\w.-]+?)(\.git)?$/i
-        const result = regex.test(this.gitHubRepo)
+        const result = regex.test(this.ghSolutionRepositoryURL)
 
         if (result === false && isStepGreaterThanOne()) {
           return false
