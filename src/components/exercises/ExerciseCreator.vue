@@ -7,7 +7,7 @@
     <v-form>
       <v-container>
         <v-row justify="center">
-          <v-col cols="6">
+          <v-col cols="10">
             <v-card>
               <v-card-title>Tworzenie ćwiczenia</v-card-title>
               <v-card-text>
@@ -75,54 +75,64 @@
                       :disabled="unitTestFormShow()"
                       small
                     >Dodaj test</v-btn>
-                    <v-btn icon @click="displayTooltip = !displayTooltip">                          
-                          <v-icon color="accent">mdi-help-circle</v-icon>
-                        </v-btn>                    
+                    <v-btn icon @click="displayTooltip = !displayTooltip">
+                      <v-icon color="accent">mdi-help-circle</v-icon>
+                    </v-btn>
                   </v-col>
                 </v-row>
                 <v-row v-if="displayTooltip">
                   <v-col>
                     <span v-if="form.language.name === 'Python'">
-                          Aplikacja wykorzystuje bibliotekę 'unittest' do przeprowadzania testów jednostkowych.
-                          Poniższy formularz pozwala na zdefiniowanie testów do tego ćwiczenia.
-                          W formularzu należy wpisać asercje oddzielone znakami nowej linii.
-                          <br>
-                          Przykładowa metoda:
-                          <v-card>
-                            <v-card-text>
-                              self.assertEqual(moja_funkcja(1, 1), 2) <br>
-                              self.assertEqual(moja_funkcja(2, 2), 4)
-                            </v-card-text>
-                          </v-card> 
-                          <br>
-                          <a href="https://docs.python.org/3/library/unittest.html#assert-methods">
-                            Link do dostępnych asercji.
-                          </a>    
-                        </span>
-                        <span v-else-if="form.language.name === 'Java'">
-                          Aplikacja wykorzystuje bibliotekę "JUnit" do przeprowadzania testów jednostkowych.
-                          Poniższy formularz pozwala na zdefiniowanie testów do tego ćwiczenia.
-                          W formularzu należy wpisać asercje zakończone średnikiem ";" 
-                          i oddzielone znakiem nowej linii .
-                          <br>
-                          Przykładowa metoda:
-                          <v-card>
-                            <v-card-text>
-                              assertEquals(mojaFunkcja(1, 1), 2); <br>
-                              assertEquals(mojaFunkcja(2, 2), 4);
-                            </v-card-text>
-                          </v-card> 
-                          <br>
-                          <a href="https://junit.org/junit5/docs/5.0.1/api/org/junit/jupiter/api/Assertions.html">
-                            Link do dostępnych asercji.
-                          </a>
-                        </span>
+                      Aplikacja wykorzystuje bibliotekę 'unittest' do przeprowadzania testów jednostkowych.
+                      Poniższy formularz pozwala na zdefiniowanie testów do tego ćwiczenia.
+                      W formularzu należy wpisać asercje oddzielone znakami nowej linii.
+                      <br />Przykładowa metoda:
+                      <v-card>
+                        <v-card-text>
+                          self.assertEqual(moja_funkcja(1, 1), 2)
+                          <br />self.assertEqual(moja_funkcja(2, 2), 4)
+                        </v-card-text>
+                      </v-card>
+                      <br />
+                      <a
+                        href="https://docs.python.org/3/library/unittest.html#assert-methods"
+                      >Link do dostępnych asercji.</a>
+                    </span>
+                    <span v-else-if="form.language.name === 'Java'">
+                      Aplikacja wykorzystuje bibliotekę "JUnit" do przeprowadzania testów jednostkowych.
+                      Poniższy formularz pozwala na zdefiniowanie testów do tego ćwiczenia.
+                      W formularzu należy wpisać asercje zakończone średnikiem ";"
+                      i oddzielone znakiem nowej linii .
+                      <br />Przykładowa metoda:
+                      <v-card>
+                        <v-card-text>
+                          assertEquals(mojaFunkcja(1, 1), 2);
+                          <br />assertEquals(mojaFunkcja(2, 2), 4);
+                        </v-card-text>
+                      </v-card>
+                      <br />
+                      <a
+                        href="https://junit.org/junit5/docs/5.0.1/api/org/junit/jupiter/api/Assertions.html"
+                      >Link do dostępnych asercji.</a>
+                    </span>
                   </v-col>
                 </v-row>
                 <v-divider></v-divider>
                 <v-row v-for="(unit_test, index) in form.unitTests" :key="index">
-                  <v-col>
-                    <v-textarea outlined v-model="form.unitTests[index]" required placeholder="Wprowadź asercje"></v-textarea>
+                  <v-col cols="10">Test {{ index + 1}}</v-col>
+                  <v-col cols="2">
+                    <v-btn color="error" small @click="removeUnitTest(index)">
+                      Usuń
+                      <v-icon right>mdi-delete</v-icon>
+                    </v-btn>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-textarea
+                      outlined
+                      v-model="form.unitTests[index]"
+                      required
+                      placeholder="Wprowadź asercje"
+                    ></v-textarea>
                   </v-col>
                 </v-row>
                 <v-row>
@@ -169,42 +179,41 @@ export default {
 
       for (let field in this.form) {
         if (this.form[field] === "") {
-          this.snackbar.message = "Nie podano wszystkich danych"
-          this.snackbar.color ="warning"
-          this.snackbar.show = true
-          return
+          this.snackbar.message = "Nie podano wszystkich danych";
+          this.snackbar.color = "warning";
+          this.snackbar.show = true;
+          return;
         }
       }
 
       console.log(this.form);
 
-      this.loading = true
+      this.loading = true;
 
       this.$store
         .dispatch("tasks/createExercise", this.form)
         .then(responseData => {
-          console.log(responseData)
-          this.loading = false
+          console.log(responseData);
+          this.loading = false;
 
-          let color = ""
+          let color = "";
 
           if (responseData.status === 200) {
-            color = "success"
-          }
-          else {
-            color = "error"
+            color = "success";
+          } else {
+            color = "error";
           }
 
-          this.snackbar.message = responseData.data.message
-          this.snackbar.color = color
-          this.snackbar.show = true
-          
+          this.snackbar.message = responseData.data.message;
+          this.snackbar.color = color;
+          this.snackbar.show = true;
+
           if (responseData.status === 200) {
-            this.form.title = ""
-            this.form.language = ""
-            this.form.level = ""
-            this.form.content = ""
-            this.form.unitTests = []
+            this.form.title = "";
+            this.form.language = "";
+            this.form.level = "";
+            this.form.content = "";
+            this.form.unitTests = [];
           }
         });
     },
@@ -212,11 +221,11 @@ export default {
     addUnitTest(event) {
       event.preventDefault();
 
-      if (this.form.unitTests.length === 1) {
-        return
-      }
-
       this.form.unitTests.push("");
+    },
+
+    removeUnitTest(index) {
+      this.form.unitTests.splice(index, 1);
     },
 
     unitTestFormShow() {
