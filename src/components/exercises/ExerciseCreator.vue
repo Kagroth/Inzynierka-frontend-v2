@@ -85,12 +85,21 @@
                     <span v-if="form.language.name === 'Python'">
                       Aplikacja wykorzystuje bibliotekę 'unittest' do przeprowadzania testów jednostkowych.
                       Poniższy formularz pozwala na zdefiniowanie testów do tego ćwiczenia.
-                      W formularzu należy wpisać asercje oddzielone znakami nowej linii.
+                      Każde z pól formularza odpowiada pojedynczemu testowi jednostkowemu
+                      W formularzu należy wpisać asercje lub instrukcje oddzielone znakami nowej linii.
                       <br />Przykładowa metoda:
                       <v-card>
                         <v-card-text>
-                          self.assertEqual(moja_funkcja(1, 1), 2)
-                          <br />self.assertEqual(moja_funkcja(2, 2), 4)
+                          <v-row>
+                            <v-col cols="6">
+                              <h4>Przykład 1</h4>self.assertEqual(moja_funkcja(1, 1), 2)
+                              self.assertEqual(moja_funkcja(2, 2), 4)
+                            </v-col>
+                            <v-col cols="6">
+                              <h4>Przykład 2</h4>mk = MojaKlasa()
+                              <br />assertEqual(mk.metoda(), True)
+                            </v-col>
+                          </v-row>
                         </v-card-text>
                       </v-card>
                       <br />
@@ -101,13 +110,22 @@
                     <span v-else-if="form.language.name === 'Java'">
                       Aplikacja wykorzystuje bibliotekę "JUnit" do przeprowadzania testów jednostkowych.
                       Poniższy formularz pozwala na zdefiniowanie testów do tego ćwiczenia.
-                      W formularzu należy wpisać asercje zakończone średnikiem ";"
+                      Każde z pól formularza odpowiada pojedynczemu testowi jednostkowemu
+                      W polu formularza należy wpisać asercje lub instrukcje zakończone średnikiem ";"
                       i oddzielone znakiem nowej linii .
                       <br />Przykładowa metoda:
                       <v-card>
                         <v-card-text>
-                          assertEquals(mojaFunkcja(1, 1), 2);
-                          <br />assertEquals(mojaFunkcja(2, 2), 4);
+                          <v-row>
+                            <v-col cols="6">
+                              <h4>Przykład 1</h4>assertEquals(mojaFunkcja(1, 1), 2);
+                              assertEquals(mojaFunkcja(2, 2), 4);
+                            </v-col>
+                            <v-col cols="6">
+                              <h4>Przykład 2</h4>MojaKlasa mk = new MojaKlasa();
+                              assertEqual(mk.metoda(), true);
+                            </v-col>
+                          </v-row>
                         </v-card-text>
                       </v-card>
                       <br />
