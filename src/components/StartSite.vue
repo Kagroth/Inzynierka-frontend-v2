@@ -144,6 +144,12 @@
 
 <script>
 export default {
+  created() {
+    if (this.isLogged) {
+      this.$store.dispatch('loadTasksWithExercisesAndTests')
+    }
+  },
+
   computed: {
     isLogged() {
       return this.$store.state.auth.isLogged;

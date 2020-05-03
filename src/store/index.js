@@ -11,5 +11,22 @@ export default new Vuex.Store({
     auth,
     users,
     tasks
+  },
+
+  actions: {
+    async loadTasksWithExercisesAndTests ({dispatch}) {
+
+      try {
+        let [exercisesResponse, testsResponse, tasksResponse] = await Promise.all([dispatch('tasks/getAllExercises'), dispatch('tasks/getAllTests'), dispatch('tasks/getAllTasks')])
+        console.log(exercisesResponse)
+        console.log(testsResponse)
+        console.log(tasksResponse)
+
+      }
+      catch (e) {
+        console.log(e)
+        return e
+      }
+    }
   }
 })
