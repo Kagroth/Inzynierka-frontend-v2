@@ -299,10 +299,7 @@
               <v-row>
                 <v-col>
                   Przypisane do:
-                  <span
-                    v-for="(group, index) in task.assignedTo"
-                    :key="index"
-                  >{{ group.name }},</span>
+                  <span>{{ task.assigned_to.name }}</span>
                 </v-col>
               </v-row>
             </v-card-subtitle>
@@ -329,7 +326,7 @@
                   <v-col>
                     <v-list>
                       <v-list-item
-                        v-for="(groupMember, index) in task.assignedTo[0].users"
+                        v-for="(groupMember, index) in task.assigned_to.users"
                         :key="`index-${index}`"
                       >
                         <v-list-item-content>
