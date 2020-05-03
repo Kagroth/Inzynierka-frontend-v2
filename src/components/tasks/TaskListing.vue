@@ -34,7 +34,7 @@
               Rozwiązanie: {{ task.solutionType.name }}
             </v-card-subtitle>
             <v-card-text class="text--primary">
-              Przypisane do: {{ task.assignedTo[0].name }} <br>
+              Przypisane do: {{ task.assigned_to.name }} <br>
               Rozwiązanie: 
               <span v-if="hasSolution(task)">
                 Rozwiazanie zapisane
@@ -66,9 +66,9 @@
               Rozwiązanie: {{ task.solutionType.name }}
             </v-card-subtitle>
             <v-card-text class="text--primary">
-              Przypisane do: {{ task.assignedTo[0].name }} <br>
+              Przypisane do: {{ task.assigned_to.name }} <br>
               Rozwiazania: 
-              {{ task.solution.length }} / {{ task.assignedTo[0].users.length }}  <v-icon small color="primary">mdi-account</v-icon>
+              {{ task.solution.length }} / {{ task.assigned_to.users.length }}  <v-icon small color="primary">mdi-account</v-icon>
             </v-card-text>
           </v-card>
         </v-col>
@@ -93,7 +93,7 @@
               Rozwiązanie: {{ task.solutionType.name }}
             </v-card-subtitle>
             <v-card-text class="text--primary">
-              Przypisane do: {{ task.assignedTo[0].name }} <br>
+              Przypisane do: {{ task.assigned_to.name }} <br>
               Rozwiązanie: 
               <span v-if="hasSolution(task)">
                 Rozwiazanie zapisane
@@ -119,9 +119,9 @@
               Rozwiązanie: {{ task.solutionType.name }}
             </v-card-subtitle>
             <v-card-text class="text--primary">
-              Przypisane do: {{ task.assignedTo[0].name }} <br>
+              Przypisane do: {{ task.assigned_to.name }} <br>
               Rozwiazania: 
-              {{ task.solution.length }} / {{ task.assignedTo[0].users.length }}  <v-icon small color="primary">mdi-account</v-icon>
+              {{ task.solution.length }} / {{ task.assigned_to.users.length }}  <v-icon small color="primary">mdi-account</v-icon>
             </v-card-text>
           </v-card>
       </v-col>
@@ -152,7 +152,7 @@ export default {
       }
 
       return taskArray.filter(task => {
-        return task.title.includes(this.searchForName) || task.assignedTo[0].name.includes(this.searchForName)
+        return task.title.includes(this.searchForName) || task.assigned_to.name.includes(this.searchForName)
       })
     },
 
