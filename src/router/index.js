@@ -61,12 +61,18 @@ const router = new VueRouter({
             {
               path: 'newGroup',
               name: 'GroupCreator',
-              component: GroupCreator
+              component: GroupCreator,
+              meta: {
+                onlyTeacherAllowed: true
+              },
             },
             {
               path: 'group/:name/edit',
               name: 'GroupEditor',
-              component: GroupEditor
+              component: GroupEditor,
+              meta: {
+                onlyTeacherAllowed: true
+              },
             } 
           ]
         },
@@ -83,7 +89,10 @@ const router = new VueRouter({
             {
               path: 'newTask',
               name: 'TaskCreator',
-              component: TaskCreator
+              component: TaskCreator,
+              meta: {
+                onlyTeacherAllowed: true
+              },
             },            
             {
               path: ':pk',
@@ -208,7 +217,11 @@ const router = new VueRouter({
 
 
 router.beforeEach((to, from, next) => {
-  const userTypeName = JSON.parse(localStorage.getItem('profile')).userType.name
+  let userTypeName = {}
+
+  if (localStorage.getItem('profile')) {
+    userTypeName = JSON.parse(localStorage.getItem('profile')).userType.name
+  }
 
   if (to.matched.some(record => record.meta.onlyTeacherAllowed)) {
     if (userTypeName !== 'Teacher') {
