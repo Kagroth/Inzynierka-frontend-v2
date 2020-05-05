@@ -1,6 +1,4 @@
 
-//Docelowy Router
-
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import StartSite from '@/components/StartSite'
@@ -33,7 +31,7 @@ import StudentManager from '@/components/students/StudentManager'
 
 Vue.use(VueRouter)
 
-export default new VueRouter({
+const router = new VueRouter({
   routes: [
     {
       path: '/',
@@ -99,6 +97,9 @@ export default new VueRouter({
           path: 'exercises',
           name: 'MyExercises',
           component: ExerciseManager,
+          meta: {
+            onlyTeacherAllowed: true
+          },
           children: [            
             {
               path: '/',
@@ -122,6 +123,9 @@ export default new VueRouter({
           path: 'tests',
           name: "MyTests",
           component: TestManager,
+          meta: {
+            onlyTeacherAllowed: true
+          },
           children: [
             {
               path: '/',
@@ -202,36 +206,21 @@ export default new VueRouter({
   mode: 'history'
 })
 
-/*
-Stockowy router z vue add router
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 
-Vue.use(VueRouter)
+router.beforeEach((to, from, next) => {
+  const userTypeName = JSON.parse(localStorage.getItem('profile')).userType.name
 
-const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ /*'../views/About.vue')
+  if (to.matched.some(record => record.meta.onlyTeacherAllowed)) {
+    if (userTypeName !== 'Teacher') {
+      next({
+        path: "/"
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() 
   }
-]
-
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
 })
 
 export default router
-
-*/
