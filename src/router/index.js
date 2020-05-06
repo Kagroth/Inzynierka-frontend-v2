@@ -30,6 +30,7 @@ import Editor from '@/components/editor/Editor'
 Vue.use(VueRouter)
 
 export default new VueRouter({
+  mode: 'hash',
   routes: [
     {
       path: '/',
@@ -172,7 +173,6 @@ export default new VueRouter({
       props: true
     }
   ],
-  mode: 'history'
 })
 
 /*
