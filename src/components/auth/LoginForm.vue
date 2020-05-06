@@ -26,6 +26,12 @@
                   requried
                   outlined
                 ></v-text-field>
+                <p>
+                  <router-link
+                    :to="{name: 'ObtainResetPasswordLink'}"
+                  >Odzyskaj hasło</router-link>
+                  
+                </p>
                 <v-btn color="primary" @click="loginUser" :loading="loading" :disabled="disabled">Zaloguj</v-btn>
               </v-form>
             </v-card-text>

@@ -26,13 +26,15 @@
       <v-row>
         <v-col v-for="(task, index) in activeTasks" :key="`activeTask-${index}`" cols="4">
           <v-card tile>
-            <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            <v-hover v-slot:default="{ hover }">
+              <v-card-title :class="hover ? 'title-link' : ''" @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            </v-hover>
             <v-card-subtitle>
               Typ: {{ polishTaskTypesNames[task.taskType.name] }} <br>
               Rozwiązanie: {{ task.solutionType.name }}
             </v-card-subtitle>
             <v-card-text class="text--primary">
-              Przypisane do: {{ task.assignedTo[0].name }} <br>
+              Przypisane do: {{ task.assigned_to.name }} <br>
               Rozwiązanie: 
               <span v-if="hasSolution(task)">
                 Rozwiazanie zapisane
@@ -56,19 +58,17 @@
        <v-row>
         <v-col v-for="(task, index) in activeTasks" :key="`activeTask-${index}`" cols="4">
           <v-card tile>
-            <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            <v-hover v-slot:default="{ hover }">
+              <v-card-title :class="hover ? 'title-link' : ''" @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            </v-hover>
             <v-card-subtitle>
               Typ: {{ polishTaskTypesNames[task.taskType.name] }} <br>
               Rozwiązanie: {{ task.solutionType.name }}
             </v-card-subtitle>
             <v-card-text class="text--primary">
-              Przypisane do: {{ task.assignedTo[0].name }} <br>
+              Przypisane do: {{ task.assigned_to.name }} <br>
               Rozwiazania: 
-              <v-rating v-model="task.solution.length" :length="task.assignedTo[0].users.length">
-                <template v-slot:item="props">
-                  <v-icon small :color="props.isFilled ? 'primary': 'error'">mdi-account</v-icon>
-                </template>
-              </v-rating>
+              {{ task.solution.length }} / {{ task.assigned_to.users.length }}  <v-icon small color="primary">mdi-account</v-icon>
             </v-card-text>
           </v-card>
         </v-col>
@@ -85,13 +85,15 @@
       <v-row>
       <v-col v-for="(task, index) in inactiveTasks" :key="`inactiveTask-${index}`" cols="4">
         <v-card tile>
-            <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            <v-hover v-slot:default="{ hover }">
+              <v-card-title :class="hover ? 'title-link' : ''" @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            </v-hover>
             <v-card-subtitle>
               Typ: {{ polishTaskTypesNames[task.taskType.name] }} <br>
               Rozwiązanie: {{ task.solutionType.name }}
             </v-card-subtitle>
             <v-card-text class="text--primary">
-              Przypisane do: {{ task.assignedTo[0].name }} <br>
+              Przypisane do: {{ task.assigned_to.name }} <br>
               Rozwiązanie: 
               <span v-if="hasSolution(task)">
                 Rozwiazanie zapisane
@@ -109,19 +111,17 @@
     <v-row v-else>
       <v-col v-for="(task, index) in inactiveTasks" :key="`inactiveTask-${index}`" cols="4">
         <v-card tile>
-            <v-card-title @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            <v-hover v-slot:default="{ hover }">
+              <v-card-title :class="hover ? 'title-link' : ''" @click="showTaskDetails(task)" link> {{ task.title }}</v-card-title>
+            </v-hover>
             <v-card-subtitle>
               Typ: {{ polishTaskTypesNames[task.taskType.name] }} <br>
               Rozwiązanie: {{ task.solutionType.name }}
             </v-card-subtitle>
             <v-card-text class="text--primary">
-              Przypisane do: {{ task.assignedTo[0].name }} <br>
+              Przypisane do: {{ task.assigned_to.name }} <br>
               Rozwiazania: 
-              <v-rating v-model="task.solution.length" :length="task.assignedTo[0].users.length">
-                <template v-slot:item="props">
-                  <v-icon small :color="props.isFilled ? 'primary': 'error'">mdi-account</v-icon>
-                </template>
-              </v-rating>
+              {{ task.solution.length }} / {{ task.assigned_to.users.length }}  <v-icon small color="primary">mdi-account</v-icon>
             </v-card-text>
           </v-card>
       </v-col>
@@ -152,7 +152,7 @@ export default {
       }
 
       return taskArray.filter(task => {
-        return task.title.includes(this.searchForName) || task.assignedTo[0].name.includes(this.searchForName)
+        return task.title.includes(this.searchForName) || task.assigned_to.name.includes(this.searchForName)
       })
     },
 
@@ -202,4 +202,12 @@ export default {
 </script>
 
 <style scoped>
+.v-card {
+  cursor: default;
+}
+
+.title-link {
+  cursor: pointer;
+  color: lightblue;
+}
 </style>

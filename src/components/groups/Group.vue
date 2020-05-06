@@ -6,11 +6,9 @@
       </v-col>
       <v-spacer></v-spacer>
       <v-col cols="2" v-if="userType.name === 'Teacher'">
-        <!--
           <v-btn class="mr-4" @click="editGroup" color="success" small>
               <v-icon>mdi-pencil</v-icon>
-            </v-btn>    
-        -->
+            </v-btn>   
         <v-btn @click="deleteGroup" color="error" small>
           <v-icon>mdi-delete</v-icon>
         </v-btn>
@@ -32,9 +30,13 @@
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title
-                @click="inspectUser(user.pk)"
-              >{{ user.first_name }} {{ user.last_name }}</v-list-item-title>
+              <v-list-item-title @click="inspectUser(user.pk)">
+                <v-hover v-slot:default="{ hover }">
+                  <span
+                    :class="hover ? 'title-link' : ''"
+                  >{{ user.first_name }} {{ user.last_name }}</span>
+                </v-hover>
+              </v-list-item-title>
               <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
@@ -62,7 +64,9 @@
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title @click="showTaskDetails(task)">
-                  {{ task.title }}
+                  <v-hover v-slot:default="{ hover }">
+                    <span :class="hover ? 'title-link' : ''">{{ task.title }}</span>
+                  </v-hover>
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
@@ -96,7 +100,9 @@
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title @click="showTaskDetails(task)">
-                  {{ task.title }}
+                  <v-hover v-slot:default="{ hover }">
+                    <span :class="hover ? 'title-link' : ''">{{ task.title }}</span>
+                  </v-hover>
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
@@ -164,4 +170,12 @@ export default {
 </script>
 
 <style scoped>
+.v-list {
+  cursor: default;
+}
+
+.title-link {
+  cursor: pointer;
+  color: lightblue;
+}
 </style>

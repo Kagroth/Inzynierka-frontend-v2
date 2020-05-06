@@ -19,7 +19,9 @@
     <v-row>
       <v-col cols="3" v-for="group in groups" :key="group.pk" class="pa-1">
         <v-card tile>
-          <v-card-title @click="showGroupDetails(group)" link>{{ group.name }}</v-card-title>
+          <v-hover v-slot:default="{ hover }">            
+            <v-card-title :class="hover ? 'title-link' : ''" @click="showGroupDetails(group)">{{ group.name }}</v-card-title>
+          </v-hover>
           <v-card-subtitle>Liczba czlonkow: 
             <v-icon small>mdi-account</v-icon>
             {{ group.users.length }} <br>
@@ -98,4 +100,12 @@ export default {
 </script>
 
 <style scoped>
+.v-card {
+  cursor: default;
+}
+
+.title-link {
+  cursor: pointer;
+  color: lightblue;
+}
 </style>

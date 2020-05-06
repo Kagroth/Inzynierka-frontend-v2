@@ -1,13 +1,14 @@
 
-//Docelowy Router
-
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import StartSite from '@/components/StartSite'
 import LoginForm from '@/components/auth/LoginForm'
 import RegisterForm from '@/components/auth/RegisterForm'
+import ObtainResetPasswordLinkForm from '@/components/auth/ObtainResetPasswordLinkForm'
+import ResetPasswordForm from '@/components/auth/ResetPasswordForm'
 import GroupManager from '@/components/groups/GroupManager'
 import GroupCreator from '@/components/groups/GroupCreator'
+import GroupEditor from '@/components/groups/GroupEditor'
 import GroupListing from '@/components/groups/GroupListing'
 import Group from '@/components/groups/Group'
 import TaskManager from '@/components/tasks/TaskManager'
@@ -26,10 +27,11 @@ import Solution from '@/components/solutions/Solution'
 import SolutionListing from '@/components/solutions/SolutionListing'
 import UserData from '@/components/solutions/UserData'
 import Editor from '@/components/editor/Editor'
+import StudentManager from '@/components/students/StudentManager'
 
 Vue.use(VueRouter)
 
-export default new VueRouter({
+const router = new VueRouter({
   mode: 'hash',
   routes: [
     {
@@ -37,6 +39,11 @@ export default new VueRouter({
       name: 'StartSite',
       component: StartSite,
       children: [
+        {
+          path: 'students',
+          name: 'Students',
+          component: StudentManager,
+        },
         {
           path: 'groups',
           name: 'MyGroups',
@@ -55,8 +62,19 @@ export default new VueRouter({
             {
               path: 'newGroup',
               name: 'GroupCreator',
-              component: GroupCreator
-            }, 
+              component: GroupCreator,
+              meta: {
+                onlyTeacherAllowed: true
+              },
+            },
+            {
+              path: 'group/:name/edit',
+              name: 'GroupEditor',
+              component: GroupEditor,
+              meta: {
+                onlyTeacherAllowed: true
+              },
+            } 
           ]
         },
         {
@@ -72,7 +90,10 @@ export default new VueRouter({
             {
               path: 'newTask',
               name: 'TaskCreator',
-              component: TaskCreator
+              component: TaskCreator,
+              meta: {
+                onlyTeacherAllowed: true
+              },
             },            
             {
               path: ':pk',
@@ -86,6 +107,9 @@ export default new VueRouter({
           path: 'exercises',
           name: 'MyExercises',
           component: ExerciseManager,
+          meta: {
+            onlyTeacherAllowed: true
+          },
           children: [            
             {
               path: '/',
@@ -109,6 +133,9 @@ export default new VueRouter({
           path: 'tests',
           name: "MyTests",
           component: TestManager,
+          meta: {
+            onlyTeacherAllowed: true
+          },
           children: [
             {
               path: '/',
@@ -142,6 +169,10 @@ export default new VueRouter({
           name: 'UserData',
           component: UserData,
           props: true
+        },
+        {
+          path: 'email_test',
+          component: () => import("@/components/EmailTest.vue")
         }        
       ]
     },    
@@ -153,7 +184,16 @@ export default new VueRouter({
       path: '/register',
       component: RegisterForm
     },
-    
+    {
+      path: '/obtain_reset_password_link',
+      name: 'ObtainResetPasswordLink',
+      component: ObtainResetPasswordLinkForm
+    },
+    {
+      path: '/reset_password/:hash_string',
+      name: 'ResetPasswordForm',
+      component: ResetPasswordForm
+    },
     {
       path: '/tasks',
       name: 'MyTasks',
@@ -175,36 +215,25 @@ export default new VueRouter({
   ],
 })
 
-/*
-Stockowy router z vue add router
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 
-Vue.use(VueRouter)
+router.beforeEach((to, from, next) => {
+  let userTypeName = {}
 
-const routes = [
-  {
-    path: '/',
-    name: 'home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ /*'../views/About.vue')
+  if (localStorage.getItem('profile')) {
+    userTypeName = JSON.parse(localStorage.getItem('profile')).userType.name
   }
-]
 
-const router = new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
-  routes
+  if (to.matched.some(record => record.meta.onlyTeacherAllowed)) {
+    if (userTypeName !== 'Teacher') {
+      next({
+        path: "/"
+      })
+    } else {
+      next()
+    }
+  } else {
+    next() 
+  }
 })
 
 export default router
-
-*/

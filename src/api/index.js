@@ -187,5 +187,21 @@ export default {
 
   getTeachersStudents () {
     return this.sendRequest('my_students/', 'get')
+  },
+
+  obtainResetPasswordLink(formWithEmail) {
+    return this.sendRequest('reset_password/', 'post', formWithEmail)
+  },
+
+  verifyResetPasswordHash(hash_string) {
+    return this.sendRequest('reset_password/' + hash_string, 'get')
+  },
+
+  setNewPassword(updateData) {
+    return this.sendRequest('reset_password/' + updateData.hash_string, 'put', updateData)
+  },
+
+  testRegistrationHashView (data) {
+    return this.sendRequest('reset_password/', 'get')
   }
 }

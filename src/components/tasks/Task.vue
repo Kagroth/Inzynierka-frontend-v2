@@ -138,7 +138,7 @@
                             </v-list-item>
                             <v-list-item @click="addGitHubRepoDialog = true">
                               <v-list-item-icon>
-                                <v-icon>mdi-github-circle</v-icon>
+                                <v-icon>mdi-github</v-icon>
                               </v-list-item-icon>
                               <v-list-item-content>
                                 <v-list-item-title>Przeslij ponownie</v-list-item-title>
@@ -149,10 +149,13 @@
                       </span>
                       <span v-else>
                         <v-btn color="primary" rounded @click="addGitHubRepoDialog = true">
-                          <v-icon>mdi-github-circle</v-icon>
+                          <v-icon>mdi-github</v-icon>
                         </v-btn>
                       </span>
-                      <v-dialog v-model="addGitHubRepoDialog" width="600">
+
+                      <!-- Okno z wynikiem testowania oraz formularzem w którym podajemy adres repozytorium i plik z rozwiązaniem -->
+                      <v-dialog v-model="addGitHubRepoDialog" width="600" persistent scrollable>
+                        <!-- Wynik testowania -->
                         <v-card v-if="testsResultsModal">
                           <v-card-title>Twoje rozwiązanie zostało przetestowane i zapisane</v-card-title>
 
@@ -175,37 +178,80 @@
                             <v-btn color="primary" text @click="hideResultDialog">Ok</v-btn>
                           </v-card-actions>
                         </v-card>
-                        <v-card v-else>
-                          <v-card-title
-                            class="headline grey lighten-2"
-                            primary-title
-                          >Przesyłanie odpowiedzi</v-card-title>
-
-                          <v-card-text class="mt-4">
-                            <v-text-field
-                              v-model="gitHubRepo"
-                              outlined
-                              placeholder="Np: https://github.com/User/RepositoryName.git"
-                              label="Link do repozytorium GitHub"
-                            ></v-text-field>
-                          </v-card-text>
-
-                          <v-card-actions>
-                            <v-spacer></v-spacer>
-                            <v-btn
-                              v-if="!sendSolutionLoading"
-                              color="primary"
-                              text
-                              @click="addGitHubRepoDialog = false"
-                            >Anuluj</v-btn>
-                            <v-btn
-                              color="primary"
-                              :loading="sendSolutionLoading"
-                              text
-                              @click="sendGitHubSolution"
-                            >Wyślij</v-btn>
-                          </v-card-actions>
-                        </v-card>
+                        <!-- Formularz do udzielenia odpowiedzi -->
+                        <v-stepper v-else v-model="gitHubStepperModel" style="overflow-y: scroll;">
+                              <v-stepper-header>
+                                <v-stepper-step :complete="gitHubStepperModel > 1" step="1" :rules="firstStepCompleteRules">Podaj adres repozytorium</v-stepper-step>
+                                <v-divider></v-divider>
+                                <v-stepper-step :complete="gitHubStepperModel > 2" step="2">Wybierz plik</v-stepper-step>
+                              </v-stepper-header>
+                              <v-stepper-items>
+                                <!-- Krok pierwszy - podanie adresu repozytorium -->
+                                <v-stepper-content step="1">
+                                  <v-card flat tile>
+                                    <v-card-text>                                      
+                                      <v-text-field
+                                        v-model="ghSolutionRepositoryURL"
+                                        placeholder="Np: https://github.com/User/RepositoryName.git"
+                                        label="Link do repozytorium"
+                                      ></v-text-field>
+                                    </v-card-text>
+                                  </v-card>
+                                  <v-row>
+                                    <v-spacer></v-spacer>
+                                    <v-col class="text-right">
+                                      <v-btn
+                                        v-if="!sendSolutionLoading"
+                                        color="primary"
+                                        text
+                                        @click="addGitHubRepoDialog = false"
+                                      >Anuluj</v-btn>
+                                      <v-btn
+                                        color="primary"
+                                        :loading="sendSolutionLoading"
+                                        @click="nextStep"
+                                      >Dalej</v-btn>
+                                    </v-col>
+                                  </v-row>                             
+                                </v-stepper-content>
+                                
+                                <!-- Krok drugi - wybranie pliku -->
+                                <v-stepper-content step="2">
+                                  <v-card flat tile>
+                                    <v-card-text  v-if="firstStepCompleteRules[0]()">
+                                      <v-progress-circular indeterminate v-if="gitHubLoadingFiles"></v-progress-circular>
+                                      <div v-else>
+                                        <v-radio-group v-if="repoFiles.length > 0" v-model="selectedRepositoryElem">
+                                          <v-radio v-for="(repoElem, index) in repoFiles" :key="`repo-${index}`" :label="repoElem.name" :value="repoElem"></v-radio>
+                                        </v-radio-group>
+                                        <div v-else>
+                                          Brak odpowiednich plików
+                                        </div>
+                                      </div>
+                                    </v-card-text>
+                                    <v-card-text v-else>
+                                      Nie podano poprawnego adresu repozytorium
+                                    </v-card-text>
+                                  </v-card>
+                                  <v-row>
+                                    <v-spacer></v-spacer>
+                                    <v-col class="text-right">
+                                      <v-btn
+                                        v-if="!sendSolutionLoading"
+                                        color="primary"
+                                        text
+                                        @click="gitHubStepperModel = 1"
+                                      >Powrót</v-btn>
+                                      <v-btn
+                                        color="primary"
+                                        :loading="sendSolutionLoading"
+                                        @click="sendGitHubSolution"
+                                      >Wyślij</v-btn>
+                                    </v-col>
+                                  </v-row>  
+                                </v-stepper-content>
+                              </v-stepper-items>
+                            </v-stepper>                        
                       </v-dialog>
                     </div>
                   </div>
@@ -253,10 +299,7 @@
               <v-row>
                 <v-col>
                   Przypisane do:
-                  <span
-                    v-for="(group, index) in task.assignedTo"
-                    :key="index"
-                  >{{ group.name }},</span>
+                  <span>{{ task.assigned_to.name }}</span>
                 </v-col>
               </v-row>
             </v-card-subtitle>
@@ -283,7 +326,7 @@
                   <v-col>
                     <v-list>
                       <v-list-item
-                        v-for="(groupMember, index) in task.assignedTo[0].users"
+                        v-for="(groupMember, index) in task.assigned_to.users"
                         :key="`index-${index}`"
                       >
                         <v-list-item-content>
@@ -360,13 +403,20 @@ export default {
         message: ""
       },
 
+      gitHubStepperModel: "1",
       sendSolutionLoading: false,
       testsResultsModal: false,
       testResults: "",
       fileSendDialog: false,
       file: null,
       addGitHubRepoDialog: false,
-      gitHubRepo: "",
+
+      ghSolutionRepositoryURL: "",
+
+      selectedRepositoryElem: {},
+
+      gitHubLoadingFiles: false,
+      repoContent: {},
       solution: null
     };
   },
@@ -374,6 +424,15 @@ export default {
   created() {},
 
   methods: {
+    nextStep () {
+      this.gitHubStepperModel = 2
+      console.log(this.firstStepCompleteRules[0]())
+
+      if (this.firstStepCompleteRules[0]()) {
+        this.getFilesOfRepo()
+      }
+    },
+
     onFileChange(event) {
       console.log(this.file);
     },
@@ -436,10 +495,21 @@ export default {
 
     sendGitHubSolution() {
       if (
-        this.gitHubRepo === "" ||
-        this.gitHubRepo === undefined ||
-        this.gitHubRepo === null
+        this.ghSolutionRepositoryURL === "" ||
+        this.ghSolutionRepositoryURL === undefined ||
+        this.ghSolutionRepositoryURL === null
       ) {
+        alert("Nie wybrano repozytorium")
+        return;
+      }
+
+      if (
+        this.selectedRepositoryElem === "" ||
+        this.selectedRepositoryElem === undefined ||
+        this.selectedRepositoryElem === null
+      ) {
+        alert("Nie wybrano pliku")
+
         return;
       }
 
@@ -448,7 +518,9 @@ export default {
 
       let formData = new FormData();
 
-      formData.append("repository", this.gitHubRepo);
+      formData.append('repositoryURL', this.ghSolutionRepositoryURL)
+      formData.append('filename', this.selectedRepositoryElem.name)
+      formData.append('fileDownloadURL', this.selectedRepositoryElem.download_url)
       formData.append("taskPk", this.task.pk);
       formData.append("solutionType", this.task.solutionType.name);
 
@@ -501,7 +573,49 @@ export default {
       });
 
       return usernamesWithSolutions.includes(username);
-    }
+    },
+
+    async getFilesOfRepo() {
+      this.gitHubLoadingFiles = true
+
+      let arr = this.ghSolutionRepositoryURL.split("/")
+      const username = arr[3]
+      const repoName = arr[4]
+      console.log(arr)
+
+      const githubApiLink = `https://api.github.com/repos/${username}/${repoName}/contents`
+
+      console.log(githubApiLink)
+
+
+      let response = await fetch(githubApiLink, {
+            method: 'GET'
+          })
+
+      let data = await response.json()
+
+      console.log(data)
+
+      this.repoContent = data.filter(repoElem => {
+        const type = repoElem.type
+
+        if (type === 'dir') {
+          return true
+        }
+
+        if (type === 'file') {
+          const fileName = repoElem.name
+
+          let extension = fileName.split(".")[1]
+          extension = ".".concat(extension)
+
+          return (extension === this.task.exercise.language.allowed_extension)
+        }
+
+        return false
+      })
+      this.gitHubLoadingFiles = false
+    },
   },
 
   computed: {
@@ -526,6 +640,62 @@ export default {
 
       console.log(sol);
       return sol !== undefined;
+    },
+    
+    firstStepCompleteRules () {
+      let rules = []
+
+      const isStepGreaterThanOne = () => this.gitHubStepperModel > 1
+    
+      const isCorrect = () => {
+        const regex = /^([A-Za-z0-9]+@|http(|s):\/\/)([A-Za-z0-9.]+(:\d+)?)(?::|\/)([\d/\w.-]+?)(\.git)?$/i
+        const result = regex.test(this.ghSolutionRepositoryURL)
+
+        if (result === false && isStepGreaterThanOne()) {
+          return false
+        }
+
+        return true
+        }
+
+      rules.push(isCorrect)
+
+      return rules
+    },
+
+    repoFiles () {
+      if (!Array.isArray(this.repoContent)) {
+        return []
+      }
+
+      const filesList = this.repoContent.filter(repoElem => {
+        const type = repoElem.type
+
+        if (type === 'file') {
+          const fileName = repoElem.name
+
+          let extension = fileName.split(".")[1]
+          extension = ".".concat(extension)
+
+          return (extension === this.task.exercise.language.allowed_extension)
+        }
+
+        return false
+      })
+
+      return filesList
+    },
+
+    repoDirs () {
+      if (!Array.isArray(this.repoContent)) {
+        return []
+      }
+      
+      const dirsList = this.repoContent.filter(repoElem => {
+        return (repoElem.type === 'dir')
+      })
+
+      return dirsList
     }
   }
 };
