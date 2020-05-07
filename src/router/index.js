@@ -32,7 +32,7 @@ import StudentManager from '@/components/students/StudentManager'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
-  mode: 'hash',
+  mode: 'history',
   routes: [
     {
       path: '/',
