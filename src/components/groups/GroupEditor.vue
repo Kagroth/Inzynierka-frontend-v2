@@ -228,6 +228,7 @@ export default {
           alert(message);
 
           if (response.status === 200) {
+            this.$store.dispatch('loadTasksWithExercisesAndTests')
             this.$router.push({ name: "GroupListing" });
           }
         })
