@@ -100,10 +100,13 @@ import {
   required,
   sameAs,
   minLength,
-  alpha,
+  //alpha,
   alphaNum,
-  email
+  email,
+  helpers
 } from "vuelidate/lib/validators";
+
+const polishAlpha = helpers.regex('polishAlpha', /^[a-zA-Z\u0105\u0104\u0107\u0106\u0119\u0118\u0142\u0141\u0144\u0143\u00f3\u00d3\u015b\u015a\u017a\u0179\u017c\u017b]*$/)
 
 export default {
   data() {
@@ -140,12 +143,12 @@ export default {
     form: {
       firstname: {
         required,
-        alpha
+        polishAlpha
       },
 
       lastname: {
         required,
-        alpha
+        polishAlpha
       },
 
       username: {
@@ -225,7 +228,7 @@ export default {
       if (!this.$v.form.firstname.$dirty) return errors
 
       !this.$v.form.firstname.required && errors.push('Pole jest wymagane')
-      !this.$v.form.firstname.alpha && errors.push('Imię może składać się tylko ze znaków alfabetu')
+      !this.$v.form.firstname.polishAlpha && errors.push('Imię może składać się tylko ze znaków alfabetu')
 
       return errors
     },
@@ -236,7 +239,7 @@ export default {
       if (!this.$v.form.lastname.$dirty) return errors
 
       !this.$v.form.lastname.required && errors.push('Nazwisko jest wymagane')
-      !this.$v.form.lastname.alpha && errors.push('Nazwisko może składać się tylko ze znaków alfabetu')
+      !this.$v.form.lastname.polishAlpha && errors.push('Nazwisko może składać się tylko ze znaków alfabetu')
       
       return errors
     },
