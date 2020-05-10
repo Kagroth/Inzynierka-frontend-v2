@@ -15,7 +15,9 @@
                 <v-text-field
                   type="text"
                   v-model="form.firstname"
-                  :rules="[() => !!$v.form.firstname.required || 'Imię jest wymagane', () => !!$v.form.firstname.alpha || 'Imię może składać się tylko ze znaków z alfabetu']"
+                  @input="$v.form.firstname.$touch()"
+                  @blur="$v.form.firstname.$touch()"
+                  :error-messages="firstnameRules"
                   label="Imię"
                   required
                   outlined
@@ -23,6 +25,9 @@
                 <v-text-field
                   type="text"
                   v-model="form.lastname"
+                  @input="$v.form.lastname.$touch()"
+                  @blur="$v.form.lastname.$touch()"
+                  :error-messages="lastnameRules"
                   label="Nazwisko"
                   required
                   outlined
@@ -30,14 +35,29 @@
                 <v-text-field
                   type="text"
                   v-model="form.username"
+                  @input="$v.form.username.$touch()"
+                  @blur="$v.form.username.$touch()"
+                  :error-messages="usernameRules"      
                   label="Nazwa użytkownika"
                   required
                   outlined
                 ></v-text-field>
-                <v-text-field type="email" v-model="form.email" label="Email" required outlined></v-text-field>
+                <v-text-field
+                  type="email"
+                  v-model="form.email"
+                  @input="$v.form.email.$touch()"
+                  @blur="$v.form.email.$touch()"
+                  :error-messages="emailRules"
+                  label="Email"
+                  required
+                  outlined
+                ></v-text-field>
                 <v-text-field
                   type="password"
                   v-model="form.password"
+                  @input="$v.form.password.$touch()"
+                  @blur="$v.form.password.$touch()"
+                  :error-messages="passwordRules"
                   label="Hasło"
                   required
                   outlined
@@ -45,6 +65,9 @@
                 <v-text-field
                   type="password"
                   v-model="form.passwordRepeat"
+                  @input="$v.form.passwordRepeat.$touch()"
+                  @blur="$v.form.passwordRepeat.$touch()"
+                  :error-messages="passwordRepeatRules"
                   label="Powtórz hasło"
                   required
                   outlined
@@ -156,6 +179,8 @@ export default {
     registerUser(event) {
       event.preventDefault();
 
+      this.$v.$touch();
+
       if (this.$v.$invalid) {
         this.snackbar.color = "warning";
         this.snackbar.show = true;
@@ -177,7 +202,7 @@ export default {
           this.snackbar.show = true;
           this.snackbar.message =
             response.data.message +
-            " .Nastapi przekierowanie do strony logowania";
+            ". Nastapi przekierowanie do strony logowania";
 
           setTimeout(() => {
             this.$router.push("/login");
@@ -190,6 +215,75 @@ export default {
 
         console.log(response);
       });
+    }
+  },
+
+  computed: {
+    firstnameRules() {
+      const errors = []
+
+      if (!this.$v.form.firstname.$dirty) return errors
+
+      !this.$v.form.firstname.required && errors.push('Pole jest wymagane')
+      !this.$v.form.firstname.alpha && errors.push('Imię może składać się tylko ze znaków alfabetu')
+
+      return errors
+    },
+
+    lastnameRules() {
+      const errors = []
+
+      if (!this.$v.form.lastname.$dirty) return errors
+
+      !this.$v.form.lastname.required && errors.push('Nazwisko jest wymagane')
+      !this.$v.form.lastname.alpha && errors.push('Nazwisko może składać się tylko ze znaków alfabetu')
+      
+      return errors
+    },
+
+    usernameRules() {
+      const errors = []
+
+      if (!this.$v.form.username.$dirty) return errors
+
+      !this.$v.form.username.required && errors.push('Nazwa użytkownika jest wymagana')
+      !this.$v.form.username.alphaNum && errors.push('Nazwa użytkownika może składać się tylko ze znaków alfanumerycznych')
+      !this.$v.form.username.minLength && errors.push('Nazwa użytkownika musi składać się conajmniej z 3 znaków')
+      
+      return errors                  
+    },
+
+    emailRules() {
+      const errors = []
+      
+      if (!this.$v.form.email.$dirty) return errors
+
+      !this.$v.form.email.required && errors.push('Adres email jest wymagany')
+      !this.$v.form.email.email && errors.push('Niepoprawny adres email')
+      
+      return errors
+    },
+
+    passwordRules() {
+      const errors = []
+
+      if (!this.$v.form.password.$dirty) return errors
+
+      !this.$v.form.password.required && errors.push('Hasło jest wymagane')
+      !this.$v.form.password.minLength && errors.push('Hasło musi składać się conajmniej z 8 znaków')
+      
+      return errors
+    },
+
+    passwordRepeatRules() {
+      const errors = []
+      
+      if (!this.$v.form.passwordRepeat.$dirty) return errors
+
+      !this.$v.form.passwordRepeat.required && errors.push('Wprowadź ponownie hasło')
+      !this.$v.form.passwordRepeat.sameAsPassword && errors.push('Hasła się różnią')
+
+      return errors
     }
   }
 };
