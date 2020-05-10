@@ -12,7 +12,14 @@
             <v-card-title>Rejestracja</v-card-title>
             <v-card-text>
               <v-form>
-                <v-text-field type="text" v-model="form.firstname" label="Imię" required outlined></v-text-field>
+                <v-text-field
+                  type="text"
+                  v-model="form.firstname"
+                  :rules="[() => !!$v.form.firstname.required || 'Imię jest wymagane', () => !!$v.form.firstname.alpha || 'Imię może składać się tylko ze znaków z alfabetu']"
+                  label="Imię"
+                  required
+                  outlined
+                ></v-text-field>
                 <v-text-field
                   type="text"
                   v-model="form.lastname"
