@@ -98,7 +98,11 @@ export default {
 
                     if (response.status === 200) {
                         this.snackbar.color = "success"; 
-                        this.snackbar.message = response.data.message + " Teraz mozesz sie zalogowac";               
+                        this.snackbar.message = response.data.message + ". Nastapi przekierowanie do strony logowania";
+
+                        setTimeout(() => {
+                            this.$router.push("/login");
+                        }, 2000);
                     }
                     else {
                         this.snackbar.color = "warning";  
