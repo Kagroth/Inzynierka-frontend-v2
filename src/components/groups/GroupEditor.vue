@@ -4,8 +4,14 @@
       <v-col>
         <v-form>
           <v-row>
-            <v-col>
-              <v-text-field type="text" v-model="form.groupName" label="Nazwa grupy" required></v-text-field>
+            <v-col cols="4">
+              <v-text-field
+                type="text"
+                v-model="form.groupName"
+                append-icon="mdi-pencil"
+                label="Nazwa grupy"
+                required
+              ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
@@ -124,7 +130,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text @click="closeDialog($event, addUsersContext, true)">Wyczyść</v-btn>
+                <v-btn text @click="closeDialog($event, addUsersContext, true)">Wyczyść i wyjdź</v-btn>
                 <v-btn text @click="closeDialog($event, addUsersContext)">Wybierz</v-btn>
               </v-card-actions>
             </v-card>
@@ -168,7 +174,7 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text @click="closeDialog($event, removeUsersContext, true)">Wyczyść</v-btn>
+                <v-btn text @click="closeDialog($event, removeUsersContext, true)">Wyczyść i wyjdź</v-btn>
                 <v-btn text @click="closeDialog($event, removeUsersContext)">Wybierz</v-btn>
               </v-card-actions>
             </v-card>
@@ -228,7 +234,7 @@ export default {
           alert(message);
 
           if (response.status === 200) {
-            this.$store.dispatch('loadTasksWithExercisesAndTests')
+            this.$store.dispatch("loadTasksWithExercisesAndTests");
             this.$router.push({ name: "GroupListing" });
           }
         })
