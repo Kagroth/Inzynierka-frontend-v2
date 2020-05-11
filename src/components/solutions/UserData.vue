@@ -3,7 +3,7 @@
     <v-row>
       <v-col>
         <v-card>
-          <v-card-title> {{ userData.user.first_name }} {{ userData.user.last_name }}</v-card-title>
+          <v-card-title>{{ userData.user.first_name }} {{ userData.user.last_name }}</v-card-title>
           <v-card-text>
             <v-simple-table>
               <template>
@@ -17,14 +17,23 @@
                 <tbody>
                   <tr v-for="(task, index) in userData.tasks" :key="index">
                     <td>{{ task.title }}</td>
-                    <td v-if="getSolution(task) !== undefined">
-                      {{ getSolution(task).rate || "Brak oceny" }}
-                    </td>
-                    <td v-else>{{ "Brak rozwiazania "}}</td>
                     <td>
-                      <v-btn icon color="primary" @click="showSolution(getSolution(task).pk)">
-                        <v-icon>mdi-magnify</v-icon>
-                      </v-btn>
+                      <div
+                        v-if="getSolution(task) !== undefined"
+                      >{{ getSolution(task).rate || "Brak oceny" }}</div>
+                      <div v-else>Brak rozwiązania</div>
+                    </td>
+                    <td>
+                      <div v-if="getSolution(task) !== undefined">
+                        <v-btn icon color="primary" @click="showSolution(getSolution(task))">
+                          <v-icon>mdi-magnify</v-icon>
+                        </v-btn>
+                      </div>
+                      <div v-else>
+                        <v-btn icon color="error" disabled>
+                          <v-icon>mdi-magnify</v-icon>
+                        </v-btn>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -50,26 +59,32 @@ export default {
   created() {
     this.$store.dispatch("users/getUserData", this.pk).then(response => {
       if (response.status === 200) {
-        this.userData = response.data
+        this.userData = response.data;
       }
     });
   },
 
   methods: {
-     getSolution(task) {
-       let sol = task.solution.find(sol => {
-         return sol.user.pk === this.userData.user.pk
-       })
+    getSolution(task) {
+      let sol = task.solution.find(sol => {
+        return sol.user.pk === this.userData.user.pk;
+      });
 
-       return sol
-     },
+      return sol;
+    },
 
-     showSolution(pk) {
+    showSolution(solution) {
+      let pk = null;
+
+      if (solution) {
+        pk = solution.pk;
+      }
+
       this.$router.push({
         name: "Solution",
         params: { pk: pk }
       });
-    },
+    }
   }
 };
 </script>

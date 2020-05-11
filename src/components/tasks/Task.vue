@@ -367,8 +367,7 @@
                             <v-btn
                               icon
                               small
-                              color="error"
-                              @click="showSolutionAsTeacher(null, groupMember)"
+                              disabled
                             >
                               <v-icon>mdi-magnify</v-icon>
                             </v-btn>
