@@ -223,14 +223,16 @@
                                       <div v-else>
                                         <v-breadcrumbs :items="repoContent">
                                           <template v-slot:item="{ item }">
-                                            <v-breadcrumbs-item @click="item.name === 'Root' ? getFilesOfRepo() : changeRepoContent($event, item)">
+                                            <v-breadcrumbs-item @click="item.name === 'Root' ? getFilesOfRepo($event) : changeRepoContent($event, item)" href="#">
                                               {{ item.name }}
                                             </v-breadcrumbs-item>
                                           </template>
                                         </v-breadcrumbs>
+                                        <v-divider class="mb-5"></v-divider>
                                         <span v-if="repoDirs.length > 0">
                                           <span v-for="(dir, index) in repoDirs" :key="`repo-dir-${index}`">
-                                            <a @click="getFilesOfRepoDirectory($event, dir)">{{ dir.name }}</a>
+                                            <v-icon>mdi-folder</v-icon>
+                                            <a @click="getFilesOfRepoDirectory($event, dir)"> {{ dir.name }}</a>
                                           </span>
                                         </span>
                                         <v-radio-group v-if="repoFiles.length > 0" v-model="selectedRepositoryElem">
@@ -587,7 +589,12 @@ export default {
       return usernamesWithSolutions.includes(username);
     },
 
-    async getFilesOfRepo() {
+    async getFilesOfRepo(event = null) {
+      
+      if(event) {
+        event.preventDefault()
+      }
+
       this.selectedRepositoryElem = null
       this.gitHubLoadingFiles = true
       this.repoContent = []
@@ -684,6 +691,7 @@ export default {
     },
 
     changeRepoContent(event, dir) {
+      event.preventDefault()
       this.gitHubLoadingFiles = true
       console.log(dir)
       console.log(dir.github_url)
