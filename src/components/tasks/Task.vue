@@ -221,6 +221,20 @@
                                     <v-card-text  v-if="firstStepCompleteRules[0]()">
                                       <v-progress-circular indeterminate v-if="gitHubLoadingFiles"></v-progress-circular>
                                       <div v-else>
+                                        <v-breadcrumbs :items="repoContent">
+                                          <template v-slot:item="{ item }">
+                                            <v-breadcrumbs-item @click="item.name === 'Root' ? getFilesOfRepo($event) : changeRepoContent($event, item)" href="#">
+                                              {{ item.name }}
+                                            </v-breadcrumbs-item>
+                                          </template>
+                                        </v-breadcrumbs>
+                                        <v-divider class="mb-5"></v-divider>
+                                        <span v-if="repoDirs.length > 0">
+                                          <span v-for="(dir, index) in repoDirs" :key="`repo-dir-${index}`">
+                                            <v-icon>mdi-folder</v-icon>
+                                            <a @click="getFilesOfRepoDirectory($event, dir)"> {{ dir.name }}</a>
+                                          </span>
+                                        </span>
                                         <v-radio-group v-if="repoFiles.length > 0" v-model="selectedRepositoryElem">
                                           <v-radio v-for="(repoElem, index) in repoFiles" :key="`repo-${index}`" :label="repoElem.name" :value="repoElem"></v-radio>
                                         </v-radio-group>
@@ -367,8 +381,7 @@
                             <v-btn
                               icon
                               small
-                              color="error"
-                              @click="showSolutionAsTeacher(null, groupMember)"
+                              disabled
                             >
                               <v-icon>mdi-magnify</v-icon>
                             </v-btn>
@@ -416,7 +429,8 @@ export default {
       selectedRepositoryElem: {},
 
       gitHubLoadingFiles: false,
-      repoContent: {},
+      repoContent: [],
+      currentContextRepoDir: "",
       solution: null
     };
   },
@@ -575,8 +589,15 @@ export default {
       return usernamesWithSolutions.includes(username);
     },
 
-    async getFilesOfRepo() {
+    async getFilesOfRepo(event = null) {
+      
+      if(event) {
+        event.preventDefault()
+      }
+
+      this.selectedRepositoryElem = null
       this.gitHubLoadingFiles = true
+      this.repoContent = []
 
       let arr = this.ghSolutionRepositoryURL.split("/")
       const username = arr[3]
@@ -587,7 +608,49 @@ export default {
 
       console.log(githubApiLink)
 
+      const response_content = await this.loadContentFromGithubURL(githubApiLink)
 
+      this.currentContextRepoDir = githubApiLink
+      
+      this.addContent('Root', githubApiLink, null, response_content)
+      
+      this.gitHubLoadingFiles = false
+    },
+
+    async getFilesOfRepoDirectory(event, dir) {
+      event.preventDefault();
+      this.gitHubLoadingFiles = true
+      
+      console.log(dir)
+      this.selectedRepositoryElem = null
+      const urlToFetch = dir.url 
+
+      const response_content = await this.loadContentFromGithubURL(urlToFetch)
+
+      const parent = this.repoContent[this.repoContent.length - 1].github_url
+
+      this.currentContextRepoDir = urlToFetch
+      
+      const isInContent = this.repoContent.some(repoContentObject => {
+        return repoContentObject.github_url === urlToFetch
+      })
+
+      if (isInContent) {
+        const index = this.repoContent.findIndex(repoContentObject => {
+          return repoContentObject.github_url === urlToFetch
+        })
+
+        this.repoContent = this.repoContent.slice(0, index)
+      }
+
+      console.log(this.repoContent)
+
+      this.addContent(dir.name, urlToFetch, parent, response_content)
+
+      this.gitHubLoadingFiles = false
+    },
+
+    async loadContentFromGithubURL(githubApiLink) {
       let response = await fetch(githubApiLink, {
             method: 'GET'
           })
@@ -596,7 +659,7 @@ export default {
 
       console.log(data)
 
-      this.repoContent = data.filter(repoElem => {
+      let response_content = data.filter(repoElem => {
         const type = repoElem.type
 
         if (type === 'dir') {
@@ -614,8 +677,45 @@ export default {
 
         return false
       })
-      this.gitHubLoadingFiles = false
+
+      return response_content
     },
+
+    addContent(name, github_url, parent_url, content) {
+      this.repoContent.push({
+        name: name,
+        github_url: github_url,
+        parent_url: parent_url,
+        content: content
+      })
+    },
+
+    changeRepoContent(event, dir) {
+      event.preventDefault()
+      this.gitHubLoadingFiles = true
+      console.log(dir)
+      console.log(dir.github_url)
+
+      this.selectedRepositoryElem = null
+      this.currentContextRepoDir = dir.github_url
+
+      const isInContent = this.repoContent.some(repoContentObject => {
+        return repoContentObject.github_url === this.currentContextRepoDir
+      })
+
+      if (isInContent) {
+        const index = this.repoContent.findIndex(repoContentObject => {
+          return repoContentObject.github_url === this.currentContextRepoDir
+        })
+
+        this.repoContent = this.repoContent.slice(0, index + 1)
+
+        this.currentContextRepoDir = dir.github_url
+
+      }
+
+      this.gitHubLoadingFiles = false
+    }
   },
 
   computed: {
@@ -668,7 +768,15 @@ export default {
         return []
       }
 
-      const filesList = this.repoContent.filter(repoElem => {
+      if (this.repoContent.length === 0) {
+        return []
+      }
+
+      const repoContentObjectToRetrieveFilesFrom = this.repoContent.find(repoDirContent => {
+        return repoDirContent.github_url === this.currentContextRepoDir
+      })
+
+      const filesList = repoContentObjectToRetrieveFilesFrom.content.filter(repoElem => {
         const type = repoElem.type
 
         if (type === 'file') {
@@ -691,7 +799,14 @@ export default {
         return []
       }
       
-      const dirsList = this.repoContent.filter(repoElem => {
+      if (this.repoContent.length === 0) {
+        return []
+      }
+
+      const repoContentObjectToRetrieveFilesFrom = this.repoContent.find(repoDirContent => {
+        return repoDirContent.github_url === this.currentContextRepoDir
+      })
+      const dirsList = repoContentObjectToRetrieveFilesFrom.content.filter(repoElem => {
         return (repoElem.type === 'dir')
       })
 

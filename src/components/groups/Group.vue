@@ -30,10 +30,10 @@
               <v-icon>mdi-account</v-icon>
             </v-list-item-icon>
             <v-list-item-content>
-              <v-list-item-title @click="inspectUser(user.pk)">
+              <v-list-item-title @click="userType.name === 'Teacher' ? inspectUser(user.pk) : null"> <!-- jeśli typ uzytkownika to teacher to podepnij metode inspectUser -->
                 <v-hover v-slot:default="{ hover }">
                   <span
-                    :class="hover ? 'title-link' : ''"
+                    :class="hover && userType.name === 'Teacher' ? 'title-link' : ''"
                   >{{ user.first_name }} {{ user.last_name }}</span>
                 </v-hover>
               </v-list-item-title>
@@ -57,10 +57,10 @@
           <v-list>
             <v-list-item v-for="(task, index) in group.activeTasks" :key="index">
               <v-list-item-icon v-if="task.taskType.name === 'Exercise'">
-                <v-icon>mdi-file-document-box</v-icon>
+                <v-icon>mdi-text-box</v-icon>
               </v-list-item-icon>
               <v-list-item-icon v-else>
-                <v-icon>mdi-file-document-box-multiple</v-icon>
+                <v-icon>mdi-text-box-multiple</v-icon>
               </v-list-item-icon>
               <v-list-item-content>
                 <v-list-item-title @click="showTaskDetails(task)">
