@@ -18,7 +18,7 @@
       <v-col v-for="(exercise, index) in exercises" :key="index" cols="4">
         <v-card>
           <v-hover v-slot:default="{ hover }">
-            <v-card-title :class="hover ? 'title-link' : ''" @click="showExerciseDetails(exercise)">
+            <v-card-title :class="hover ? 'title-link' : ''" @click="showExerciseDetails(exercise)" style="word-break: keep-all">
               {{ exercise.title }}
             </v-card-title>
           </v-hover>
