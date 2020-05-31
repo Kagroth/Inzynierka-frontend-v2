@@ -30,7 +30,7 @@
                      </v-btn>
                   </v-col>
                   <v-divider vertical></v-divider>
-                  <v-col>
+                  <v-col cols="6">
                     <h4 class="text-center">Wybrane cwiczenia:</h4>
                     <v-list>
                       <v-list-item v-for="(exercise, index) in form.exercises" :key="index">
@@ -38,7 +38,7 @@
                           <v-icon>mdi-language-{{ exercise.language.name.toLowerCase() }}</v-icon>
                         </v-list-item-icon>
                         <v-list-item-content>
-                          <v-list-item-title> {{ exercise.title }} </v-list-item-title>
+                          <v-list-item-title :title="exercise.title"> {{ exercise.title }} </v-list-item-title>
                           <v-list-item-subtitle>Poziom - {{ exercise.level.name }}</v-list-item-subtitle>
                         </v-list-item-content>
                         <v-list-item-action>
