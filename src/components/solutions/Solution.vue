@@ -37,7 +37,7 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-row class="pa-0 ma-0" align="baseline">
+            <v-row class="pa-0 ma-0" align="baseline"  v-if="!solution.task.isRated">
               <v-spacer></v-spacer>
               <v-col cols="2" class="pa-0 ma-0">
                 <v-select
@@ -57,6 +57,12 @@
                   :loading="loading"
                   :disabled="disabled"
                 >Oceń</v-btn>
+              </v-col>
+            </v-row>
+            <v-row v-else align="baseline" class="pa-0 ma-0">
+              <v-spacer></v-spacer>
+              <v-col cols="2" class="pa-0 ma-0">
+                Ocena: {{ solution.rate }}
               </v-col>
             </v-row>
           </v-card-actions>
@@ -103,7 +109,7 @@
               <v-card-actions>
                 <v-row class="pa-0 ma-0" align="baseline">
                   <v-spacer></v-spacer>
-                  <v-col cols="2" class="pa-0 ma-0">
+                  <v-col cols="2" class="pa-0 ma-0" v-if="!solution.task.isRated">
                     <v-select
                       outlined
                       rounded
@@ -112,6 +118,9 @@
                       v-model="solutionRates[index].rate"
                     ></v-select>
                   </v-col>
+                  <v-col v-else cols="2" class="pa-0 ma-0">
+                    Ocena: {{ solutionRates[index].rate }}
+                  </v-col>
                 </v-row>
               </v-card-actions>
             </v-card>
@@ -119,7 +128,7 @@
         </v-row>
         <v-row>
           <v-spacer></v-spacer>
-          <v-col cols="1">
+          <v-col cols="1" v-if="!solution.task.isRated">
             <v-btn
               large
               rounded
@@ -128,6 +137,9 @@
               :loading="loading"
               :disabled="disabled"
             >Oceń</v-btn>
+          </v-col>
+          <v-col cols="4">
+            Ocena końcowa: {{ solution.rate }}
           </v-col>
         </v-row>
       </div>

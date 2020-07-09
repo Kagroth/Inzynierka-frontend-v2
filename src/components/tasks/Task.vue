@@ -232,7 +232,7 @@
                                         <span v-if="repoDirs.length > 0">
                                           <span v-for="(dir, index) in repoDirs" :key="`repo-dir-${index}`">
                                             <v-icon>mdi-folder</v-icon>
-                                            <a @click="getFilesOfRepoDirectory($event, dir)"> {{ dir.name }}</a>
+                                            <a @click="getFilesOfRepoDirectory($event, dir)"> {{ dir.name }}</a> <br>
                                           </span>
                                         </span>
                                         <v-radio-group v-if="repoFiles.length > 0" v-model="selectedRepositoryElem">

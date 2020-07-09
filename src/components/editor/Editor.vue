@@ -53,11 +53,19 @@
                     {{ exercise.content }}
                     <v-divider class="mt-5 mb-5"></v-divider>
                     <h3 class="mb-5">Testy:</h3>
+                    <p v-for="(unit_test_arr_elem, index) in exercise.unit_tests" :key="`arr_elem_test-${index}`">
+                      Test {{ index + 1 }}: <br>
+                      <span v-for="(unit_test_line, idx) in unit_test_arr_elem.content.split('\n')" :key="`test-${idx}`">
+                        {{ unit_test_line }}
+                      </span>
+                    </p>
+                    <!--
                     <span v-for="(unit_test_arr_elem, index) in exercise.unit_tests" :key="`arr_elem_test-${index}`">
                       <p v-for="(unit_test, idx) in unit_test_arr_elem.content.split('\n')" :key="`test-${idx}`">
                         {{ unit_test }}
                       </p>
                     </span>
+                    -->
                   </v-card-text>
                 </v-card>
               </v-col>
@@ -107,11 +115,12 @@
                 {{ task.exercise.content }}
                 <v-divider class="mt-5 mb-5"></v-divider>
                 <h3 class="mb-5">Testy: </h3>
-                <span v-for="(unit_test_arr_elem, index) in task.exercise.unit_tests" :key="`arr_elem_test-${index}`">
-                  <p v-for="(unit_test, idx) in unit_test_arr_elem.content.split('\n')" :key="`test-${idx}`">
-                    {{ unit_test }}
-                  </p>
-                </span>
+                <p v-for="(unit_test_arr_elem, index) in task.exercise.unit_tests" :key="`arr_elem_test-${index}`">
+                  Test {{ index + 1 }}: <br>
+                  <span v-for="(unit_test_line, idx) in unit_test_arr_elem.content.split('\n')" :key="`test-${idx}`">
+                    {{ unit_test_line }} <br>
+                  </span>
+                </p>
               </v-card-text>
               
             </v-card>
@@ -192,7 +201,7 @@ export default {
       this.tabsExercises = this.task.test.exercises
       this.tabsExercisesCodes = this.tabsExercises.map(exercise => {
         if (exercise.language.name === 'Java') {
-          return "package com.myapp;\n\npublic class Solution { \n  // Tu wprowadź swój kod\n}"
+          return "// Tu wprowadź swój kod"
         }
       })
       this.tabsSolutionsResults = this.tabsExercises.map(exercise => {
@@ -203,7 +212,7 @@ export default {
     }
     else {
       if (this.task.exercise.language.name === 'Java') {
-        this.myCode = "package com.myapp;\n\npublic class Solution { \n  // Tu wprowadź swój kod\n}"
+        this.myCode = "// Tu wprowadź swój kod"
       }
     }
   },

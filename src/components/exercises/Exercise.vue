@@ -5,12 +5,7 @@
         <v-col cols="6">{{ exercise.title }}</v-col>
         <v-spacer></v-spacer>
         <v-col cols="3" class="text-right" v-if="userType.name === 'Teacher'">
-          <!--
-          <v-btn small color="success" icon large disabled>
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-          -->
-          <v-btn small color="error" @click="deleteExercise" icon large>
+          <v-btn v-if="this.$route.name === 'ExerciseDetails'" small color="error" @click="deleteExercise" icon large>
             <v-icon>mdi-delete</v-icon>
           </v-btn>
         </v-col>
