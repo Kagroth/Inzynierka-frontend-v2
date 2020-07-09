@@ -453,7 +453,7 @@ export default {
 
     sendFileSolution(event) {
       if (this.file === undefined || this.file === null) {
-        // komunikat o nie wybraniu pliku
+        alert("Nie wybrano pliku")
         return;
       }
 
