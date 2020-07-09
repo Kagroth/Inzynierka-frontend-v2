@@ -295,7 +295,7 @@
                     @click="changeTaskState(`LOCK`)"
                     :loading="loading"
                   >
-                    Zakończ zadanie
+                    Zablokuj zadanie
                     <v-icon right>mdi-lock</v-icon>
                   </v-btn>
                   <div v-else-if="task.isRated">Zadanie zamkniete</div>

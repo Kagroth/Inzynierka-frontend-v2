@@ -168,11 +168,7 @@ const router = new VueRouter({
           name: 'UserData',
           component: UserData,
           props: true
-        },
-        {
-          path: 'email_test',
-          component: () => import("@/components/EmailTest.vue")
-        }        
+        },        
       ]
     },    
     {
