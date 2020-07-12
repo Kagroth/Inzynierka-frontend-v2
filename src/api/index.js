@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const APIInstance = axios.create({
-  baseURL: 'http://localhost:8000/'
+  baseURL: 'http://13.53.79.179:8000/'
 })
 
 let token = ''
